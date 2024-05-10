@@ -1,0 +1,44 @@
+site_name: Guidebook
+site_dir: build
+theme:
+  features:
+    - navigation.expand
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+extra_css:
+  - assets/main.css
+plugins:
+  - search
+  # - minify:
+      # minify_html: true
+      # minify_js: true
+      # minify_css: true
+      # htmlmin_opts:
+      #   remove_comments: true
+      # cache_safe: true
+  # - redirects:
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+use_directory_urls: false
