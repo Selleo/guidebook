@@ -1,32 +1,20 @@
 # Overview
 
 Guide book is a set of practices that focus on providing efficient development of web and mobile apps.
-This includes the project setup practices, set of patterns, examples of features
-so developers can easily add new features without reinventing the wheel.
 
+This includes:
 
-<!-- TODO: for whom is this guide intended?
-- application developers
-- devops engineers
-- business owners and CISOs, CTOs, CIOs, DPOs
+- Project setup practices
+- Set of patterns
+- Full feature examples
+- Deployment possibilities
 
+For whom is this guide intended?
 
-## WHAT'S INSIDE
+- Tech leads
+- Project leaders
+- Application developers
 
-TODO: list of topics covered in this guide -->
+Every tool mentioned in the docs is a PROPOSAL that has been tested in production, but feel free to use alternatives if you prefer them. Let us also know them (`@mikoscz` `@bart` `@kieu`) so we can also test them and update if necessary!
 
-
-<!-- ## Commercial offering
-
-We offer:
-
-- Deployment
-- Maintenance
-- Cloud Transformation
-- Consulting
-- Cybersecurity
-
-<div class="flex justify-center my-2">
-    <img src="./assets/certs/aws-solutions-architect.png" alt="AWS Solutions Architect" width="100" height="100" />
-    <img src="./assets/certs/iso-27001.png" alt="ISO 27001" width="100" height="100" />
-</div> -->
+Every project part recommendation has been tested in production and if you're taking a diffrent approach on your project, please leave an ADR with the decision and let us know (`@mikoscz` `@bart` `@kieu`) so we can valuate it into our stack.

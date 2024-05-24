@@ -1,13 +1,14 @@
 ## General
 
-- [ ] Monorepo setup
+- [-] Monorepo setup
 
   - [ ] Internal packagages
   - [ ] Shared UI
 
-- [ ] Package manager(pnpm)
-- [ ] Monorepo proxy with certs(Caddy)
-- [ ] Docker Compose for external dependencies
+- [x] Node version
+- [x] Package manager(pnpm)
+- [x] Monorepo proxy with certs(Caddy)
+- [-] Docker Compose for external dependencies
 
 ## Backend
 
