@@ -7,8 +7,8 @@ export const routes: (
   defineRoutes: (
     callback: (defineRoute: DefineRouteFunction) => void
   ) => RouteManifest
-) => RouteManifest | Promise<RouteManifest> = (defin) => {
-  return defin((route) => {
+) => RouteManifest | Promise<RouteManifest> = (defineRoutes) => {
+  return defineRoutes((route) => {
     route("", "modules/Landing/Landing.page.tsx");
   });
 };
