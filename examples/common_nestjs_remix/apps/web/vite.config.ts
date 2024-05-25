@@ -1,6 +1,7 @@
 import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { routes } from "./routes";
 
 export default defineConfig({
   plugins: [
@@ -12,6 +13,7 @@ export default defineConfig({
         unstable_singleFetch: true,
       },
       ssr: false,
+      routes,
     }),
     tsconfigPaths(),
   ],
