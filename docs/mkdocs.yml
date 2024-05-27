@@ -1,4 +1,5 @@
 site_name: Guidebook
+copyright: Copyright &copy; Selleo Labs sp z o.o.
 site_dir: build
 theme:
   features:
@@ -41,4 +42,3 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
-use_directory_urls: false
