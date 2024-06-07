@@ -9,6 +9,16 @@ export const routes: (
   ) => RouteManifest
 ) => RouteManifest | Promise<RouteManifest> = (defineRoutes) => {
   return defineRoutes((route) => {
-    route("", "modules/Landing/Landing.page.tsx");
+    route("", "modules/Landing/Landing.layout.tsx", () => {
+      route("", "modules/Landing/Landing.page.tsx", {
+        index: true,
+      });
+      route("/about", "modules/Landing/About.page.tsx");
+    });
+    route("dashboard", "modules/Dashboard/Dashboard.layout.tsx", () => {
+      route("", "modules/Dashboard/Dashboard.page.tsx", {
+        index: true,
+      });
+    });
   });
 };

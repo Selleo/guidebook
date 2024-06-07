@@ -12,12 +12,11 @@ export const clientLoader = async () => {
   return { date: new Date() };
 };
 
-export default function Index() {
-  const date = useLoaderData();
-  console.log({ date });
+export default function LandingPage() {
+  const data = useLoaderData<typeof clientLoader>();
+
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
+    <>
       <ul>
         <li>
           <a
@@ -43,6 +42,7 @@ export default function Index() {
           </a>
         </li>
       </ul>
-    </div>
+      <p>createdAt: {data.date.toLocaleString()}</p>
+    </>
   );
 }
