@@ -22,6 +22,8 @@
 - [ ] Recurring jobs
 - [ ] Multitenancy
 - [ ] Deployment
+- [ ] Testing
+- [ ] Factories
 
 ## Frontend
 
