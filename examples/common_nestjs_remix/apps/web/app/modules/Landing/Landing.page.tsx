@@ -16,33 +16,63 @@ export default function LandingPage() {
   const data = useLoaderData<typeof clientLoader>();
 
   return (
-    <>
-      <ul>
+    <div className="px-4">
+      <h2 className="text-xl font-semibold">Usefull Remix Sources</h2>
+      <ul className="list-disc">
         <li>
           <a
+            className="underline"
             target="_blank"
-            href="https://remix.run/tutorials/blog"
+            href="https://remix.run/docs/en/main/discussion/routes#route-configuration"
             rel="noreferrer"
           >
-            15m Quickstart Blog Tutorial
+            Layout routing
           </a>
         </li>
         <li>
           <a
+            className="underline"
             target="_blank"
-            href="https://remix.run/tutorials/jokes"
+            href="https://remix.run/docs/en/main/guides/spa-mode"
             rel="noreferrer"
           >
-            Deep Dive Jokes App Tutorial
+            SPA Mode resources
           </a>
         </li>
         <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
+          <a
+            className="underline"
+            target="_blank"
+            href="https://remix.run/docs/en/main/guides/client-data"
+            rel="noreferrer"
+          >
+            Client data
+          </a>
+        </li>
+        <li>
+          <a
+            className="underline"
+            target="_blank"
+            href="https://remix.run/docs/en/main/route/client-action#arguments"
+            rel="noreferrer"
+          >
+            Client action
+          </a>
+        </li>
+        <li>
+          <a
+            className="underline"
+            target="_blank"
+            href="https://remix.run/docs"
+            rel="noreferrer"
+          >
             Remix Docs
           </a>
         </li>
       </ul>
-      <p>createdAt: {data.date.toLocaleString()}</p>
-    </>
+      <p className="fixed bottom-4 left-1/2 -translate-x-1/2">
+        renderedAt: {data.date.toLocaleString()}
+      </p>
+    </div>
   );
 }

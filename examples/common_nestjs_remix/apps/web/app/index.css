@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --brand-100: #FCE3DE;
+    --brand-500: #EC5138;
+    --brand-600: #D83B22;
+
+    --background: var(--moon-50);
+
+    --border: var(--moon-500);
+    --border-hover: var(--moon-400);
+
+    --foreground-one: var(--moon-50);
+    --foreground-two: var(--moon-100);
+  }
+ 
+  .dark {
+    --background: var(--moon-800);
+
+    --border: var(--moon-500);
+    --border-hover: var(--moon-400);
+
+    --foreground-one: var(--moon-50);
+    --foreground-two: var(--moon-100);
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply bg-background;
+  }
+  body {
+    @apply text-foreground bg-background;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}

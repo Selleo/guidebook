@@ -8,7 +8,7 @@ export default function AboutPage() {
   return (
     <div>
       <h1>About page</h1>
-      <p>Something about the product.</p>
+      <p>Kitchen sink for remix frontend app</p>
     </div>
   );
 }

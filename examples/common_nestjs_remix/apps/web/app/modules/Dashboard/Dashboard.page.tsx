@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => {
 
 export default function DashboardPage() {
   return (
-    <ul>
+    <ul className="text-success">
       <li>This is our page</li>
     </ul>
   );
