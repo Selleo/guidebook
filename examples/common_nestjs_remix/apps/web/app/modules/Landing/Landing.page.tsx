@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,6 +17,12 @@ export default function LandingPage() {
 
   return (
     <div className="px-4">
+      <div>
+        <h2>Check out our Pokemons!</h2>
+        <Link className="text-orange-500" to="/about">
+          Pokemons
+        </Link>
+      </div>
       <h2 className="text-xl font-semibold">Usefull Remix Sources</h2>
       <ul className="list-disc">
         <li>
