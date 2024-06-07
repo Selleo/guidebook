@@ -16,3 +16,6 @@ Colocation is gonna be the the theme in the described approach.
 ## Route components
 
 Route and Layout components should be living in their corresponding modules. Their names should be `module.page.tsx` & `module.layout.tsx` respectively.
+It allows for easy fuzzy search while not introducing any specific, not semantic file based syntax.
+
+

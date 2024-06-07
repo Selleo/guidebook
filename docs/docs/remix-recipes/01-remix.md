@@ -22,6 +22,8 @@ By default Remix uses [flat file based routing](https://remix.run/docs/en/main/d
 
 To set it up we'd like to create a `routes.ts` file at the top level of remix app with the following content (adjusted with proper file paths):
 
+<i>update sidenote - Remix 3 and React Router 7 will both use the routes.ts syntax as standard</i>
+
 ```typescript
 import {
   DefineRouteFunction,
@@ -34,7 +36,17 @@ export const routes: (
   ) => RouteManifest
 ) => RouteManifest | Promise<RouteManifest> = (defineRoutes) => {
   return defineRoutes((route) => {
-    route("", "modules/Landing/Landing.page.tsx");
+    route("", "modules/Landing/Landing.layout.tsx", () => {
+      route("", "modules/Landing/Landing.page.tsx", {
+        index: true,
+      });
+      route("/about", "modules/Landing/About.page.tsx");
+    });
+    route("dashboard", "modules/Dashboard/Dashboard.layout.tsx", () => {
+      route("", "modules/Dashboard/Dashboard.page.tsx", {
+        index: true,
+      });
+    });
   });
 };
 ```
