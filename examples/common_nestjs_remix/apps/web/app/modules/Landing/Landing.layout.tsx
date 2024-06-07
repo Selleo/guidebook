@@ -18,6 +18,13 @@ export default function LandingLayout() {
         >
           Login
         </Link>
+        <button
+          onClick={() => {
+            document.documentElement.classList.toggle("dark");
+          }}
+        >
+          🎃
+        </button>
       </nav>
       <Outlet />
     </main>

@@ -8,13 +8,25 @@
     --brand-500: #EC5138;
     --brand-600: #D83B22;
 
+    --moon-50: #FAFAFA;
+    --moon-100: #BFBFC4;
+    --moon-200: #92929B;
+    --moon-300: #73737D;
+    --moon-400: #53535A;
+    --moon-500: #38383D;
+    --moon-600: #2A2A2D;
+    --moon-700: #202022;
+    --moon-800: #161618;
+    --moon-900: #0A0A0B;
+    --moon-950: #020203;
+
     --background: var(--moon-50);
 
     --border: var(--moon-500);
     --border-hover: var(--moon-400);
 
-    --foreground-one: var(--moon-50);
-    --foreground-two: var(--moon-100);
+    --foreground-one: var(--moon-800);
+    --foreground-two: var(--moon-900);
   }
  
   .dark {
@@ -34,6 +46,7 @@
   }
   html {
     @apply bg-background;
+    @apply text-foreground-one;
   }
   body {
     @apply text-foreground bg-background;
