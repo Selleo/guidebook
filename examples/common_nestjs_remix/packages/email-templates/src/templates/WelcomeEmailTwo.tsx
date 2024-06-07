@@ -1,19 +1,17 @@
 import { Button, Html } from "@react-email/components";
 
-export type WelcomeEmailProps = {
-  email: string;
-  name: string;
-};
+// export type WelcomeEmailProps = {
+//   email: string;
+//   name: string;
+// };
 
-export const WelcomeEmail = ({ email, name }: WelcomeEmailProps) => {
+export const WelcomeEmailTwo = () => {
   return (
     <Html>
       <Button
         href="https://selleo.com"
         style={{ background: "#000", color: "#fff", padding: "12px 20px" }}
-      >
-        Hello there! {name}({email})
-      </Button>
+      ></Button>
     </Html>
   );
 };
@@ -23,4 +21,4 @@ export const WelcomeEmail = ({ email, name }: WelcomeEmailProps) => {
 //   name: "Selleo Dev",
 // };
 
-export default WelcomeEmail;
+// export default WelcomeEmailTwo;
