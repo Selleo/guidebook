@@ -18,6 +18,11 @@
     "react-email": "^2.1.4"
   },
   "devDependencies": {
+    "@babel/generator": "^7.24.7",
+    "@babel/parser": "^7.24.7",
+    "@babel/template": "^7.24.7",
+    "@babel/traverse": "^7.24.7",
+    "@babel/types": "^7.24.7",
     "@repo/typescript-config": "*",
     "@types/react": "^18.2.61",
     "tsup": "^8.0.2",
