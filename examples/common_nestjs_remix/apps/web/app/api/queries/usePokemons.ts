@@ -15,7 +15,7 @@ type PokemonsResponse = {
 };
 
 export const pokemonsOptions = queryOptions({
-  queryKey: ["pokemons"],
+  queryKey: ["pokemons", "list"],
   queryFn: async () => {
     const response = await fetch("https://pokeapi.co/api/v2/pokemon");
     return response.json() as Promise<PokemonsResponse>;

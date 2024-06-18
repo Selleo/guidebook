@@ -1,4 +1,4 @@
-# Remix Intro + Setup
+# React Intro + Setup
 
 Vite community is huge and Remix intergration with it was the milestone we were waiting for. Now merging the Remix into React Router 7 let's us migrate older projects easier, and have great `framework` environment with patterns for the new apps.
 
