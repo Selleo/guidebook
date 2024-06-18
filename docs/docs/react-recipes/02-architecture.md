@@ -6,7 +6,7 @@ Flexibility of React is a great strength and great pitfall. In this chapter we w
 
 Colocation is gonna be the the theme in the described approach.
 
-- Your code should be inside `app` folder in the Remix app.
+- Your code should be inside `app` folder in the React app.
 - `modules` is the most important folder inside where most of your UI and business logic is gonna be living. For example we can have `Auth` module that should have everything related to auth inside of it - from compoents to pages, layout, hooks, it's "util functions".
 - `api` folder where we'll be storing all data related to the API communication.
 - `components` folder should consist of highly reusable components used throughout the whole app - Button, Input

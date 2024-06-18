@@ -1,10 +1,23 @@
 import {
+  ClientActionFunctionArgs,
   ClientLoaderFunctionArgs,
+  Form,
   isRouteErrorResponse,
+  useFormAction,
   useParams,
   useRouteError,
 } from "@remix-run/react";
-import { pokemonOptions, usePokemonSuspense } from "~/api/queries/usePokemon";
+import { useState } from "react";
+import {
+  invalidatePokemonQueries,
+  updatePokemon,
+  useUpdatePokemon,
+} from "~/api/mutations/useUpdatePokemon";
+import {
+  pokemonOptions,
+  usePokemon,
+  usePokemonSuspense,
+} from "~/api/queries/usePokemon";
 import { queryClient } from "~/api/queryClient";
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
@@ -23,19 +36,70 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
   return {};
 }
 
+export async function clientAction({
+  request,
+  params,
+}: ClientActionFunctionArgs) {
+  if (!params.id) throw new Error("No id provided");
+  const formData = await request.formData();
+
+  const name = formData.get("name") as string;
+  const weight = Number(formData.get("weight"));
+
+  await updatePokemon(params.id, { data: { name, weight } });
+  await invalidatePokemonQueries(queryClient, params.id);
+
+  return {};
+}
+
 export default function PokemonPage() {
   const params = useParams<{ id: string }>();
-  const { data: pokemon } = usePokemonSuspense(params.id!);
+  const { data: pokemon, isFetching } = usePokemonSuspense(params.id!);
+  const [editMode, setEditMode] = useState(false);
 
   return (
     <main>
-      <h1>{pokemon.name} page</h1>
+      <header>
+        <h1>{pokemon.name} page</h1>
+        <h2>{isFetching && "Refetching in bg..."}</h2>
+        <button
+          onClick={() => {
+            setEditMode(!editMode);
+          }}
+        >
+          edit
+        </button>
+      </header>
       <p>Here you can see the pokemon details</p>
       <img
         alt={pokemon.name}
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
       />
       <p>Weight: {pokemon.weight}</p>
+
+      {editMode && (
+        <Form method="POST">
+          <label>
+            Name:
+            <input
+              className="text-black"
+              type="text"
+              name="name"
+              defaultValue={pokemon.name}
+            />
+          </label>
+          <label>
+            Weight:
+            <input
+              className="text-black"
+              type="number"
+              name="weight"
+              defaultValue={pokemon.weight}
+            />
+          </label>
+          <button type="submit">Save</button>
+        </Form>
+      )}
     </main>
   );
 }

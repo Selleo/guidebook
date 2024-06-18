@@ -1,6 +1,6 @@
 # Data loading
 
-For the data loading we will combine two technologies. `clientloader`s from Remix and React Query `queries`. It will allow us for easier management of queries and less `undefined` states.
+For the data loading we will combine two technologies. `clientloader`s from Remix(React Router 7) and React Query `queries`. It will allow us for easier management of queries and less `undefined` states.
 
 For the setup of React Query check their docs: [Installation](https://tanstack.com/query/latest/docs/framework/react/installation) and [Quickstart](https://tanstack.com/query/latest/docs/framework/react/quick-start). With the configuration of the query client you can go one of few ways:
 
@@ -80,7 +80,7 @@ export function usePokemonSuspense(id: string) {
 
 ## Using queries data
 
-Remix has a loaders concept that we'll utilze here. Loaders as a concept allow you to fetch data before the route component loads which solves eg. the `undefined` data issues. We'll combine it with RQ to easily work with data across components. As we're working in SPA environemnt we'll utilze `clientLoader` export in a route component.
+Remix / ReactRouter(6+) has a loaders concept that we'll utilze here. Loaders as a concept allow you to fetch data before the route component loads which solves eg. the `undefined` data issues. We'll combine it with RQ to easily work with data across components. As we're working in SPA environemnt we'll utilze `clientLoader` export in a route component.
 
 ```ts
 export async function clientLoader() {
