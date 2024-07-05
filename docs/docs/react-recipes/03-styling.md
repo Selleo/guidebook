@@ -6,6 +6,19 @@ TailwindCSS is our GoTo solution for everything related to styling. It offers gr
 
 We can use just regular Vite setup for tailwind https://tailwindcss.com/docs/guides/vite
 
+### Helper setup
+
+To never think about specificity again and avoid duplicating overlapping tailwind classes we can use [tailwind-merge](https://www.npmjs.com/package/tailwind-merge) utility. Together with [clsx](https://www.npmjs.com/package/clsx)(preferred) or [classnames](https://www.npmjs.com/package/classnames) it will help us to manage overriding component classes or updating components state styles
+
+```ts
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
 ## Semantic vars and dark mode setup
 
 To easier work work with designer files from Figma we recommend common setup that will use semantic variables inside tailiwind. Example `tailwind.config.js` structure
