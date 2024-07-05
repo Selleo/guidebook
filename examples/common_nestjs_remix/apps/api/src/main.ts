@@ -1,12 +1,8 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import {
-  patchNestJsSwagger,
-  applyFormats,
-  // TypeboxValidationPipe,
-  // TypeboxTransformInterceptor,
-} from "nestjs-typebox";
+import { patchNestJsSwagger, applyFormats } from "nestjs-typebox";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { exportSchemaToFile } from "./utils/save-swagger-to-file";
 
 patchNestJsSwagger();
 applyFormats();
@@ -21,6 +17,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
+  exportSchemaToFile(document);
 
   await app.listen(3000);
 }
