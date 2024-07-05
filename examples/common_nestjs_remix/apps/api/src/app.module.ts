@@ -5,6 +5,7 @@ import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
 import database from "./common/configuration/database";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as schema from "./storage/schema";
+import { ManagementModule } from "./management/management.module";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import * as schema from "./storage/schema";
       },
       inject: [ConfigService],
     }),
+    ManagementModule,
   ],
   controllers: [AppController],
   providers: [AppService],
