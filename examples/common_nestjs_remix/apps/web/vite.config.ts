@@ -12,7 +12,7 @@ export default defineConfig({
         v3_throwAbortReason: true,
         unstable_singleFetch: true,
       },
-      ssr: false,
+      ssr: false, // SPA MODE - Might migrate to React Router 7
       routes,
     }),
     tsconfigPaths(),
