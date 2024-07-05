@@ -3,8 +3,8 @@ import { Link, useLoaderData } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Selleo Remix" },
+    { name: "description", content: "Welcome to the Selleo!" },
   ];
 };
 

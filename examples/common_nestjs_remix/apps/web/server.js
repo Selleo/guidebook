@@ -1,4 +1,6 @@
 // INFO: This file is not used, but It's already preconfigured if you want to switch into fullstack/bff apporach
+// Currently it is using express but for production probably we will use HONO
+
 import { createRequestHandler } from "@remix-run/express";
 import compression from "compression";
 import express from "express";
