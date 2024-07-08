@@ -15,12 +15,16 @@ export interface CreatePropertyBody {
 }
 
 export interface CreatePropertyResponse {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  name: string;
-  description: string | null;
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    description: string | null;
+  };
 }
+
+export type DeletePropertyResponse = null;
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
@@ -168,15 +172,29 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CreatePropertyControllerCreateProperty
+     * @name PropertiesControllerCreateProperty
      * @request POST:/properties
      */
-    createPropertyControllerCreateProperty: (data: CreatePropertyBody, params: RequestParams = {}) =>
+    propertiesControllerCreateProperty: (data: CreatePropertyBody, params: RequestParams = {}) =>
       this.request<CreatePropertyResponse, any>({
         path: `/properties`,
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name PropertiesControllerDeleteProperty
+     * @request DELETE:/properties/{id}
+     */
+    propertiesControllerDeleteProperty: (id: string, params: RequestParams = {}) =>
+      this.request<DeletePropertyResponse, any>({
+        path: `/properties/${id}`,
+        method: "DELETE",
         format: "json",
         ...params,
       }),

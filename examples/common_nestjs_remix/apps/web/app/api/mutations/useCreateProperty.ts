@@ -11,7 +11,7 @@ export function useCreateProperty() {
   return useMutation({
     mutationFn: async (options: CreatePropertyOptions) => {
       const response =
-        await ApiClient.properties.createPropertyControllerCreateProperty(
+        await ApiClient.properties.propertiesControllerCreateProperty(
           options.data
         );
 
