@@ -5,7 +5,10 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "generate:client": "pnpm run --filter=web generate:client",
+    "db:generate": "pnpm run --filter=api db:generate",
+    "db:migrate": "pnpm run --filter=api db:migrate"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

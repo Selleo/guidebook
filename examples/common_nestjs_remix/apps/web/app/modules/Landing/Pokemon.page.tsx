@@ -3,7 +3,6 @@ import {
   ClientLoaderFunctionArgs,
   Form,
   isRouteErrorResponse,
-  useFormAction,
   useParams,
   useRouteError,
 } from "@remix-run/react";
@@ -11,13 +10,8 @@ import { useState } from "react";
 import {
   invalidatePokemonQueries,
   updatePokemon,
-  useUpdatePokemon,
 } from "~/api/mutations/useUpdatePokemon";
-import {
-  pokemonOptions,
-  usePokemon,
-  usePokemonSuspense,
-} from "~/api/queries/usePokemon";
+import { pokemonOptions, usePokemonSuspense } from "~/api/queries/usePokemon";
 import { queryClient } from "~/api/queryClient";
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
