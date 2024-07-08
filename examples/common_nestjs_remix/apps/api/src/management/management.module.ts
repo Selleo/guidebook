@@ -1,13 +1,11 @@
 import { Module } from "@nestjs/common";
-import { CqrsModule } from "@nestjs/cqrs";
-import {
-  CreatePropertyController,
-  CreatePropertyHandler,
-} from "./use-cases/create-property";
+import { PropertiesController } from "./api/properties.controller";
+import { PropertiesService } from "./properties.service";
 
 @Module({
-  imports: [CqrsModule],
-  controllers: [CreatePropertyController],
-  providers: [CreatePropertyHandler],
+  imports: [],
+  controllers: [PropertiesController],
+  providers: [PropertiesService],
+  exports: [],
 })
 export class ManagementModule {}

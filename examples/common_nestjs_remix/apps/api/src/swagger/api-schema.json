@@ -3,7 +3,7 @@
   "paths": {
     "/properties": {
       "post": {
-        "operationId": "CreatePropertyController_createProperty",
+        "operationId": "PropertiesController_createProperty",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -21,6 +21,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreatePropertyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/properties/{id}": {
+      "delete": {
+        "operationId": "PropertiesController_deleteProperty",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletePropertyResponse"
                 }
               }
             }
@@ -56,36 +83,47 @@
       "CreatePropertyResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "anyOf": [
-              {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "string"
               },
-              {
-                "type": "null"
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "name",
+              "description"
             ]
           }
         },
         "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "name",
-          "description"
+          "data"
         ]
+      },
+      "DeletePropertyResponse": {
+        "type": "null"
       }
     }
   }
