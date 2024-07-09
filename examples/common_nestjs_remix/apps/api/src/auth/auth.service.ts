@@ -53,22 +53,30 @@ export class AuthService {
   }
 
   async login(data: { email: string; password: string }) {
-    const user = await this.validateUser(data.email, data.password);
-    if (!user) {
-      throw new UnauthorizedException("Invalid email or password");
+    try {
+      const user = await this.validateUser(data.email, data.password);
+      if (!user) {
+        throw new UnauthorizedException("Invalid email or password");
+      }
+
+      const { accessToken, refreshToken } = await this.getTokens(
+        user.id,
+        user.email,
+      );
+      await this.updateRefreshToken(user.id, refreshToken);
+
+      return {
+        ...user,
+        accessToken,
+        refreshToken,
+      };
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException("Error during login");
     }
-
-    const { accessToken, refreshToken } = await this.getTokens(
-      user.id,
-      user.email,
-    );
-    await this.updateRefreshToken(user.id, refreshToken);
-
-    return {
-      ...user,
-      accessToken,
-      refreshToken,
-    };
   }
 
   async logout(userId: string) {

@@ -101,8 +101,6 @@ export class AuthController {
   ) {
     const refreshToken = request.cookies["refresh_token"];
 
-    console.log(refreshToken);
-
     if (!refreshToken) {
       throw new UnauthorizedException("Refresh token not found");
     }
