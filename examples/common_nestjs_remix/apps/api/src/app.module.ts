@@ -3,7 +3,9 @@ import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
 import database from "./common/configuration/database";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as schema from "./storage/schema";
-import { ManagementModule } from "./management/management.module";
+import { AuthModule } from "./auth/auth.module";
+import { UsersModule } from "./users/users.module";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -25,7 +27,13 @@ import { ManagementModule } from "./management/management.module";
       },
       inject: [ConfigService],
     }),
-    ManagementModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: "15min" },
+    }),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

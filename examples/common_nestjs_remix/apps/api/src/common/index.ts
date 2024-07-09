@@ -1,4 +1,4 @@
-import { TObject, Type } from "@sinclair/typebox";
+import { TSchema, Type } from "@sinclair/typebox";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import * as schema from "src/storage/schema";
 
@@ -14,9 +14,15 @@ export class BaseResponse<T> {
 
 export const UUIDSchema = Type.String({ format: "uuid" });
 
-export function baseResponse(data: TObject) {
+export function baseResponse(data: TSchema) {
+  if (data.$type === "array") {
+    return Type.Object({
+      data: Type.Array(data.items),
+    });
+  }
+
   return Type.Object({
-    data,
+    data: data,
   });
 }
 
