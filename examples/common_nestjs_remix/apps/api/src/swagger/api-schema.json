@@ -55,6 +55,23 @@
         }
       }
     },
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/refresh": {
       "post": {
         "operationId": "AuthController_refreshTokens",
@@ -114,15 +131,103 @@
             }
           }
         }
+      },
+      "delete": {
+        "operationId": "UsersController_deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteUserResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/users/{id}/update": {
       "patch": {
         "operationId": "UsersController_updateUser",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserBody"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": ""
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}/change-password": {
+      "patch": {
+        "operationId": "UsersController_changePassword",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangePasswordResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -236,6 +341,9 @@
           "data"
         ]
       },
+      "LogoutResponse": {
+        "type": "null"
+      },
       "RefreshTokensBody": {
         "type": "object",
         "properties": {
@@ -314,6 +422,93 @@
         "required": [
           "data"
         ]
+      },
+      "UpdateUserBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "format": "email",
+            "type": "string"
+          }
+        }
+      },
+      "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ChangePasswordBody": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "minLength": 8,
+            "maxLength": 64,
+            "type": "string"
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "ChangePasswordResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteUserResponse": {
+        "type": "null"
       }
     }
   }

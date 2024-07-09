@@ -1,9 +1,9 @@
-import { omit } from "lodash";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
 import { eq, getTableColumns } from "drizzle-orm";
+import { omit } from "lodash";
 import { DatabasePg } from "src/common";
 import { users } from "src/storage/schema";
-import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -26,7 +26,7 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(id: string, data: { email: string }) {
+  async updateUser(id: string, data: { email?: string }) {
     const [user] = await this.db
       .update(users)
       .set(data)
@@ -60,6 +60,13 @@ export class UsersService {
   }
 
   async deleteUser(id: string) {
-    await this.db.delete(users).where(eq(users.id, id));
+    const [deleted] = await this.db
+      .delete(users)
+      .where(eq(users.id, id))
+      .returning();
+
+    if (!deleted) {
+      throw new NotFoundException("User not found");
+    }
   }
 }

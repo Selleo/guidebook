@@ -6,10 +6,11 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { eq } from "drizzle-orm";
+import * as bcrypt from "bcrypt";
+import { eq, getTableColumns } from "drizzle-orm";
+import { omit } from "lodash";
 import { DatabasePg } from "src/common";
 import { users } from "src/storage/schema";
-import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -70,6 +71,14 @@ export class AuthService {
     };
   }
 
+  async logout(userId: string) {
+    try {
+      await this.updateRefreshToken(userId, null);
+    } catch (error) {
+      throw new InternalServerErrorException("Error during logout");
+    }
+  }
+
   async refreshTokens(userId: string, refreshToken: string) {
     try {
       const [user] = await this.db
@@ -83,6 +92,7 @@ export class AuthService {
 
       const tokens = await this.getTokens(user.id, user.email);
       await this.updateRefreshToken(user.id, tokens.refreshToken);
+
       return tokens;
     } catch (error) {
       if (error instanceof UnauthorizedException) {
@@ -96,18 +106,15 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     try {
       const [user] = await this.db
-        .select()
+        .select(omit(getTableColumns(users), ["refreshToken"]))
         .from(users)
         .where(eq(users.email, email));
 
       if (user && (await bcrypt.compare(password, user.password))) {
-        const {
-          password: _password,
-          refreshToken: _refreshToken,
-          ...result
-        } = user;
+        const { password: _password, ...result } = user;
         return result;
       }
+
       return null;
     } catch (error) {
       throw new InternalServerErrorException("Error during user validation");
@@ -133,7 +140,10 @@ export class AuthService {
     }
   }
 
-  private async updateRefreshToken(userId: string, refreshToken: string) {
+  private async updateRefreshToken(
+    userId: string,
+    refreshToken: string | null,
+  ) {
     try {
       await this.db
         .update(users)

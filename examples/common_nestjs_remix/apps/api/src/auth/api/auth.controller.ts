@@ -21,6 +21,8 @@ import {
 import { refreshTokenSchema } from "../schemas/refresh-token";
 import { AuthGuard } from "@nestjs/passport";
 import { RefreshTokenGuard } from "src/utils/guards/refresh-token-guard";
+import { JwtAuthGuard } from "src/utils/guards/jwt-auth-guard";
+import { CurrentUser } from "src/utils/decorators/user.decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -67,6 +69,23 @@ export class AuthController {
     });
 
     return new BaseResponse(account);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("logout")
+  @Validate({
+    response: nullResponse(),
+  })
+  async logout(
+    @Res({ passthrough: true }) response: Response,
+    @CurrentUser() currentUser: { userId: string },
+  ): Promise<null> {
+    await this.authService.logout(currentUser.userId);
+
+    response.clearCookie("access_token");
+    response.clearCookie("refresh_token");
+
+    return null;
   }
 
   @UseGuards(RefreshTokenGuard)
