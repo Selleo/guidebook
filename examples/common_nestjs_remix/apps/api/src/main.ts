@@ -4,12 +4,15 @@ import { patchNestJsSwagger, applyFormats } from "nestjs-typebox";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { exportSchemaToFile } from "./utils/save-swagger-to-file";
 import * as cookieParser from "cookie-parser";
+import { setupValidation } from "./common";
 
 patchNestJsSwagger();
 applyFormats();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  setupValidation();
 
   app.use(cookieParser());
 

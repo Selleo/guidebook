@@ -115,7 +115,14 @@ export class UsersController {
     response: nullResponse(),
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
   })
-  async deleteUser(@Param("id") id: string): Promise<null> {
+  async deleteUser(
+    @Param("id") id: string,
+    @CurrentUser() currentUser: { userId: string },
+  ): Promise<null> {
+    if (currentUser.userId !== id) {
+      throw new ForbiddenException("You can only delete your own account");
+    }
+
     await this.usersService.deleteUser(id);
 
     return null;
