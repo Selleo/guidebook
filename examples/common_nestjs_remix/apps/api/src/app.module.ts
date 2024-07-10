@@ -6,11 +6,12 @@ import * as schema from "./storage/schema";
 import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
 import { JwtModule } from "@nestjs/jwt";
+import jwtConfig from "./common/configuration/jwt";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database],
+      load: [database, jwtConfig],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({
@@ -27,10 +28,20 @@ import { JwtModule } from "@nestjs/jwt";
       },
       inject: [ConfigService],
     }),
-    JwtModule.register({
+    JwtModule.registerAsync({
+      useFactory(configService: ConfigService) {
+        return {
+          secret: configService.get<string>("jwt.secret")!,
+          signOptions: {
+            expiresIn: configService.get<string>(
+              "JWT_EXPIRATION_TIME",
+              "15min",
+            ),
+          },
+        };
+      },
+      inject: [ConfigService],
       global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: "15min" },
     }),
     AuthModule,
     UsersModule,
