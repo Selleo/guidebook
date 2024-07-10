@@ -18,7 +18,6 @@ import {
   UUIDSchema,
 } from "src/common";
 import { CurrentUser } from "src/utils/decorators/user.decorator";
-import { JwtAuthGuard } from "src/utils/guards/jwt-auth-guard";
 import { RefreshTokenGuard } from "src/utils/guards/refresh-token-guard";
 import { AuthService } from "../auth.service";
 import { accountSchema } from "../schemas/account.schema";
@@ -29,6 +28,7 @@ import {
 import { LoginBody, loginSchema } from "../schemas/login";
 import { RefreshTokenBody } from "../schemas/refresh-token";
 import { TokenService } from "../token.service";
+import { Public } from "src/utils/decorators/public.decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -37,6 +37,7 @@ export class AuthController {
     private readonly tokenService: TokenService,
   ) {}
 
+  @Public()
   @Post("register")
   @Validate({
     request: [{ type: "body", schema: createAccountSchema }],
