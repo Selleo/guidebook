@@ -119,7 +119,17 @@
     "/users/{id}": {
       "get": {
         "operationId": "UsersController_getUserById",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
