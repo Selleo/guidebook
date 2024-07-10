@@ -25,8 +25,8 @@ import {
   CreateAccountBody,
   createAccountSchema,
 } from "../schemas/create-account.schema";
-import { LoginBody, loginSchema } from "../schemas/login";
-import { RefreshTokenBody } from "../schemas/refresh-token";
+import { LoginBody, loginSchema } from "../schemas/login.schema";
+import { RefreshTokenBody } from "../schemas/refresh-token.schema";
 import { TokenService } from "../token.service";
 import { Public } from "src/utils/decorators/public.decorator";
 

@@ -18,14 +18,17 @@ import { CurrentUser } from "src/utils/decorators/user.decorator";
 import {
   ChangePasswordBody,
   changePasswordSchema,
-} from "../schemas/change-password";
-import { UpdateUserBody, updateUserSchema } from "../schemas/update-user";
+} from "../schemas/change-password.schema";
+import {
+  UpdateUserBody,
+  updateUserSchema,
+} from "../schemas/update-user.schema";
 import {
   AllUsersResponse,
   allUsersSchema,
   UserResponse,
   userSchema,
-} from "../schemas/user";
+} from "../schemas/user.schema";
 import { UsersService } from "../users.service";
 
 @Controller("users")
