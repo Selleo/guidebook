@@ -51,6 +51,7 @@ export class AuthController {
     return new BaseResponse(account);
   }
 
+  @Public()
   @UseGuards(AuthGuard("local"))
   @Post("login")
   @Validate({
@@ -69,7 +70,6 @@ export class AuthController {
     return new BaseResponse(account);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post("logout")
   @Validate({
     response: nullResponse(),
@@ -84,6 +84,7 @@ export class AuthController {
     return null;
   }
 
+  @Public()
   @UseGuards(RefreshTokenGuard)
   @Post("refresh")
   @Validate({

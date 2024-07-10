@@ -4,9 +4,7 @@ import {
   Delete,
   ForbiddenException,
   Get,
-  Param,
   Patch,
-  UseGuards,
 } from "@nestjs/common";
 import { Static } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
@@ -17,7 +15,6 @@ import {
   UUIDSchema,
 } from "src/common";
 import { CurrentUser } from "src/utils/decorators/user.decorator";
-import { JwtAuthGuard } from "src/utils/guards/jwt-auth-guard";
 import {
   ChangePasswordBody,
   changePasswordSchema,
@@ -35,7 +32,6 @@ import { UsersService } from "../users.service";
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   @Validate({
     response: baseResponse(allUsersSchema),
@@ -46,20 +42,17 @@ export class UsersController {
     return new BaseResponse(users);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(":id")
   @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
     response: baseResponse(userSchema),
   })
-  async getUserById(
-    @Param() params: { id: string },
-  ): Promise<BaseResponse<UserResponse>> {
-    const user = await this.usersService.getUserById(params.id);
+  async getUserById(id: string): Promise<BaseResponse<UserResponse>> {
+    const user = await this.usersService.getUserById(id);
 
     return new BaseResponse(user);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(":id")
   @Validate({
     response: baseResponse(userSchema),
@@ -69,7 +62,7 @@ export class UsersController {
     ],
   })
   async updateUser(
-    @Param("id") id: string,
+    id: string,
     @Body() data: UpdateUserBody,
     @CurrentUser() currentUser: { userId: string },
   ): Promise<BaseResponse<Static<typeof userSchema>>> {
@@ -84,7 +77,6 @@ export class UsersController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(":id/change-password")
   @Validate({
     response: nullResponse(),
@@ -94,7 +86,7 @@ export class UsersController {
     ],
   })
   async changePassword(
-    @Param("id") id: string,
+    id: string,
     @Body() data: ChangePasswordBody,
     @CurrentUser() currentUser: { userId: string },
   ): Promise<null> {
@@ -106,14 +98,13 @@ export class UsersController {
     return null;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(":id")
   @Validate({
     response: nullResponse(),
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
   })
   async deleteUser(
-    @Param("id") id: string,
+    id: string,
     @CurrentUser() currentUser: { userId: string },
   ): Promise<null> {
     if (currentUser.userId !== id) {
