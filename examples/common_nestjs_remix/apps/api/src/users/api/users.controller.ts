@@ -36,7 +36,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get("all")
+  @Get()
   @Validate({
     response: baseResponse(allUsersSchema),
   })
@@ -60,7 +60,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(":id/update")
+  @Patch(":id")
   @Validate({
     response: baseResponse(userSchema),
     request: [
@@ -87,7 +87,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Patch(":id/change-password")
   @Validate({
-    response: baseResponse(userSchema),
+    response: nullResponse(),
     request: [
       { type: "param", name: "id", schema: UUIDSchema },
       { type: "body", schema: changePasswordSchema },
@@ -97,16 +97,13 @@ export class UsersController {
     @Param("id") id: string,
     @Body() data: ChangePasswordBody,
     @CurrentUser() currentUser: { userId: string },
-  ): Promise<BaseResponse<Static<typeof userSchema>>> {
+  ): Promise<null> {
     if (currentUser.userId !== id) {
       throw new ForbiddenException("You can only update your own account");
     }
-    const updatedUser = await this.usersService.changePassword(
-      id,
-      data.password,
-    );
+    await this.usersService.changePassword(id, data.password);
 
-    return new BaseResponse(updatedUser);
+    return null;
   }
 
   @UseGuards(JwtAuthGuard)

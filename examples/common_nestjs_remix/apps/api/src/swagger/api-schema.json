@@ -99,7 +99,7 @@
         }
       }
     },
-    "/users/all": {
+    "/users": {
       "get": {
         "operationId": "UsersController_getUsers",
         "parameters": [],
@@ -132,33 +132,6 @@
           }
         }
       },
-      "delete": {
-        "operationId": "UsersController_deleteUser",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteUserResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/{id}/update": {
       "patch": {
         "operationId": "UsersController_updateUser",
         "parameters": [
@@ -188,6 +161,31 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "UsersController_deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteUserResponse"
                 }
               }
             }
@@ -348,6 +346,7 @@
         "type": "object",
         "properties": {
           "id": {
+            "format": "uuid",
             "type": "string"
           }
         },
@@ -477,35 +476,7 @@
         ]
       },
       "ChangePasswordResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "createdAt": {
-                "type": "string"
-              },
-              "updatedAt": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "id",
-              "createdAt",
-              "updatedAt",
-              "email"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
+        "type": "null"
       },
       "DeleteUserResponse": {
         "type": "null"

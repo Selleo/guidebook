@@ -7,34 +7,43 @@ import {
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
-import { AuthService } from "../auth.service";
-import { Validate } from "nestjs-typebox";
-import { Static } from "@sinclair/typebox";
-import { createAccountSchema } from "../schemas/create-account";
-import { baseResponse, BaseResponse, nullResponse } from "src/common";
-import { accountSchema, accountIdSchema } from "../schemas/account";
-import { Response, Request } from "express";
-import {
-  ACCESS_TOKEN_EXPIRATION_TIME,
-  REFRESH_TOKEN_EXPIRATION_TIME,
-} from "../consts";
-import { refreshTokenSchema } from "../schemas/refresh-token";
 import { AuthGuard } from "@nestjs/passport";
-import { RefreshTokenGuard } from "src/utils/guards/refresh-token-guard";
-import { JwtAuthGuard } from "src/utils/guards/jwt-auth-guard";
+import { Static, Type } from "@sinclair/typebox";
+import { Request, Response } from "express";
+import { Validate } from "nestjs-typebox";
+import {
+  baseResponse,
+  BaseResponse,
+  nullResponse,
+  UUIDSchema,
+} from "src/common";
 import { CurrentUser } from "src/utils/decorators/user.decorator";
+import { JwtAuthGuard } from "src/utils/guards/jwt-auth-guard";
+import { RefreshTokenGuard } from "src/utils/guards/refresh-token-guard";
+import { AuthService } from "../auth.service";
+import { accountSchema } from "../schemas/account.schema";
+import {
+  CreateAccountBody,
+  createAccountSchema,
+} from "../schemas/create-account.schema";
+import { LoginBody, loginSchema } from "../schemas/login";
+import { RefreshTokenBody } from "../schemas/refresh-token";
+import { TokenService } from "../token.service";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   @Post("register")
   @Validate({
-    response: baseResponse(accountSchema),
     request: [{ type: "body", schema: createAccountSchema }],
+    response: baseResponse(accountSchema),
   })
   async register(
-    data: Static<typeof createAccountSchema>,
+    data: CreateAccountBody,
   ): Promise<BaseResponse<Static<typeof accountSchema>>> {
     const account = await this.authService.register(data.email, data.password);
 
