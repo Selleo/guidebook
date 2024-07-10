@@ -53,29 +53,17 @@ export class AuthController {
   @UseGuards(AuthGuard("local"))
   @Post("login")
   @Validate({
+    request: [{ type: "body", schema: loginSchema }],
     response: baseResponse(accountSchema),
-    request: [{ type: "body", schema: createAccountSchema }],
   })
   async login(
-    @Body() data: Static<typeof createAccountSchema>,
+    @Body() data: LoginBody,
     @Res({ passthrough: true }) response: Response,
   ): Promise<BaseResponse<Static<typeof accountSchema>>> {
     const { accessToken, refreshToken, ...account } =
       await this.authService.login(data);
 
-    response.cookie("access_token", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: ACCESS_TOKEN_EXPIRATION_TIME,
-    });
-
-    response.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: REFRESH_TOKEN_EXPIRATION_TIME,
-    });
+    this.tokenService.setTokenCookies(response, accessToken, refreshToken);
 
     return new BaseResponse(account);
   }
@@ -90,9 +78,7 @@ export class AuthController {
     @CurrentUser() currentUser: { userId: string },
   ): Promise<null> {
     await this.authService.logout(currentUser.userId);
-
-    response.clearCookie("access_token");
-    response.clearCookie("refresh_token");
+    this.tokenService.clearTokenCookies(response);
 
     return null;
   }
@@ -100,14 +86,14 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Post("refresh")
   @Validate({
+    request: [{ type: "body", schema: Type.Object({ id: UUIDSchema }) }],
     response: nullResponse(),
-    request: [{ type: "body", schema: accountIdSchema }],
   })
   async refreshTokens(
-    @Body() data: Static<typeof refreshTokenSchema>,
+    @Body() data: RefreshTokenBody,
     @Res({ passthrough: true }) response: Response,
     @Req() request: Request,
-  ) {
+  ): Promise<null> {
     const refreshToken = request.cookies["refresh_token"];
 
     if (!refreshToken) {
@@ -117,19 +103,7 @@ export class AuthController {
     const { accessToken, refreshToken: newRefreshToken } =
       await this.authService.refreshTokens(data.id, refreshToken);
 
-    response.cookie("access_token", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: ACCESS_TOKEN_EXPIRATION_TIME,
-    });
-
-    response.cookie("refresh_token", newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: REFRESH_TOKEN_EXPIRATION_TIME,
-    });
+    this.tokenService.setTokenCookies(response, accessToken, newRefreshToken);
 
     return null;
   }
