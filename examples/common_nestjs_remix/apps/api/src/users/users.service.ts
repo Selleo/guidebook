@@ -61,18 +61,12 @@ export class UsersService {
   }
 
   public async deleteUser(id: string) {
-    const deleted = await this.db.transaction(async (trx) => {
-      await trx.delete(credentials).where(eq(credentials.userId, id));
+    const [deletedUser] = await this.db
+      .delete(users)
+      .where(eq(users.id, id))
+      .returning();
 
-      const [deletedUser] = await trx
-        .delete(users)
-        .where(eq(users.id, id))
-        .returning();
-
-      return deletedUser;
-    });
-
-    if (!deleted) {
+    if (!deletedUser) {
       throw new NotFoundException("User not found");
     }
   }
