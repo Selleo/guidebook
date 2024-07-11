@@ -4,17 +4,21 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import { credentials, users } from "src/storage/schema";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private jwtService: JwtService,
+    private usersService: UsersService,
+    private configService: ConfigService,
   ) {}
 
   public async register(email: string, password: string) {

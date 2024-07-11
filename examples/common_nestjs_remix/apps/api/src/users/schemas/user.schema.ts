@@ -1,11 +1,7 @@
 import { Type, Static } from "@sinclair/typebox";
-import { createSelectSchema } from "drizzle-typebox";
-import { users } from "src/storage/schema";
+import { commonUserSchema } from "src/common/schemas/common-user.schema";
 
-const schema = createSelectSchema(users);
-export const userSchema = Type.Omit(schema, ["password", "refreshToken"]);
+export const allUsersSchema = Type.Array(commonUserSchema);
 
-export const allUsersSchema = Type.Array(userSchema);
-
-export type UserResponse = Static<typeof userSchema>;
+export type UserResponse = Static<typeof commonUserSchema>;
 export type AllUsersResponse = Static<typeof allUsersSchema>;
