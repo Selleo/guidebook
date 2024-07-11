@@ -4,8 +4,9 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
+import { extractToken } from "src/utils/extract-token";
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {
@@ -16,7 +17,7 @@ export class RefreshTokenGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const refreshToken = request.cookies["refresh_token"];
+    const refreshToken = extractToken(request, "refresh_token");
 
     if (!refreshToken) {
       throw new UnauthorizedException("No refresh token provided");
@@ -28,6 +29,7 @@ export class RefreshTokenGuard implements CanActivate {
       });
 
       request["user"] = payload;
+      request["refreshToken"] = refreshToken;
 
       return true;
     } catch {

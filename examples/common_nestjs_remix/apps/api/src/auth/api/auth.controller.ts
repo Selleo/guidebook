@@ -1,3 +1,4 @@
+import { UUIDType } from "src/common/index";
 import {
   Body,
   Controller,
@@ -73,6 +74,7 @@ export class AuthController {
     return null;
   }
 
+  @Public()
   @UseGuards(RefreshTokenGuard)
   @Post("refresh")
   @Validate({
@@ -80,9 +82,9 @@ export class AuthController {
   })
   async refreshTokens(
     @Res({ passthrough: true }) response: Response,
-    @Req() request: Request,
+    @Req() request: Request & { refreshToken: UUIDType },
   ): Promise<null> {
-    const refreshToken = request.cookies["refresh_token"];
+    const refreshToken = request["refreshToken"];
 
     if (!refreshToken) {
       throw new UnauthorizedException("Refresh token not found");

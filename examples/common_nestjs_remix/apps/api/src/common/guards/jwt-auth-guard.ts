@@ -7,6 +7,7 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
+import { extractToken } from "src/utils/extract-token";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -27,7 +28,7 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const token = request.cookies["access_token"];
+    const token = extractToken(request, "access_token");
 
     if (!token) {
       throw new UnauthorizedException("Access token not found");
@@ -37,7 +38,9 @@ export class JwtAuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>("jwt.secret"),
       });
+
       request["user"] = payload;
+
       return true;
     } catch {
       throw new UnauthorizedException("Invalid access token");
