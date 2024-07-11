@@ -8,27 +8,20 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { Static, Type } from "@sinclair/typebox";
+import { Static } from "@sinclair/typebox";
 import { Request, Response } from "express";
 import { Validate } from "nestjs-typebox";
-import {
-  baseResponse,
-  BaseResponse,
-  nullResponse,
-  UUIDSchema,
-} from "src/common";
-import { CurrentUser } from "src/utils/decorators/user.decorator";
-import { RefreshTokenGuard } from "src/utils/guards/refresh-token-guard";
+import { baseResponse, BaseResponse, nullResponse } from "src/common";
+import { Public } from "src/common/decorators/public.decorator";
+import { RefreshTokenGuard } from "src/common/guards/refresh-token-guard";
 import { AuthService } from "../auth.service";
-import { accountSchema } from "../schemas/account.schema";
 import {
   CreateAccountBody,
   createAccountSchema,
 } from "../schemas/create-account.schema";
 import { LoginBody, loginSchema } from "../schemas/login.schema";
-import { RefreshTokenBody } from "../schemas/refresh-token.schema";
 import { TokenService } from "../token.service";
-import { Public } from "src/utils/decorators/public.decorator";
+import { commonUserSchema } from "src/common/schemas/common-user.schema";
 
 @Controller("auth")
 export class AuthController {
@@ -41,11 +34,11 @@ export class AuthController {
   @Post("register")
   @Validate({
     request: [{ type: "body", schema: createAccountSchema }],
-    response: baseResponse(accountSchema),
+    response: baseResponse(commonUserSchema),
   })
   async register(
     data: CreateAccountBody,
-  ): Promise<BaseResponse<Static<typeof accountSchema>>> {
+  ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     const account = await this.authService.register(data.email, data.password);
 
     return new BaseResponse(account);
@@ -56,12 +49,12 @@ export class AuthController {
   @Post("login")
   @Validate({
     request: [{ type: "body", schema: loginSchema }],
-    response: baseResponse(accountSchema),
+    response: baseResponse(commonUserSchema),
   })
   async login(
     @Body() data: LoginBody,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<BaseResponse<Static<typeof accountSchema>>> {
+  ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     const { accessToken, refreshToken, ...account } =
       await this.authService.login(data);
 
