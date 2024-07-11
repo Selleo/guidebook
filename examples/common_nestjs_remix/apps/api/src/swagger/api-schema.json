@@ -76,16 +76,6 @@
       "post": {
         "operationId": "AuthController_refreshTokens",
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshTokensBody"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -351,18 +341,6 @@
       },
       "LogoutResponse": {
         "type": "null"
-      },
-      "RefreshTokensBody": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "format": "uuid",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id"
-        ]
       },
       "RefreshTokensResponse": {
         "type": "null"

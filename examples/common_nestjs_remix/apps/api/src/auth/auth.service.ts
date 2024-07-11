@@ -54,7 +54,6 @@ export class AuthService {
       user.id,
       user.email,
     );
-    await this.updateRefreshToken(user.id, refreshToken);
 
     return {
       ...user,
@@ -63,64 +62,44 @@ export class AuthService {
     };
   }
 
-  public async logout(userId: string) {
-    await this.updateRefreshToken(userId, null);
-  }
+  public async refreshTokens(refreshToken: string) {
+    const payload = await this.jwtService.verifyAsync(refreshToken, {
+      secret: this.configService.get<string>("jwt.refreshSecret"),
+      ignoreExpiration: false,
+    });
 
-  public async refreshTokens(userId: string, refreshToken: string) {
-    const [user] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.id, userId));
-
+    const user = await this.usersService.getUserById(payload.userId);
     if (!user) {
       throw new UnauthorizedException("User not found");
     }
 
-    const [userCredentials] = await this.db
-      .select()
-      .from(credentials)
-      .where(eq(credentials.userId, userId));
-
-    if (!userCredentials || userCredentials.refreshToken !== refreshToken) {
-      throw new UnauthorizedException("Invalid refresh token");
-    }
-
-    try {
-      await this.jwtService.verifyAsync(refreshToken, {
-        secret: process.env.REFRESH_SECRET,
-      });
-    } catch {
-      throw new UnauthorizedException("Invalid refresh token");
-    }
-
     const tokens = await this.getTokens(user.id, user.email);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-
     return tokens;
   }
 
   public async validateUser(email: string, password: string) {
-    const [user] = await this.db
-      .select()
+    const [userWithCredentials] = await this.db
+      .select({
+        id: users.id,
+        email: users.email,
+        password: credentials.password,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
       .from(users)
+      .leftJoin(credentials, eq(users.id, credentials.userId))
       .where(eq(users.email, email));
 
-    if (!user) return null;
-
-    const [userCredentials] = await this.db
-      .select()
-      .from(credentials)
-      .where(eq(credentials.userId, user.id));
-
-    if (!userCredentials) return null;
+    if (!userWithCredentials || !userWithCredentials.password) return null;
 
     const isPasswordValid = await bcrypt.compare(
       password,
-      userCredentials.password,
+      userWithCredentials.password,
     );
 
     if (!isPasswordValid) return null;
+
+    const { password: _, ...user } = userWithCredentials;
 
     return user;
   }
@@ -129,24 +108,20 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         { userId, email },
-        { expiresIn: "15m", secret: process.env.JWT_SECRET },
+        {
+          expiresIn: "15m",
+          secret: this.configService.get<string>("jwt.secret"),
+        },
       ),
       this.jwtService.signAsync(
         { userId, email },
-        { expiresIn: "7d", secret: process.env.REFRESH_SECRET },
+        {
+          expiresIn: "7d",
+          secret: this.configService.get<string>("jwt.refreshSecret"),
+        },
       ),
     ]);
 
     return { accessToken, refreshToken };
-  }
-
-  private async updateRefreshToken(
-    userId: string,
-    refreshToken: string | null,
-  ) {
-    await this.db
-      .update(credentials)
-      .set({ refreshToken })
-      .where(eq(credentials.userId, userId));
   }
 }

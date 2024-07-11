@@ -1,7 +1,6 @@
-import { TSchema, Type, FormatRegistry } from "@sinclair/typebox";
+import { TSchema, Type } from "@sinclair/typebox";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import * as schema from "src/storage/schema";
-import { validate as uuidValidate } from "uuid";
 
 export type DatabasePg = PostgresJsDatabase<typeof schema>;
 
@@ -28,8 +27,4 @@ export function baseResponse(data: TSchema) {
 
 export function nullResponse() {
   return Type.Null();
-}
-
-export function setupValidation() {
-  FormatRegistry.Set("uuid", (value) => uuidValidate(value));
 }

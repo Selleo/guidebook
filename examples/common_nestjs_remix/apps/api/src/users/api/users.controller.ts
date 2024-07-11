@@ -14,7 +14,7 @@ import {
   nullResponse,
   UUIDSchema,
 } from "src/common";
-import { CurrentUser } from "src/utils/decorators/user.decorator";
+import { CurrentUser } from "src/common/decorators/user.decorator";
 import {
   ChangePasswordBody,
   changePasswordSchema,
@@ -27,9 +27,12 @@ import {
   AllUsersResponse,
   allUsersSchema,
   UserResponse,
-  userSchema,
 } from "../schemas/user.schema";
 import { UsersService } from "../users.service";
+import {
+  CommonUser,
+  commonUserSchema,
+} from "src/common/schemas/common-user.schema";
 
 @Controller("users")
 export class UsersController {
@@ -48,7 +51,7 @@ export class UsersController {
   @Get(":id")
   @Validate({
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
-    response: baseResponse(userSchema),
+    response: baseResponse(commonUserSchema),
   })
   async getUserById(id: string): Promise<BaseResponse<UserResponse>> {
     const user = await this.usersService.getUserById(id);
@@ -58,7 +61,7 @@ export class UsersController {
 
   @Patch(":id")
   @Validate({
-    response: baseResponse(userSchema),
+    response: baseResponse(commonUserSchema),
     request: [
       { type: "param", name: "id", schema: UUIDSchema },
       { type: "body", schema: updateUserSchema },
@@ -67,10 +70,10 @@ export class UsersController {
   async updateUser(
     id: string,
     @Body() data: UpdateUserBody,
-    @CurrentUser() currentUser: { userId: string },
-  ): Promise<BaseResponse<Static<typeof userSchema>>> {
+    @CurrentUser() currentUser: { id: CommonUser["id"] },
+  ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     {
-      if (currentUser.userId !== id) {
+      if (currentUser.id !== id) {
         throw new ForbiddenException("You can only update your own account");
       }
 

@@ -67,25 +67,18 @@ export class AuthController {
   @Validate({
     response: nullResponse(),
   })
-  async logout(
-    @Res({ passthrough: true }) response: Response,
-    @CurrentUser() currentUser: { userId: string },
-  ): Promise<null> {
-    await this.authService.logout(currentUser.userId);
+  async logout(@Res({ passthrough: true }) response: Response): Promise<null> {
     this.tokenService.clearTokenCookies(response);
 
     return null;
   }
 
-  @Public()
   @UseGuards(RefreshTokenGuard)
   @Post("refresh")
   @Validate({
-    request: [{ type: "body", schema: Type.Object({ id: UUIDSchema }) }],
     response: nullResponse(),
   })
   async refreshTokens(
-    @Body() data: RefreshTokenBody,
     @Res({ passthrough: true }) response: Response,
     @Req() request: Request,
   ): Promise<null> {
@@ -96,7 +89,7 @@ export class AuthController {
     }
 
     const { accessToken, refreshToken: newRefreshToken } =
-      await this.authService.refreshTokens(data.id, refreshToken);
+      await this.authService.refreshTokens(refreshToken);
 
     this.tokenService.setTokenCookies(response, accessToken, newRefreshToken);
 

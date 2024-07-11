@@ -11,8 +11,7 @@ export const credentials = pgTable("credentials", {
   ...id,
   ...timestamps,
   userId: uuid("user_id")
-    .references(() => users.id)
+    .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   password: text("password").notNull(),
-  refreshToken: text("refresh_token"),
 });
