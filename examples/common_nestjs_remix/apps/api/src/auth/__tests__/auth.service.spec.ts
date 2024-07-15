@@ -1,13 +1,7 @@
 import { ConflictException, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import {
-  authService,
-  db,
-  jwtService,
-  userFactory,
-  usersService,
-} from "test/jest-setup";
+import { authService, db, jwtService, userFactory } from "test/jest-setup";
 import { credentials, users } from "../../storage/schema";
 
 describe("AuthService", () => {
@@ -109,40 +103,6 @@ describe("AuthService", () => {
           password: "wrongpassword",
         }),
       ).rejects.toThrow(UnauthorizedException);
-    });
-  });
-
-  describe.skip("refreshTokens", () => {
-    it("should refresh tokens successfully", async () => {
-      const userId = crypto.randomUUID();
-
-      (jwtService.verifyAsync as jest.Mock).mockResolvedValueOnce({ userId });
-      usersService.getUserById(userId);
-      (jwtService.signAsync as jest.Mock).mockResolvedValueOnce(
-        "new_access_token",
-      );
-      (jwtService.signAsync as jest.Mock).mockResolvedValueOnce(
-        "new_refresh_token",
-      );
-
-      const result = await authService.refreshTokens("refresh_token");
-
-      expect(result).toEqual({
-        accessToken: "new_access_token",
-        refreshToken: "new_refresh_token",
-      });
-    });
-
-    it("should throw UnauthorizedException for invalid refresh token", async () => {
-      (jwtService.verifyAsync as jest.Mock).mockRejectedValueOnce(new Error());
-
-      await expect(authService.refreshTokens("invalid_token")).rejects.toThrow(
-        UnauthorizedException,
-      );
-
-      await expect(authService.refreshTokens("invalid_token")).rejects.toThrow(
-        "Invalid refresh token",
-      );
     });
   });
 
