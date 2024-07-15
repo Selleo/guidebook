@@ -3,4 +3,8 @@ import { validate as uuidValidate } from "uuid";
 
 export function setupValidation() {
   FormatRegistry.Set("uuid", (value) => uuidValidate(value));
+  FormatRegistry.Set("email", (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  });
 }

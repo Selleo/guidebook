@@ -1,8 +1,13 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
-import { credentials, users } from "src/storage/schema";
+import { credentials, users } from "../storage/schema";
 
 @Injectable()
 export class UsersService {
@@ -43,7 +48,7 @@ export class UsersService {
     return updatedUser;
   }
 
-  async changePassword(id: string, password: string) {
+  async changePassword(id: string, oldPassword: string, newPassword: string) {
     const [existingUser] = await this.db
       .select()
       .from(users)

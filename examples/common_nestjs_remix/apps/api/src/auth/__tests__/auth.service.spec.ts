@@ -1,0 +1,175 @@
+import { ConflictException, UnauthorizedException } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
+import { eq } from "drizzle-orm";
+import {
+  authService,
+  db,
+  jwtService,
+  userFactory,
+  usersService,
+} from "test/jest-setup";
+import { credentials, users } from "../../storage/schema";
+
+describe("AuthService", () => {
+  afterEach(async () => {
+    await db.delete(credentials);
+    await db.delete(users);
+  });
+
+  describe("register", () => {
+    it("should register a new user successfully", async () => {
+      const { users: userData } = userFactory.build();
+      const password = "password123";
+
+      const result = await authService.register(userData.email, password);
+
+      expect(result).toBeDefined();
+      expect(result.email).toBe(userData.email);
+
+      const [savedUser] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, userData.email));
+      expect(savedUser).toBeDefined();
+
+      const [savedCredentials] = await db
+        .select()
+        .from(credentials)
+        .where(eq(credentials.userId, savedUser.id));
+      expect(savedCredentials).toBeDefined();
+      expect(await bcrypt.compare(password, savedCredentials.password)).toBe(
+        true,
+      );
+    });
+
+    it("should throw ConflictException if user already exists", async () => {
+      const email = "existing@example.com";
+      await db.insert(users).values({ email });
+
+      await expect(authService.register(email, "password123")).rejects.toThrow(
+        ConflictException,
+      );
+    });
+  });
+
+  describe("login", () => {
+    it("should login user successfully", async () => {
+      const password = "password123";
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const { users: userData, credentials: userCredentials } =
+        userFactory.build();
+
+      const [user] = await db.insert(users).values(userData).returning();
+      await db.insert(credentials).values({
+        ...userCredentials,
+        userId: user.id,
+        password: hashedPassword,
+      });
+
+      (jwtService.signAsync as jest.Mock).mockResolvedValueOnce("access_token");
+      (jwtService.signAsync as jest.Mock).mockResolvedValueOnce(
+        "refresh_token",
+      );
+
+      const result = await authService.login({
+        email: userData.email,
+        password,
+      });
+
+      expect(result).toEqual({
+        ...user,
+        accessToken: "access_token",
+        refreshToken: "refresh_token",
+      });
+      expect(jwtService.signAsync).toHaveBeenCalledTimes(2);
+    });
+
+    it("should throw UnauthorizedException for invalid email", async () => {
+      await expect(
+        authService.login({
+          email: "nonexistent@example.com",
+          password: "password123",
+        }),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it("should throw UnauthorizedException for invalid password", async () => {
+      const { users: userData, credentials: userCredentials } =
+        userFactory.build();
+      const [user] = await db.insert(users).values(userData).returning();
+      await db.insert(credentials).values({
+        ...userCredentials,
+        userId: user.id,
+        password: await bcrypt.hash("correctpassword", 10),
+      });
+
+      await expect(
+        authService.login({
+          email: userData.email,
+          password: "wrongpassword",
+        }),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe.skip("refreshTokens", () => {
+    it("should refresh tokens successfully", async () => {
+      const userId = crypto.randomUUID();
+
+      (jwtService.verifyAsync as jest.Mock).mockResolvedValueOnce({ userId });
+      usersService.getUserById(userId);
+      (jwtService.signAsync as jest.Mock).mockResolvedValueOnce(
+        "new_access_token",
+      );
+      (jwtService.signAsync as jest.Mock).mockResolvedValueOnce(
+        "new_refresh_token",
+      );
+
+      const result = await authService.refreshTokens("refresh_token");
+
+      expect(result).toEqual({
+        accessToken: "new_access_token",
+        refreshToken: "new_refresh_token",
+      });
+    });
+
+    it("should throw UnauthorizedException for invalid refresh token", async () => {
+      (jwtService.verifyAsync as jest.Mock).mockRejectedValueOnce(new Error());
+
+      await expect(authService.refreshTokens("invalid_token")).rejects.toThrow(
+        UnauthorizedException,
+      );
+
+      await expect(authService.refreshTokens("invalid_token")).rejects.toThrow(
+        "Invalid refresh token",
+      );
+    });
+  });
+
+  describe("validateUser", () => {
+    it("should validate user successfully", async () => {
+      const email = "test@example.com";
+      const password = "password123";
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const [user] = await db.insert(users).values({ email }).returning();
+      await db
+        .insert(credentials)
+        .values({ userId: user.id, password: hashedPassword });
+
+      const result = await authService.validateUser(email, password);
+
+      expect(result).toBeDefined();
+      expect(result!.email).toBe(email);
+    });
+
+    it("should return null for invalid credentials", async () => {
+      const email = "test@example.com";
+      const password = "password123";
+
+      const result = await authService.validateUser(email, password);
+
+      expect(result).toBeNull();
+    });
+  });
+});

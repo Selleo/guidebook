@@ -70,10 +70,10 @@ export class UsersController {
   async updateUser(
     id: string,
     @Body() data: UpdateUserBody,
-    @CurrentUser() currentUser: { id: CommonUser["id"] },
+    @CurrentUser() currentUser: { userId: CommonUser["id"] },
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     {
-      if (currentUser.id !== id) {
+      if (currentUser.userId !== id) {
         throw new ForbiddenException("You can only update your own account");
       }
 
@@ -99,7 +99,11 @@ export class UsersController {
     if (currentUser.userId !== id) {
       throw new ForbiddenException("You can only update your own account");
     }
-    await this.usersService.changePassword(id, data.password);
+    await this.usersService.changePassword(
+      id,
+      data.oldPassword,
+      data.newPassword,
+    );
 
     return null;
   }

@@ -1,0 +1,156 @@
+import { isArray } from "lodash";
+import request from "supertest";
+import { app, authService, userFactory } from "../../../test/jest-e2e-setup";
+
+describe("AuthController (e2e)", () => {
+  describe("POST /auth/register", () => {
+    it("should register a new user", async () => {
+      const { users: newUser, credentials: newCredentials } =
+        userFactory.build();
+
+      const response = await request(app.getHttpServer())
+        .post("/auth/register")
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .send({
+          email: newUser.email,
+          password: newCredentials.password,
+        });
+
+      expect(response.status).toEqual(201);
+      expect(response.body.data).toHaveProperty("id");
+      expect(response.body.data.email).toBe(newUser.email);
+    });
+
+    it("should return 409 if user already exists", async () => {
+      const existingUser = {
+        email: "existing@example.com",
+        password: "password123",
+      };
+
+      await authService.register(existingUser.email, existingUser.password);
+
+      await request(app.getHttpServer())
+        .post("/auth/register")
+        .send(existingUser)
+        .expect(409);
+    });
+  });
+
+  describe("POST /auth/login", () => {
+    it("should login and return user data with cookies", async () => {
+      const user = userFactory.build().users;
+      const password = "password123";
+      await authService.register(user.email, password);
+
+      const response = await request(app.getHttpServer())
+        .post("/auth/login")
+        .send({
+          email: user.email,
+          password: password,
+        })
+        .expect(201);
+
+      expect(response.body.data).toHaveProperty("id");
+      expect(response.body.data.email).toBe(user.email);
+      expect(response.headers["set-cookie"]).toBeDefined();
+      expect(response.headers["set-cookie"].length).toBe(2);
+    });
+
+    it("should return 401 for invalid credentials", async () => {
+      await request(app.getHttpServer())
+        .post("/auth/login")
+        .send({
+          email: "wrong@example.com",
+          password: "wrongpassword",
+        })
+        .expect(401);
+    });
+  });
+
+  describe("POST /auth/logout", () => {
+    it("should clear token cookies for a logged-in user", async () => {
+      const user = userFactory.build().users;
+      const password = "password123";
+      await authService.register(user.email, password);
+
+      const loginResponse = await request(app.getHttpServer())
+        .post("/auth/login")
+        .send({
+          email: user.email,
+          password: password,
+        })
+        .expect(201);
+
+      const cookies = loginResponse.headers["set-cookie"];
+
+      let accessToken = "";
+      let refreshToken = "";
+
+      if (isArray(cookies)) {
+        cookies.forEach((cookie) => {
+          if (cookie.startsWith("access_token=")) {
+            accessToken = cookie;
+          } else if (cookie.startsWith("refresh_token=")) {
+            refreshToken = cookie;
+          }
+        });
+      }
+
+      const logoutResponse = await request(app.getHttpServer())
+        .post("/auth/logout")
+        .set("Cookie", [accessToken, refreshToken].filter(Boolean))
+        .expect(201);
+
+      expect(logoutResponse.headers["set-cookie"]).toBeDefined();
+      const logoutCookies = logoutResponse.headers["set-cookie"];
+
+      expect(logoutCookies.length).toBe(2);
+      expect(logoutCookies[0]).toContain("access_token=;");
+      expect(logoutCookies[1]).toContain("refresh_token=;");
+    });
+  });
+
+  describe("POST /auth/refresh", () => {
+    it("should refresh tokens", async () => {
+      const user = userFactory.build().users;
+      const password = "password123";
+      await authService.register(user.email, password);
+
+      const loginResponse = await request(app.getHttpServer())
+        .post("/auth/login")
+        .send({
+          email: user.email,
+          password: password,
+        })
+        .expect(201);
+
+      const cookies = loginResponse.headers["set-cookie"];
+
+      let refreshToken = "";
+
+      if (isArray(cookies)) {
+        cookies.forEach((cookie) => {
+          if (cookie.startsWith("refresh_token=")) {
+            refreshToken = cookie;
+          }
+        });
+      }
+
+      const response = await request(app.getHttpServer())
+        .post("/auth/refresh")
+        .set("Cookie", [refreshToken])
+        .expect(201);
+
+      expect(response.headers["set-cookie"]).toBeDefined();
+      expect(response.headers["set-cookie"].length).toBe(2);
+    });
+
+    it("should return 401 for invalid refresh token", async () => {
+      await request(app.getHttpServer())
+        .post("/auth/refresh")
+        .set("Cookie", ["refreshToken=invalid_token"])
+        .expect(401);
+    });
+  });
+});

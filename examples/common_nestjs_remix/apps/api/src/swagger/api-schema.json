@@ -453,14 +453,20 @@
       "ChangePasswordBody": {
         "type": "object",
         "properties": {
-          "password": {
+          "newPassword": {
+            "minLength": 8,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "oldPassword": {
             "minLength": 8,
             "maxLength": 64,
             "type": "string"
           }
         },
         "required": [
-          "password"
+          "newPassword",
+          "oldPassword"
         ]
       },
       "ChangePasswordResponse": {

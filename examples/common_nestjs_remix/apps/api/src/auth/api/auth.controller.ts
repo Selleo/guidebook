@@ -1,4 +1,3 @@
-import { UUIDType } from "src/common/index";
 import {
   Body,
   Controller,
@@ -15,6 +14,8 @@ import { Validate } from "nestjs-typebox";
 import { baseResponse, BaseResponse, nullResponse } from "src/common";
 import { Public } from "src/common/decorators/public.decorator";
 import { RefreshTokenGuard } from "src/common/guards/refresh-token-guard";
+import { UUIDType } from "src/common/index";
+import { commonUserSchema } from "src/common/schemas/common-user.schema";
 import { AuthService } from "../auth.service";
 import {
   CreateAccountBody,
@@ -22,7 +23,6 @@ import {
 } from "../schemas/create-account.schema";
 import { LoginBody, loginSchema } from "../schemas/login.schema";
 import { TokenService } from "../token.service";
-import { commonUserSchema } from "src/common/schemas/common-user.schema";
 
 @Controller("auth")
 export class AuthController {
