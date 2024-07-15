@@ -1,11 +1,27 @@
+import { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { app, authService, userFactory } from "../../../test/jest-e2e-setup";
-import { CommonUser } from "../../common/schemas/common-user.schema";
+import { AuthService } from "../../../src/auth/auth.service";
+import { CommonUser } from "../../../src/common/schemas/common-user.schema";
+import { createE2ETest } from "../../../test/create-e2e-test";
+import { createUsersFactory } from "../../../test/factory/user.factory";
 
 describe("UsersController (e2e)", () => {
+  let app: INestApplication;
+  let authService: AuthService;
   let testUser: CommonUser;
   let cookies: string;
   let testCredentials: { password: string };
+  const userFactory = createUsersFactory();
+
+  beforeAll(async () => {
+    const { app: testApp, getService } = await createE2ETest();
+    app = testApp;
+    authService = getService(AuthService);
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
 
   beforeEach(async () => {
     const { users: newUser, credentials } = userFactory.build();
@@ -58,7 +74,7 @@ describe("UsersController (e2e)", () => {
       const updateData = { email: "newemail@example.com" };
       const response = await request(app.getHttpServer())
         .patch(`/users/${testUser.id}`)
-        .set("Cookie", [...cookies])
+        .set("Cookie", cookies)
         .send(updateData)
         .expect(200);
 
