@@ -18,7 +18,7 @@ export function environmentVariablesFactory() {
     get: jest.fn((key: string) => {
       switch (key) {
         case "DATABASE_URL":
-          return `${process.env.DATABASE_URL}/terhal_test`;
+          return process.env.DATABASE_URL;
         case "JWT_SECRET":
           return "secret";
         case "DEBUG":
