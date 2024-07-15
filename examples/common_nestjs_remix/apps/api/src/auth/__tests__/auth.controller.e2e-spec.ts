@@ -1,8 +1,21 @@
+import { INestApplication } from "@nestjs/common";
 import { isArray } from "lodash";
 import request from "supertest";
-import { app, authService, userFactory } from "../../../test/jest-e2e-setup";
+import { createUsersFactory } from "../../../test/factory/user.factory";
+import { createE2ETest } from "../../../test/create-e2e-test";
+import { AuthService } from "../auth.service";
 
 describe("AuthController (e2e)", () => {
+  let app: INestApplication;
+  let authService: AuthService;
+  const userFactory = createUsersFactory();
+
+  beforeAll(async () => {
+    const { app: testApp, getService } = await createE2ETest();
+    app = testApp;
+    authService = getService(AuthService);
+  });
+
   describe("POST /auth/register", () => {
     it("should register a new user", async () => {
       const { users: newUser, credentials: newCredentials } =

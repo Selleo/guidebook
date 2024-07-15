@@ -1,10 +1,34 @@
 import { ConflictException, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import { authService, db, jwtService, userFactory } from "test/jest-setup";
+import { AuthService } from "../../../src/auth/auth.service";
+import { JwtService } from "@nestjs/jwt";
 import { credentials, users } from "../../storage/schema";
+import { DatabasePg } from "../../../src/common";
+import { createUnitTest, TestContext } from "../../../test/create-unit-test";
+import { createUsersFactory } from "../../../test/factory/user.factory";
 
 describe("AuthService", () => {
+  let testContext: TestContext;
+  let authService: AuthService;
+  let jwtService: JwtService;
+  let db: DatabasePg;
+  const userFactory = createUsersFactory();
+
+  beforeAll(async () => {
+    testContext = await createUnitTest();
+    authService = testContext.getService(AuthService);
+    jwtService = testContext.getService(JwtService);
+    db = testContext.db;
+  });
+
+  afterAll(async () => {
+    if (testContext.container) {
+      await testContext.container.stop();
+    }
+    await testContext.module.close();
+  });
+
   afterEach(async () => {
     await db.delete(credentials);
     await db.delete(users);

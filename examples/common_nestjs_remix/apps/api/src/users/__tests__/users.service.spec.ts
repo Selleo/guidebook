@@ -1,10 +1,31 @@
 import { NotFoundException, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import { db, userFactory, usersService } from "test/jest-setup";
 import { credentials, users } from "../../storage/schema";
+import { DatabasePg } from "src/common";
+import { TestContext, createUnitTest } from "../../../test/create-unit-test";
+import { UsersService } from "../users.service";
+import { createUsersFactory } from "../../../test/factory/user.factory";
 
 describe("UsersService", () => {
+  let testContext: TestContext;
+  let usersService: UsersService;
+  let db: DatabasePg;
+  const userFactory = createUsersFactory();
+
+  beforeAll(async () => {
+    testContext = await createUnitTest();
+    usersService = testContext.getService(UsersService);
+    db = testContext.db;
+  });
+
+  afterAll(async () => {
+    if (testContext.container) {
+      await testContext.container.stop();
+    }
+    await testContext.module.close();
+  });
+
   afterEach(async () => {
     await db.delete(credentials);
     await db.delete(users);
