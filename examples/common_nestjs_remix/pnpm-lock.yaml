@@ -220,6 +220,12 @@ importers:
       axios:
         specifier: ^1.7.2
         version: 1.7.2
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.0
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       compression:
         specifier: ^1.7.4
         version: 1.7.4
@@ -229,6 +235,9 @@ importers:
       isbot:
         specifier: ^4.1.0
         version: 4.1.0
+      lucide-react:
+        specifier: ^0.408.0
+        version: 0.408.0(react@18.3.1)
       morgan:
         specifier: ^1.10.0
         version: 1.10.0
@@ -238,6 +247,12 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      tailwind-merge:
+        specifier: ^2.4.0
+        version: 2.4.0
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.4)
       zustand:
         specifier: ^4.5.4
         version: 4.5.4(@types/react@18.2.61)(react@18.3.1)
@@ -2019,7 +2034,6 @@ packages:
       strip-ansi-cjs: /strip-ansi@6.0.1
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: /wrap-ansi@7.0.0
-    dev: true
 
   /@istanbuljs/load-nyc-config@1.1.0:
     resolution:
@@ -2746,7 +2760,6 @@ packages:
     dependencies:
       "@nodelib/fs.stat": 2.0.5
       run-parallel: 1.2.0
-    dev: true
 
   /@nodelib/fs.stat@2.0.5:
     resolution:
@@ -2765,7 +2778,6 @@ packages:
     dependencies:
       "@nodelib/fs.scandir": 2.1.5
       fastq: 1.17.1
-    dev: true
 
   /@npmcli/fs@3.1.1:
     resolution:
@@ -2845,7 +2857,6 @@ packages:
       }
     engines: { node: ">=14" }
     requiresBuild: true
-    dev: true
     optional: true
 
   /@pkgr/core@0.1.1:
@@ -2855,6 +2866,85 @@ packages:
       }
     engines: { node: ^12.20.0 || ^14.18.0 || >=16.0.0 }
     dev: true
+
+  /@radix-ui/react-compose-refs@1.1.0(@types/react@18.2.61)(react@18.3.1):
+    resolution:
+      {
+        integrity: sha512-b4inOtiaOnYf9KWyO3jAeeCG6FeyfY6ldiEPanbUjWd+xIk5wZeHa8yVwmrJ2vderhu/BQvzCrJI0lHd+wIiqw==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+    dependencies:
+      "@types/react": 18.2.61
+      react: 18.3.1
+    dev: false
+
+  /@radix-ui/react-label@2.1.0(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1)(react@18.3.1):
+    resolution:
+      {
+        integrity: sha512-peLblDlFw/ngk3UWq0VnYaOLy6agTZZ+MUO/WhVfm14vJGML+xH4FAl2XQGLqdefjNb7ApRg6Yn7U42ZhmYXdw==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      "@types/react-dom": "*"
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      "@types/react-dom":
+        optional: true
+    dependencies:
+      "@radix-ui/react-primitive": 2.0.0(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1)(react@18.3.1)
+      "@types/react": 18.2.61
+      "@types/react-dom": 18.2.19
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
+
+  /@radix-ui/react-primitive@2.0.0(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1)(react@18.3.1):
+    resolution:
+      {
+        integrity: sha512-ZSpFm0/uHa8zTvKBDjLFWLo8dkr4MBsiDLz0g3gMUwqgLHz9rTaRRGYDgvZPtBJgYCBKXkS9fzmoySgr8CO6Cw==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      "@types/react-dom": "*"
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      "@types/react-dom":
+        optional: true
+    dependencies:
+      "@radix-ui/react-slot": 1.1.0(@types/react@18.2.61)(react@18.3.1)
+      "@types/react": 18.2.61
+      "@types/react-dom": 18.2.19
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
+
+  /@radix-ui/react-slot@1.1.0(@types/react@18.2.61)(react@18.3.1):
+    resolution:
+      {
+        integrity: sha512-FUCf5XMfmW4dtYl69pdS4DbxKy8nj4M7SafBgPllysxmdachynNflAdp/gCsnYWNDnge6tI9onzMp5ARYc1KNw==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+    dependencies:
+      "@radix-ui/react-compose-refs": 1.1.0(@types/react@18.2.61)(react@18.3.1)
+      "@types/react": 18.2.61
+      react: 18.3.1
+    dev: false
 
   /@remix-run/dev@2.9.2(@remix-run/react@2.9.2)(typescript@5.3.3)(vite@5.1.0):
     resolution:
@@ -4864,7 +4954,6 @@ packages:
     dependencies:
       normalize-path: 3.0.0
       picomatch: 2.3.1
-    dev: true
 
   /append-field@1.0.0:
     resolution:
@@ -5508,7 +5597,6 @@ packages:
       }
     dependencies:
       balanced-match: 1.0.2
-    dev: true
 
   /braces@3.0.3:
     resolution:
@@ -5518,7 +5606,6 @@ packages:
     engines: { node: ">=8" }
     dependencies:
       fill-range: 7.1.1
-    dev: true
 
   /browserify-zlib@0.1.4:
     resolution:
@@ -5875,7 +5962,6 @@ packages:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /chownr@1.1.4:
     resolution:
@@ -5913,6 +5999,15 @@ packages:
         integrity: sha512-a3KdPAANPbNE4ZUv9h6LckSl9zLsYOP4MBmhIPkRaeyybt+r4UghLvq+xw/YwUcC1gqylCkL4rdVs3Lwupjm4Q==,
       }
     dev: true
+
+  /class-variance-authority@0.7.0:
+    resolution:
+      {
+        integrity: sha512-jFI8IQw4hczaL4ALINxqLEXQbWcNjoSkloa4IaufXCJr6QawJyw7tuRysRsrE8w2p/4gGaxKIt/hX3qz/IbD1A==,
+      }
+    dependencies:
+      clsx: 2.0.0
+    dev: false
 
   /clean-stack@2.2.0:
     resolution:
@@ -5979,6 +6074,22 @@ packages:
       }
     engines: { node: ">=0.8" }
     dev: true
+
+  /clsx@2.0.0:
+    resolution:
+      {
+        integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==,
+      }
+    engines: { node: ">=6" }
+    dev: false
+
+  /clsx@2.1.1:
+    resolution:
+      {
+        integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==,
+      }
+    engines: { node: ">=6" }
+    dev: false
 
   /co@4.6.0:
     resolution:
@@ -6399,7 +6510,6 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-    dev: true
 
   /css-what@6.1.0:
     resolution:
@@ -6416,7 +6526,6 @@ packages:
       }
     engines: { node: ">=4" }
     hasBin: true
-    dev: true
 
   /csstype@3.1.3:
     resolution:
@@ -8071,7 +8180,6 @@ packages:
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.7
-    dev: true
 
   /fast-json-stable-stringify@2.1.0:
     resolution:
@@ -8100,7 +8208,6 @@ packages:
       }
     dependencies:
       reusify: 1.0.4
-    dev: true
 
   /fault@2.0.1:
     resolution:
@@ -8148,7 +8255,6 @@ packages:
     engines: { node: ">=8" }
     dependencies:
       to-regex-range: 5.0.1
-    dev: true
 
   /finalhandler@1.2.0:
     resolution:
@@ -8247,7 +8353,6 @@ packages:
     dependencies:
       cross-spawn: 7.0.3
       signal-exit: 4.1.0
-    dev: true
 
   /fork-ts-checker-webpack-plugin@8.0.0(typescript@5.1.3)(webpack@5.87.0):
     resolution:
@@ -8398,7 +8503,6 @@ packages:
     engines: { node: ^8.16.0 || ^10.6.0 || >=11.0.0 }
     os: [darwin]
     requiresBuild: true
-    dev: true
     optional: true
 
   /function-bind@1.1.2:
@@ -8561,7 +8665,6 @@ packages:
     engines: { node: ">= 6" }
     dependencies:
       is-glob: 4.0.3
-    dev: true
 
   /glob-parent@6.0.2:
     resolution:
@@ -8571,7 +8674,6 @@ packages:
     engines: { node: ">=10.13.0" }
     dependencies:
       is-glob: 4.0.3
-    dev: true
 
   /glob-to-regexp@0.4.1:
     resolution:
@@ -8594,7 +8696,6 @@ packages:
       minipass: 7.1.2
       package-json-from-dist: 1.0.0
       path-scurry: 1.11.1
-    dev: true
 
   /glob@7.2.3:
     resolution:
@@ -9291,7 +9392,6 @@ packages:
     engines: { node: ">=8" }
     dependencies:
       binary-extensions: 2.3.0
-    dev: true
 
   /is-boolean-object@1.1.2:
     resolution:
@@ -9327,7 +9427,6 @@ packages:
     engines: { node: ">= 0.4" }
     dependencies:
       hasown: 2.0.2
-    dev: true
 
   /is-data-view@1.0.1:
     resolution:
@@ -9412,7 +9511,6 @@ packages:
     engines: { node: ">=0.10.0" }
     dependencies:
       is-extglob: 2.1.1
-    dev: true
 
   /is-gzip@1.0.0:
     resolution:
@@ -10291,7 +10389,6 @@ packages:
         integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==,
       }
     hasBin: true
-    dev: true
 
   /js-tokens@4.0.0:
     resolution:
@@ -10818,6 +10915,17 @@ packages:
       }
     engines: { node: ">=12" }
     dev: true
+
+  /lucide-react@0.408.0(react@18.3.1):
+    resolution:
+      {
+        integrity: sha512-8kETAAeWmOvtGIr7HPHm51DXoxlfkNncQ5FZWXR+abX8saQwMYXANWIkUstaYtcKSo/imOe/q+tVFA8ANzdSVA==,
+      }
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    dependencies:
+      react: 18.3.1
+    dev: false
 
   /macos-release@2.5.1:
     resolution:
@@ -11464,7 +11572,6 @@ packages:
     dependencies:
       braces: 3.0.3
       picomatch: 2.3.1
-    dev: true
 
   /mime-db@1.52.0:
     resolution:
@@ -11553,7 +11660,6 @@ packages:
     engines: { node: ">=16 || 14 >=14.17" }
     dependencies:
       brace-expansion: 2.0.1
-    dev: true
 
   /minimist@1.2.8:
     resolution:
@@ -11756,7 +11862,6 @@ packages:
       any-promise: 1.3.0
       object-assign: 4.1.1
       thenify-all: 1.6.0
-    dev: true
 
   /nan@2.20.0:
     resolution:
@@ -11774,7 +11879,6 @@ packages:
       }
     engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
     hasBin: true
-    dev: true
 
   /natural-compare@1.4.0:
     resolution:
@@ -12604,7 +12708,6 @@ packages:
     dependencies:
       lru-cache: 10.4.0
       minipass: 7.1.2
-    dev: true
 
   /path-to-regexp@0.1.7:
     resolution:
@@ -12869,7 +12972,6 @@ packages:
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
       resolve: 1.22.8
-    dev: true
 
   /postcss-js@4.0.1(postcss@8.4.38):
     resolution:
@@ -12882,7 +12984,6 @@ packages:
     dependencies:
       camelcase-css: 2.0.1
       postcss: 8.4.38
-    dev: true
 
   /postcss-load-config@4.0.2(postcss@8.4.38):
     resolution:
@@ -12902,7 +13003,6 @@ packages:
       lilconfig: 3.1.2
       postcss: 8.4.38
       yaml: 2.4.5
-    dev: true
 
   /postcss-modules-extract-imports@3.1.0(postcss@8.4.38):
     resolution:
@@ -12987,7 +13087,6 @@ packages:
     dependencies:
       postcss: 8.4.38
       postcss-selector-parser: 6.1.0
-    dev: true
 
   /postcss-selector-parser@6.1.0:
     resolution:
@@ -12998,7 +13097,6 @@ packages:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
-    dev: true
 
   /postcss-value-parser@4.2.0:
     resolution:
@@ -13495,7 +13593,6 @@ packages:
       }
     dependencies:
       pify: 2.3.0
-    dev: true
 
   /readable-stream@2.3.8:
     resolution:
@@ -13539,7 +13636,6 @@ packages:
     engines: { node: ">=8.10.0" }
     dependencies:
       picomatch: 2.3.1
-    dev: true
 
   /rechoir@0.6.2:
     resolution:
@@ -13764,7 +13860,6 @@ packages:
       is-core-module: 2.14.0
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
-    dev: true
 
   /resolve@2.0.0-next.5:
     resolution:
@@ -13870,7 +13965,6 @@ packages:
       }
     dependencies:
       queue-microtask: 1.2.3
-    dev: true
 
   /rxjs@6.6.7:
     resolution:
@@ -14088,7 +14182,6 @@ packages:
     engines: { node: ">=8" }
     dependencies:
       shebang-regex: 3.0.0
-    dev: true
 
   /shebang-regex@3.0.0:
     resolution:
@@ -14487,7 +14580,6 @@ packages:
       eastasianwidth: 0.2.0
       emoji-regex: 9.2.2
       strip-ansi: 7.1.0
-    dev: true
 
   /string.prototype.matchall@4.0.11:
     resolution:
@@ -14589,7 +14681,6 @@ packages:
     engines: { node: ">=12" }
     dependencies:
       ansi-regex: 6.0.1
-    dev: true
 
   /strip-bom@3.0.0:
     resolution:
@@ -14655,7 +14746,6 @@ packages:
       mz: 2.7.0
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
-    dev: true
 
   /superagent@8.1.2:
     resolution:
@@ -14818,6 +14908,24 @@ packages:
       tslib: 2.6.3
     dev: true
 
+  /tailwind-merge@2.4.0:
+    resolution:
+      {
+        integrity: sha512-49AwoOQNKdqKPd9CViyH5wJoSKsCDjUlzL8DxuGp3P1FsGY36NJDAa18jLZcaHAUUuTj+JB8IAo8zWgBNvBF7A==,
+      }
+    dev: false
+
+  /tailwindcss-animate@1.0.7(tailwindcss@3.4.4):
+    resolution:
+      {
+        integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==,
+      }
+    peerDependencies:
+      tailwindcss: ">=3.0.0 || insiders"
+    dependencies:
+      tailwindcss: 3.4.4
+    dev: false
+
   /tailwindcss@3.4.4:
     resolution:
       {
@@ -14850,7 +14958,6 @@ packages:
       sucrase: 3.35.0
     transitivePeerDependencies:
       - ts-node
-    dev: true
 
   /tapable@2.2.1:
     resolution:
@@ -15068,7 +15175,6 @@ packages:
     engines: { node: ">=0.8" }
     dependencies:
       thenify: 3.3.1
-    dev: true
 
   /thenify@3.3.1:
     resolution:
@@ -15077,7 +15183,6 @@ packages:
       }
     dependencies:
       any-promise: 1.3.0
-    dev: true
 
   /through2@2.0.5:
     resolution:
@@ -15164,7 +15269,6 @@ packages:
     engines: { node: ">=8.0" }
     dependencies:
       is-number: 7.0.0
-    dev: true
 
   /toidentifier@1.0.1:
     resolution:
@@ -16327,7 +16431,6 @@ packages:
     hasBin: true
     dependencies:
       isexe: 2.0.0
-    dev: true
 
   /which@3.0.1:
     resolution:
@@ -16396,7 +16499,6 @@ packages:
       ansi-styles: 4.3.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
-    dev: true
 
   /wrap-ansi@8.1.0:
     resolution:
@@ -16408,7 +16510,6 @@ packages:
       ansi-styles: 6.2.1
       string-width: 5.1.2
       strip-ansi: 7.1.0
-    dev: true
 
   /wrappy@1.0.2:
     resolution:
@@ -16486,7 +16587,6 @@ packages:
       }
     engines: { node: ">= 14" }
     hasBin: true
-    dev: true
 
   /yargs-parser@21.1.1:
     resolution:
