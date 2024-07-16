@@ -13,17 +13,24 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
     "@remix-run/express": "^2.9.2",
     "@remix-run/node": "^2.9.2",
     "@remix-run/react": "^2.9.2",
     "@tanstack/react-query": "^5.40.1",
     "axios": "^1.7.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "compression": "^1.7.4",
     "express": "^4.18.2",
     "isbot": "^4.1.0",
+    "lucide-react": "^0.408.0",
     "morgan": "^1.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
