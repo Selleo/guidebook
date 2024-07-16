@@ -1,6 +1,6 @@
-import { writeFile } from 'node:fs';
+import { writeFile } from "node:fs";
 
-const SCHEMA_FILE = './src/swagger/api-schema.json';
+const SCHEMA_FILE = "./src/swagger/api-schema.json";
 
 export const exportSchemaToFile = (schema: object) => {
   const content = JSON.stringify(schema, null, 2);

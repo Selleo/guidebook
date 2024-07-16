@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { useRegisterUser } from "~/api/mutations/useRegisterUser";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -9,8 +10,21 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { useForm } from "react-hook-form";
+import { RegisterBody } from "~/api/generated-api";
 
 export default function RegisterPage() {
+  const { mutate: registerUser } = useRegisterUser();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterBody>();
+
+  const onSubmit = async (data: RegisterBody) => {
+    registerUser({ data });
+  };
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -20,24 +34,34 @@ export default function RegisterPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="user@example.com"
-              required
+              {...register("email", { required: true })}
             />
+            {errors.email && (
+              <div className="text-red-500 text-sm">Email is required</div>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" />
+            <Input
+              id="password"
+              type="password"
+              {...register("password", { required: true })}
+            />
+            {errors.password && (
+              <div className="text-red-500 text-sm">Password is required</div>
+            )}
           </div>
           <Button type="submit" className="w-full">
             Create an account
           </Button>
-        </div>
+        </form>
         <div className="mt-4 text-center text-sm">
           Already have an account?{" "}
           <Link to="/auth/login" className="underline">

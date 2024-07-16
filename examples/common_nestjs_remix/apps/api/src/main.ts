@@ -16,6 +16,11 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  app.enableCors({
+    origin: "https://app.guidebook.localhost",
+    credentials: true,
+  });
+
   const config = new DocumentBuilder()
     .setTitle("Guidebook API")
     .setDescription("Example usage of Swagger with Typebox")

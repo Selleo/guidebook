@@ -12,7 +12,7 @@ export function useAuthEffect() {
 
   useEffect(() => {
     if (!loggedIn) {
-      navigate("/login");
+      navigate("/auth/login");
     }
   }, [loggedIn, navigate]);
 }
