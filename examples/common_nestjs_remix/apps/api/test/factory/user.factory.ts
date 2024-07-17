@@ -31,6 +31,7 @@ export const userWithCredentialFactory = Factory.define<UserWithCredential>(
   ({ onCreate, transientParams }) => {
     const user = userFactory.build();
     const credential = credentialFactory.build({ userId: user.id });
+    const { authService } = transientParams;
 
     onCreate(async (user) => {
       return authService.register(user.user.email, user.credential.password);
