@@ -14,9 +14,9 @@ describe("AuthController (e2e)", () => {
   let userFactory: ReturnType<typeof createUserFactory>;
 
   beforeAll(async () => {
-    const { app: testApp, getService } = await createE2ETest();
+    const { app: testApp } = await createE2ETest();
     app = testApp;
-    authService = getService(AuthService);
+    authService = app.get(AuthService);
     db = app.get("DB");
     userFactory = createUserFactory(db);
   });

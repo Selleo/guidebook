@@ -1,40 +1,39 @@
-import { Provider, Type } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import { Provider } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
+import { StartedTestContainer } from "testcontainers";
 import { AppModule } from "../src/app.module";
 import { DatabasePg } from "../src/common";
-import { StartedTestContainer } from "testcontainers";
 import { setupTestDatabase } from "./test-database";
 
 export interface TestContext {
   module: TestingModule;
   db: DatabasePg;
   container: StartedTestContainer;
-  getService: <T>(service: Type<T>) => T;
+  teardown: () => Promise<void>;
 }
 
 export async function createUnitTest(
   customProviders: Provider[] = [],
 ): Promise<TestContext> {
-  const { db, container } = await setupTestDatabase();
+  const { db, container, connectionString } = await setupTestDatabase();
+
+  process.env.DATABASE_URL = connectionString;
 
   const module: TestingModule = await Test.createTestingModule({
     imports: [AppModule],
     providers: [...customProviders],
-  })
-    .overrideProvider("DB")
-    .useValue(db)
-    .overrideProvider(JwtService)
-    .useValue({
-      signAsync: jest.fn(),
-      verifyAsync: jest.fn(),
-    })
-    .compile();
+  }).compile();
+
+  const teardown = async () => {
+    if (container) {
+      await container.stop();
+    }
+  };
 
   return {
     module,
     db,
     container,
-    getService: <T>(service: Type<T>): T => module.get<T>(service),
+    teardown,
   };
 }

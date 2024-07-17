@@ -3,37 +3,35 @@ import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { credentials, users } from "../../storage/schema";
 import { DatabasePg } from "src/common";
-import { TestContext, createUnitTest } from "../../../test/create-unit-test";
+import { TestContext, createUnitTest } from "test/create-unit-test";
 import { UsersService } from "../users.service";
-import { createUsersFactory } from "../../../test/factory/user.factory";
+import { createUserFactory } from "test/factory/user.factory";
+import { truncateAllTables } from "test/helpers/test-helpers";
 
 describe("UsersService", () => {
   let testContext: TestContext;
   let usersService: UsersService;
   let db: DatabasePg;
-  const userFactory = createUsersFactory();
+  let userFactory: ReturnType<typeof createUserFactory>;
 
   beforeAll(async () => {
     testContext = await createUnitTest();
-    usersService = testContext.getService(UsersService);
+    usersService = testContext.module.get(UsersService);
     db = testContext.db;
-  });
+    userFactory = createUserFactory(db);
+  }, 30000);
 
   afterAll(async () => {
-    if (testContext.container) {
-      await testContext.container.stop();
-    }
-    await testContext.module.close();
+    await testContext.teardown();
   });
 
   afterEach(async () => {
-    await db.delete(credentials);
-    await db.delete(users);
+    await truncateAllTables(db);
   });
 
   describe("getUsers", () => {
     it("should return all users", async () => {
-      const testUsers = [userFactory.build().users, userFactory.build().users];
+      const testUsers = Array.from({ length: 2 }, () => userFactory.build());
       await db.insert(users).values(testUsers);
 
       const result = await usersService.getUsers();

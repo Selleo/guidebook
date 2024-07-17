@@ -17,8 +17,6 @@ export function environmentVariablesFactory() {
   return {
     get: jest.fn((key: string) => {
       switch (key) {
-        case "DATABASE_URL":
-          return process.env.DATABASE_URL;
         case "JWT_SECRET":
           return "secret";
         case "DEBUG":
@@ -32,9 +30,7 @@ export function signInAs(userId: string, jwtService: JwtService): string {
   return jwtService.sign({ sub: userId });
 }
 
-export async function truncateAllDatabase(
-  connection: DatabasePg,
-): Promise<void> {
+export async function truncateAllTables(connection: DatabasePg): Promise<void> {
   const tables = connection._.tableNamesMap;
 
   for (const table of Object.keys(tables)) {

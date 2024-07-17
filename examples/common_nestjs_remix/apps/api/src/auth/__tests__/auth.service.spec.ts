@@ -1,59 +1,55 @@
 import { ConflictException, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import { AuthService } from "../../../src/auth/auth.service";
+import { AuthService } from "src/auth/auth.service";
 import { JwtService } from "@nestjs/jwt";
 import { credentials, users } from "../../storage/schema";
-import { DatabasePg } from "../../../src/common";
-import { createUnitTest, TestContext } from "../../../test/create-unit-test";
-import { createUsersFactory } from "../../../test/factory/user.factory";
+import { DatabasePg } from "src/common";
+import { createUnitTest, TestContext } from "test/create-unit-test";
+import { createUserFactory } from "test/factory/user.factory";
+import { omit } from "lodash";
+import hashPassword from "src/common/helpers/hashPassword";
+import { truncateAllTables } from "test/helpers/test-helpers";
 
 describe("AuthService", () => {
   let testContext: TestContext;
   let authService: AuthService;
   let jwtService: JwtService;
   let db: DatabasePg;
-  const userFactory = createUsersFactory();
+  let userFactory: ReturnType<typeof createUserFactory>;
 
   beforeAll(async () => {
     testContext = await createUnitTest();
-    authService = testContext.getService(AuthService);
-    jwtService = testContext.getService(JwtService);
+    authService = testContext.module.get(AuthService);
+    jwtService = testContext.module.get(JwtService);
     db = testContext.db;
-  });
-
-  afterAll(async () => {
-    if (testContext.container) {
-      await testContext.container.stop();
-    }
-    await testContext.module.close();
-  });
+    userFactory = createUserFactory(db);
+  }, 30000);
 
   afterEach(async () => {
-    await db.delete(credentials);
-    await db.delete(users);
+    await truncateAllTables(db);
   });
 
   describe("register", () => {
     it("should register a new user successfully", async () => {
-      const { users: userData } = userFactory.build();
+      const user = userFactory.build();
       const password = "password123";
 
-      const result = await authService.register(userData.email, password);
-
-      expect(result).toBeDefined();
-      expect(result.email).toBe(userData.email);
+      const result = await authService.register(user.email, password);
 
       const [savedUser] = await db
         .select()
         .from(users)
-        .where(eq(users.email, userData.email));
+        .where(eq(users.email, user.email));
       expect(savedUser).toBeDefined();
 
       const [savedCredentials] = await db
         .select()
         .from(credentials)
         .where(eq(credentials.userId, savedUser.id));
+
+      expect(result).toBeDefined();
+      expect(result.email).toBe(user.email);
       expect(savedCredentials).toBeDefined();
       expect(await bcrypt.compare(password, savedCredentials.password)).toBe(
         true,
@@ -62,44 +58,35 @@ describe("AuthService", () => {
 
     it("should throw ConflictException if user already exists", async () => {
       const email = "existing@example.com";
-      await db.insert(users).values({ email });
+      const user = await userFactory.create({ email });
 
-      await expect(authService.register(email, "password123")).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(
+        authService.register(user.email, "password123"),
+      ).rejects.toThrow(ConflictException);
     });
   });
 
   describe("login", () => {
     it("should login user successfully", async () => {
       const password = "password123";
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const { users: userData, credentials: userCredentials } =
-        userFactory.build();
-
-      const [user] = await db.insert(users).values(userData).returning();
-      await db.insert(credentials).values({
-        ...userCredentials,
-        userId: user.id,
-        password: hashedPassword,
-      });
-
-      (jwtService.signAsync as jest.Mock).mockResolvedValueOnce("access_token");
-      (jwtService.signAsync as jest.Mock).mockResolvedValueOnce(
-        "refresh_token",
-      );
+      const email = "example@test.com";
+      const user = await userFactory
+        .withCredentials({ password })
+        .create({ email });
 
       const result = await authService.login({
-        email: userData.email,
+        email: user.email,
         password,
       });
 
-      expect(result).toEqual({
-        ...user,
-        accessToken: "access_token",
-        refreshToken: "refresh_token",
+      const decodedToken = await jwtService.verifyAsync(result.accessToken);
+
+      expect(decodedToken.userId).toBe(user.id);
+      expect(result).toMatchObject({
+        ...omit(user, "credentials"),
+        accessToken: expect.any(String),
+        refreshToken: expect.any(String),
       });
-      expect(jwtService.signAsync).toHaveBeenCalledTimes(2);
     });
 
     it("should throw UnauthorizedException for invalid email", async () => {
@@ -112,18 +99,11 @@ describe("AuthService", () => {
     });
 
     it("should throw UnauthorizedException for invalid password", async () => {
-      const { users: userData, credentials: userCredentials } =
-        userFactory.build();
-      const [user] = await db.insert(users).values(userData).returning();
-      await db.insert(credentials).values({
-        ...userCredentials,
-        userId: user.id,
-        password: await bcrypt.hash("correctpassword", 10),
-      });
+      const user = await userFactory.create({ email: "example@test.com" });
 
       await expect(
         authService.login({
-          email: userData.email,
+          email: user.email,
           password: "wrongpassword",
         }),
       ).rejects.toThrow(UnauthorizedException);
@@ -134,7 +114,7 @@ describe("AuthService", () => {
     it("should validate user successfully", async () => {
       const email = "test@example.com";
       const password = "password123";
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await hashPassword(password);
 
       const [user] = await db.insert(users).values({ email }).returning();
       await db

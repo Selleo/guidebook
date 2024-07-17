@@ -11,6 +11,7 @@ import { eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import { credentials, users } from "../storage/schema";
 import { UsersService } from "../users/users.service";
+import hashPassword from "src/common/helpers/hashPassword";
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
       throw new ConflictException("User already exists");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
     return this.db.transaction(async (trx) => {
       const [newUser] = await trx.insert(users).values({ email }).returning();

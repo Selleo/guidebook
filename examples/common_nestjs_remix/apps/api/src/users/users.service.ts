@@ -8,6 +8,7 @@ import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import { credentials, users } from "../storage/schema";
+import hashPassword from "src/common/helpers/hashPassword";
 
 @Injectable()
 export class UsersService {
@@ -75,7 +76,7 @@ export class UsersService {
       throw new UnauthorizedException("Invalid old password");
     }
 
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    const hashedNewPassword = await hashPassword(newPassword);
     await this.db
       .update(credentials)
       .set({ password: hashedNewPassword })

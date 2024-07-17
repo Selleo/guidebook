@@ -13,8 +13,9 @@ let db: DatabasePg;
 export async function setupTestDatabase(): Promise<{
   db: DatabasePg;
   container: StartedTestContainer;
+  connectionString: string;
 }> {
-  container = await new GenericContainer("postgres:14")
+  container = await new GenericContainer("postgres:16")
     .withExposedPorts(5432)
     .withEnvironment({
       POSTGRES_DB: "testdb",
@@ -32,7 +33,7 @@ export async function setupTestDatabase(): Promise<{
     migrationsFolder: path.join(__dirname, "../src/storage/migrations"),
   });
 
-  return { db, container };
+  return { db, container, connectionString };
 }
 
 export async function closeTestDatabase() {

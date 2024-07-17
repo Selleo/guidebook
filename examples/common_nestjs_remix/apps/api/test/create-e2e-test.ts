@@ -1,19 +1,18 @@
-import { Provider, Type } from "@nestjs/common";
+import { Provider } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import cookieParser from "cookie-parser";
 import { AppModule } from "../src/app.module";
 import { setupTestDatabase } from "./test-database";
 
 export async function createE2ETest(customProviders: Provider[] = []) {
-  const { db } = await setupTestDatabase();
+  const { db, connectionString } = await setupTestDatabase();
+
+  process.env.DATABASE_URL = connectionString;
 
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [AppModule],
     providers: [...customProviders],
-  })
-    .overrideProvider("DB")
-    .useValue(db)
-    .compile();
+  }).compile();
 
   const app = moduleFixture.createNestApplication();
 
@@ -25,6 +24,5 @@ export async function createE2ETest(customProviders: Provider[] = []) {
     app,
     moduleFixture,
     db,
-    getService: <T>(service: Type<T>): T => moduleFixture.get(service),
   };
 }

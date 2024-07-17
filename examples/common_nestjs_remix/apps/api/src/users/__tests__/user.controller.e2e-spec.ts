@@ -1,12 +1,13 @@
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
+import { castArray, omit } from "lodash";
 import { AuthService } from "../../../src/auth/auth.service";
 import { createE2ETest } from "../../../test/create-e2e-test";
 import {
   createUserFactory,
   UserWithCredentials,
 } from "../../../test/factory/user.factory";
-import { DatabasePg } from "src/common";
+import { DatabasePg } from "../../../src/common";
 
 describe("UsersController (e2e)", () => {
   let app: INestApplication;
@@ -18,9 +19,9 @@ describe("UsersController (e2e)", () => {
   let userFactory: ReturnType<typeof createUserFactory>;
 
   beforeAll(async () => {
-    const { app: testApp, getService } = await createE2ETest();
+    const { app: testApp } = await createE2ETest();
     app = testApp;
-    authService = getService(AuthService);
+    authService = app.get(AuthService);
     db = app.get("DB");
     userFactory = createUserFactory(db);
   });
@@ -51,23 +52,22 @@ describe("UsersController (e2e)", () => {
         .set("Cookie", cookies)
         .expect(200);
 
-      expect(response.body.data).toBeDefined();
+      expect(response.body.data).toStrictEqual(
+        castArray(omit(testUser, "credentials")),
+      );
       expect(Array.isArray(response.body.data)).toBe(true);
     });
   });
 
   describe("GET /users/:id", () => {
     it("should return a user by id", async () => {
-      console.log(testUser);
       const response = await request(app.getHttpServer())
         .get(`/users/${testUser.id}`)
         .set("Cookie", cookies)
         .expect(200);
 
-      console.log(response.body.data);
-
       expect(response.body.data).toBeDefined();
-      expect(response.body.data.id).toBe(testUser.id);
+      expect(response.body.data).toStrictEqual(omit(testUser, "credentials"));
     });
 
     it("should return 404 for non-existent user", async () => {
