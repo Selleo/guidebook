@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { Factory } from "fishery";
-import { AuthService } from "../../src/auth/auth.service";
 import { credentials, users } from "../../src/storage/schema";
 import { DatabasePg } from "src/common";
 import hashPassword from "../../src/common/helpers/hashPassword";
