@@ -20,6 +20,11 @@ describe("AuthController (e2e)", () => {
     it("should register a new user", async () => {
       const { users: newUser, credentials: newCredentials } =
         userFactory.build();
+      /**
+         * maybe we can pass some param that will defined if we want to get just the data from factory
+or get the data and add it to the DB already ? 
+Since in other places I expect this factory to be used always to create new users, multiple of them proably - so having to do "authService.register" for all might be boring
+         */
 
       const response = await request(app.getHttpServer())
         .post("/auth/register")
@@ -101,6 +106,10 @@ describe("AuthController (e2e)", () => {
       let refreshToken = "";
 
       if (isArray(cookies)) {
+        /**
+         * https://www.npmjs.com/package/cookie
+maybe something like this? seems usefull
+         */
         cookies.forEach((cookie) => {
           if (cookie.startsWith("access_token=")) {
             accessToken = cookie;
