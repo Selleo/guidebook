@@ -61,10 +61,13 @@ describe("UsersController (e2e)", () => {
 
   describe("GET /users/:id", () => {
     it("should return a user by id", async () => {
+      console.log(testUser);
       const response = await request(app.getHttpServer())
         .get(`/users/${testUser.id}`)
         .set("Cookie", cookies)
         .expect(200);
+
+      console.log(response.body.data);
 
       expect(response.body.data).toBeDefined();
       expect(response.body.data).toStrictEqual(omit(testUser, "credentials"));
