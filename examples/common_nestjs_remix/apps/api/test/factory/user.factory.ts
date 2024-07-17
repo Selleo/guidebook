@@ -27,25 +27,18 @@ type UserWithCredential = {
   credential: Credential;
 };
 
-export const userWithCredentialFactory = Factory.define<
-  UserWithCredential,
-  {
-    saveToDatabase?: boolean;
-    authService?: AuthService;
-  }
->(({ afterBuild, transientParams }) => {
-  const user = userFactory.build();
-  const credential = credentialFactory.build({ userId: user.id });
+export const userWithCredentialFactory = Factory.define<UserWithCredential>(
+  ({ onCreate, transientParams }) => {
+    const user = userFactory.build();
+    const credential = credentialFactory.build({ userId: user.id });
 
-  afterBuild(async (result) => {
-    const { saveToDatabase, authService } = transientParams;
-    if (saveToDatabase && authService) {
-      await authService.register(result.user.email, result.credential.password);
-    }
-  });
+    onCreate(async (user) => {
+      return authService.register(user.user.email, user.credential.password);
+    });
 
-  return {
-    user,
-    credential,
-  };
-});
+    return {
+      user,
+      credential,
+    };
+  },
+);

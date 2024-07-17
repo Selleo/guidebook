@@ -1,14 +1,13 @@
 import { INestApplication } from "@nestjs/common";
 import { isArray } from "lodash";
 import request from "supertest";
-import { createUsersFactory } from "../../../test/factory/user.factory";
+import { userWithCredentialFactory } from "../../../test/factory/user.factory";
 import { createE2ETest } from "../../../test/create-e2e-test";
 import { AuthService } from "../auth.service";
 
 describe("AuthController (e2e)", () => {
   let app: INestApplication;
   let authService: AuthService;
-  const userFactory = createUsersFactory();
 
   beforeAll(async () => {
     const { app: testApp, getService } = await createE2ETest();
@@ -18,13 +17,8 @@ describe("AuthController (e2e)", () => {
 
   describe("POST /auth/register", () => {
     it("should register a new user", async () => {
-      const { users: newUser, credentials: newCredentials } =
-        userFactory.build();
-      /**
-         * maybe we can pass some param that will defined if we want to get just the data from factory
-or get the data and add it to the DB already ? 
-Since in other places I expect this factory to be used always to create new users, multiple of them proably - so having to do "authService.register" for all might be boring
-         */
+      const { user: newUser, credential: newCredential } =
+        userWithCredentialFactory.build();
 
       const response = await request(app.getHttpServer())
         .post("/auth/register")
@@ -32,7 +26,7 @@ Since in other places I expect this factory to be used always to create new user
         .set("Content-Type", "application/json")
         .send({
           email: newUser.email,
-          password: newCredentials.password,
+          password: newCredential.password,
         });
 
       expect(response.status).toEqual(201);
@@ -57,15 +51,17 @@ Since in other places I expect this factory to be used always to create new user
 
   describe("POST /auth/login", () => {
     it("should login and return user data with cookies", async () => {
-      const user = userFactory.build().users;
-      const password = "password123";
-      await authService.register(user.email, password);
+      const { user, credential } = await userWithCredentialFactory
+        .transient({ saveToDatabase: true, authService })
+        .build();
+
+      console.log({ user, credential });
 
       const response = await request(app.getHttpServer())
         .post("/auth/login")
         .send({
           email: user.email,
-          password: password,
+          password: credential.password,
         })
         .expect(201);
 
@@ -88,7 +84,7 @@ Since in other places I expect this factory to be used always to create new user
 
   describe("POST /auth/logout", () => {
     it("should clear token cookies for a logged-in user", async () => {
-      const user = userFactory.build().users;
+      const { user } = userWithCredentialFactory.build();
       const password = "password123";
       await authService.register(user.email, password);
 
@@ -135,7 +131,7 @@ maybe something like this? seems usefull
 
   describe("POST /auth/refresh", () => {
     it("should refresh tokens", async () => {
-      const user = userFactory.build().users;
+      const { user } = userWithCredentialFactory.build();
       const password = "password123";
       await authService.register(user.email, password);
 
