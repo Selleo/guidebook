@@ -1,22 +1,28 @@
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { AuthService } from "../../../src/auth/auth.service";
-import { CommonUser } from "../../../src/common/schemas/common-user.schema";
 import { createE2ETest } from "../../../test/create-e2e-test";
-import { createUsersFactory } from "../../../test/factory/user.factory";
+import {
+  createUserFactory,
+  UserWithCredentials,
+} from "../../../test/factory/user.factory";
+import { DatabasePg } from "src/common";
 
 describe("UsersController (e2e)", () => {
   let app: INestApplication;
   let authService: AuthService;
-  let testUser: CommonUser;
+  let testUser: UserWithCredentials;
   let cookies: string;
-  let testCredentials: { password: string };
-  const userFactory = createUsersFactory();
+  const testPassword = "password123";
+  let db: DatabasePg;
+  let userFactory: ReturnType<typeof createUserFactory>;
 
   beforeAll(async () => {
     const { app: testApp, getService } = await createE2ETest();
     app = testApp;
     authService = getService(AuthService);
+    db = app.get("DB");
+    userFactory = createUserFactory(db);
   });
 
   afterAll(async () => {
@@ -24,15 +30,15 @@ describe("UsersController (e2e)", () => {
   });
 
   beforeEach(async () => {
-    const { users: newUser, credentials } = userFactory.build();
-    testUser = await authService.register(newUser.email, credentials.password);
-    testCredentials = credentials;
+    testUser = await userFactory
+      .withCredentials({ password: testPassword })
+      .create();
 
     const loginResponse = await request(app.getHttpServer())
       .post("/auth/login")
       .send({
-        email: newUser.email,
-        password: credentials.password,
+        email: testUser.email,
+        password: testUser.credentials?.password,
       });
 
     cookies = loginResponse.headers["set-cookie"];
@@ -52,10 +58,13 @@ describe("UsersController (e2e)", () => {
 
   describe("GET /users/:id", () => {
     it("should return a user by id", async () => {
+      console.log(testUser);
       const response = await request(app.getHttpServer())
         .get(`/users/${testUser.id}`)
         .set("Cookie", cookies)
         .expect(200);
+
+      console.log(response.body.data);
 
       expect(response.body.data).toBeDefined();
       expect(response.body.data.id).toBe(testUser.id);
@@ -101,7 +110,7 @@ describe("UsersController (e2e)", () => {
       await request(app.getHttpServer())
         .patch(`/users/${testUser.id}/change-password`)
         .set("Cookie", cookies)
-        .send({ oldPassword: testCredentials.password, newPassword })
+        .send({ oldPassword: testPassword, newPassword })
         .expect(200);
 
       const loginResponse = await request(app.getHttpServer())

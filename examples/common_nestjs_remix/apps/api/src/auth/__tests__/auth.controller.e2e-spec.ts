@@ -104,36 +104,28 @@ describe("AuthController (e2e)", () => {
         .send({
           email: user.email,
           password: password,
-        })
-        .expect(201);
+        });
 
       const cookies = loginResponse.headers["set-cookie"];
 
-      let accessToken = "";
-      let refreshToken = "";
-
-      if (isArray(cookies)) {
-        /**
-         * https://www.npmjs.com/package/cookie
-maybe something like this? seems usefull
-         */
-        cookies.forEach((cookie) => {
-          if (cookie.startsWith("access_token=")) {
-            accessToken = cookie;
-          } else if (cookie.startsWith("refresh_token=")) {
-            refreshToken = cookie;
+      if (Array.isArray(cookies)) {
+        cookies.forEach((cookieString) => {
+          const parsedCookie = cookie.parse(cookieString);
+          if ("access_token" in parsedCookie) {
+            accessToken = parsedCookie.access_token;
           }
         });
       }
 
       const logoutResponse = await request(app.getHttpServer())
         .post("/auth/logout")
-        .set("Cookie", [accessToken, refreshToken].filter(Boolean))
-        .expect(201);
+        .set("Cookie", `access_token=${accessToken};`);
 
-      expect(logoutResponse.headers["set-cookie"]).toBeDefined();
       const logoutCookies = logoutResponse.headers["set-cookie"];
 
+      expect(loginResponse.status).toBe(201);
+      expect(logoutResponse.status).toBe(201);
+      expect(logoutResponse.headers["set-cookie"]).toBeDefined();
       expect(logoutCookies.length).toBe(2);
       expect(logoutCookies[0]).toContain("access_token=;");
       expect(logoutCookies[1]).toContain("refresh_token=;");
@@ -142,7 +134,7 @@ maybe something like this? seems usefull
 
   describe("POST /auth/refresh", () => {
     it("should refresh tokens", async () => {
-      const { user } = userWithCredentialFactory.build();
+      const user = await userFactory.build();
       const password = "password123";
       await authService.register(user.email, password);
 
