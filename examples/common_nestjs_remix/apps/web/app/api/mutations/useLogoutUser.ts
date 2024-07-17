@@ -1,9 +1,11 @@
 import { useAuthStore } from "./../../modules/Auth/authStore";
 import { useMutation } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 export function useLogoutUser() {
-  const { setAuthState } = useAuthStore();
+  const { setLoggedIn } = useAuthStore();
   return useMutation({
     mutationFn: async () => {
       const response = await ApiClient.auth.authControllerLogout();
@@ -11,7 +13,13 @@ export function useLogoutUser() {
       return response.data;
     },
     onSuccess: () => {
-      setAuthState(false);
+      setLoggedIn(false);
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        return toast.error(error.response?.data.message);
+      }
+      toast.error(error.message);
     },
   });
 }

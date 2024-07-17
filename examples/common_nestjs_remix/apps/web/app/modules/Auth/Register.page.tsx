@@ -12,6 +12,15 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useForm } from "react-hook-form";
 import { RegisterBody } from "~/api/generated-api";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const registerSchema = z.object({
+  email: z.string().email({ message: "Invalid email" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
+});
 
 export default function RegisterPage() {
   const { mutate: registerUser } = useRegisterUser();
@@ -19,7 +28,7 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterBody>();
+  } = useForm<RegisterBody>({ resolver: zodResolver(registerSchema) });
 
   const onSubmit = async (data: RegisterBody) => {
     registerUser({ data });

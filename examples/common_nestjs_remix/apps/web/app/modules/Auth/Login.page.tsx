@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -13,17 +13,29 @@ import { useLoginUser } from "~/api/mutations/useLoginUser";
 import { useForm } from "react-hook-form";
 import { LoginBody } from "~/api/generated-api";
 import { cn } from "~/lib/utils";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const loginSchema = z.object({
+  email: z.string().email({ message: "Invalid email" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" }),
+});
 
 export default function LoginPage() {
-  const { mutate: loginUser } = useLoginUser();
+  const navigate = useNavigate();
+  const { mutateAsync: loginUser } = useLoginUser();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginBody>();
+  } = useForm<LoginBody>({ resolver: zodResolver(loginSchema) });
 
-  const onSubmit = async (data: LoginBody) => {
-    loginUser({ data });
+  const onSubmit = (data: LoginBody) => {
+    loginUser({ data }).then(() => {
+      navigate("/dashboard");
+    });
   };
 
   return (
@@ -43,10 +55,10 @@ export default function LoginPage() {
               type="email"
               placeholder="user@example.com"
               className={cn({ "border-red-500": errors.email })}
-              {...register("email", { required: true })}
+              {...register("email")}
             />
             {errors.email && (
-              <div className="text-red-500 text-sm">Email is required</div>
+              <div className="text-red-500 text-sm">{errors.email.message}</div>
             )}
           </div>
           <div className="grid gap-2">
@@ -57,10 +69,12 @@ export default function LoginPage() {
               id="password"
               type="password"
               className={cn({ "border-red-500": errors.password })}
-              {...register("password", { required: true })}
+              {...register("password")}
             />
             {errors.password && (
-              <div className="text-red-500 text-sm">Password is required</div>
+              <div className="text-red-500 text-sm">
+                {errors.password.message}
+              </div>
             )}
           </div>
           <Button type="submit" className="w-full">
