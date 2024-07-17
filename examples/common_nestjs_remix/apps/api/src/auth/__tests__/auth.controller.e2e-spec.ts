@@ -1,37 +1,44 @@
+import { DatabasePg } from "../../common/index";
 import { INestApplication } from "@nestjs/common";
 import { isArray } from "lodash";
 import request from "supertest";
-import { userWithCredentialFactory } from "../../../test/factory/user.factory";
+import { createUserFactory } from "../../../test/factory/user.factory";
 import { createE2ETest } from "../../../test/create-e2e-test";
 import { AuthService } from "../auth.service";
+import * as cookie from "cookie";
 
 describe("AuthController (e2e)", () => {
   let app: INestApplication;
   let authService: AuthService;
+  let db: DatabasePg;
+  let userFactory: ReturnType<typeof createUserFactory>;
 
   beforeAll(async () => {
     const { app: testApp, getService } = await createE2ETest();
     app = testApp;
     authService = getService(AuthService);
+    db = app.get("DB");
+    userFactory = createUserFactory(db);
   });
 
   describe("POST /auth/register", () => {
     it("should register a new user", async () => {
-      const { user: newUser, credential: newCredential } =
-        userWithCredentialFactory.build();
+      const user = await userFactory
+        .withCredentials({ password: "password123" })
+        .build();
 
       const response = await request(app.getHttpServer())
         .post("/auth/register")
         .set("Accept", "application/json")
         .set("Content-Type", "application/json")
         .send({
-          email: newUser.email,
-          password: newCredential.password,
+          email: user.email,
+          password: user.credentials?.password,
         });
 
       expect(response.status).toEqual(201);
       expect(response.body.data).toHaveProperty("id");
-      expect(response.body.data.email).toBe(newUser.email);
+      expect(response.body.data.email).toBe(user.email);
     });
 
     it("should return 409 if user already exists", async () => {
@@ -51,20 +58,22 @@ describe("AuthController (e2e)", () => {
 
   describe("POST /auth/login", () => {
     it("should login and return user data with cookies", async () => {
-      const { user, credential } = await userWithCredentialFactory
-        .transient({ saveToDatabase: true, authService })
-        .build();
-
-      console.log({ user, credential });
+      const user = await userFactory
+        .withCredentials({
+          password: "password123",
+        })
+        .create({
+          email: "test@example.com",
+        });
 
       const response = await request(app.getHttpServer())
         .post("/auth/login")
         .send({
           email: user.email,
-          password: credential.password,
-        })
-        .expect(201);
+          password: user.credentials?.password,
+        });
 
+      expect(response.status).toEqual(201);
       expect(response.body.data).toHaveProperty("id");
       expect(response.body.data.email).toBe(user.email);
       expect(response.headers["set-cookie"]).toBeDefined();
@@ -84,7 +93,9 @@ describe("AuthController (e2e)", () => {
 
   describe("POST /auth/logout", () => {
     it("should clear token cookies for a logged-in user", async () => {
-      const { user } = userWithCredentialFactory.build();
+      let accessToken = "";
+
+      const user = userFactory.build();
       const password = "password123";
       await authService.register(user.email, password);
 
