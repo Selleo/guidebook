@@ -4,11 +4,9 @@ import {
   ACCESS_TOKEN_EXPIRATION_TIME,
   REFRESH_TOKEN_EXPIRATION_TIME,
 } from "./consts";
-import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class TokenService {
-  constructor(private readonly configService: ConfigService) {}
   setTokenCookies(
     response: Response,
     accessToken: string,
@@ -26,10 +24,7 @@ export class TokenService {
       secure: true,
       sameSite: "strict",
       maxAge: REFRESH_TOKEN_EXPIRATION_TIME,
-      path: this.configService.get<string>(
-        "auth.refreshTokenPath",
-        "/auth/refresh-token",
-      ),
+      path: "/auth/refresh",
     });
   }
 

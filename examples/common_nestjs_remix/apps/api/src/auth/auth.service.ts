@@ -9,8 +9,9 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
-import { credentials, users } from "src/storage/schema";
-import { UsersService } from "src/users/users.service";
+import { credentials, users } from "../storage/schema";
+import { UsersService } from "../users/users.service";
+import hashPassword from "src/common/helpers/hashPassword";
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
       throw new ConflictException("User already exists");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
     return this.db.transaction(async (trx) => {
       const [newUser] = await trx.insert(users).values({ email }).returning();
@@ -63,18 +64,22 @@ export class AuthService {
   }
 
   public async refreshTokens(refreshToken: string) {
-    const payload = await this.jwtService.verifyAsync(refreshToken, {
-      secret: this.configService.get<string>("jwt.refreshSecret"),
-      ignoreExpiration: false,
-    });
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.configService.get<string>("jwt.refreshSecret"),
+        ignoreExpiration: false,
+      });
 
-    const user = await this.usersService.getUserById(payload.userId);
-    if (!user) {
-      throw new UnauthorizedException("User not found");
+      const user = await this.usersService.getUserById(payload.userId);
+      if (!user) {
+        throw new UnauthorizedException("User not found");
+      }
+
+      const tokens = await this.getTokens(user.id, user.email);
+      return tokens;
+    } catch (error) {
+      throw new UnauthorizedException("Invalid refresh token");
     }
-
-    const tokens = await this.getTokens(user.id, user.email);
-    return tokens;
   }
 
   public async validateUser(email: string, password: string) {

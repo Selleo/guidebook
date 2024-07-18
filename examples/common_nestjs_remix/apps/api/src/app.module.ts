@@ -7,14 +7,13 @@ import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
 import { JwtModule } from "@nestjs/jwt";
 import jwtConfig from "./common/configuration/jwt";
-import authConfig from "./common/configuration/auth";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./common/guards/jwt-auth-guard";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database, jwtConfig, authConfig],
+      load: [database, jwtConfig],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({
