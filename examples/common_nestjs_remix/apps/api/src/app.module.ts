@@ -3,12 +3,17 @@ import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
 import database from "./common/configuration/database";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as schema from "./storage/schema";
-import { ManagementModule } from "./management/management.module";
+import { AuthModule } from "./auth/auth.module";
+import { UsersModule } from "./users/users.module";
+import { JwtModule } from "@nestjs/jwt";
+import jwtConfig from "./common/configuration/jwt";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtAuthGuard } from "./common/guards/jwt-auth-guard";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database],
+      load: [database, jwtConfig],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({
@@ -25,9 +30,30 @@ import { ManagementModule } from "./management/management.module";
       },
       inject: [ConfigService],
     }),
-    ManagementModule,
+    JwtModule.registerAsync({
+      useFactory(configService: ConfigService) {
+        return {
+          secret: configService.get<string>("jwt.secret")!,
+          signOptions: {
+            expiresIn: configService.get<string>(
+              "JWT_EXPIRATION_TIME",
+              "15min",
+            ),
+          },
+        };
+      },
+      inject: [ConfigService],
+      global: true,
+    }),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
