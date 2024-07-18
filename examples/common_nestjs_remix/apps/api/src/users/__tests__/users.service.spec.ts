@@ -73,13 +73,13 @@ describe("UsersService", () => {
         email: "new@example.com",
       });
 
-      expect(updatedUser).toBeDefined();
-      expect(updatedUser.email).toBe("new@example.com");
-
       const [dbUser] = await db
         .select()
         .from(users)
         .where(eq(users.id, testUser.id));
+
+      expect(updatedUser).toBeDefined();
+      expect(updatedUser.email).toBe("new@example.com");
       expect(dbUser.email).toBe("new@example.com");
     });
 

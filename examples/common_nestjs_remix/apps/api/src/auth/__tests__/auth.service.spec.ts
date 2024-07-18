@@ -41,13 +41,13 @@ describe("AuthService", () => {
         .select()
         .from(users)
         .where(eq(users.email, user.email));
-      expect(savedUser).toBeDefined();
 
       const [savedCredentials] = await db
         .select()
         .from(credentials)
         .where(eq(credentials.userId, savedUser.id));
 
+      expect(savedUser).toBeDefined();
       expect(result).toBeDefined();
       expect(result.email).toBe(user.email);
       expect(savedCredentials).toBeDefined();
