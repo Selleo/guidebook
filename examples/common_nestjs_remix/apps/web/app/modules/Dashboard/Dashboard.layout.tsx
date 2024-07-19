@@ -12,6 +12,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { useAuthEffect } from "../Auth/authEffect";
 import { authGuard } from "../Auth/authGuard";
+import { ThemeToggle } from "~/components";
 
 export function clientLoader() {
   return authGuard();
@@ -24,18 +25,7 @@ export default function DashboardLayout() {
   return (
     <div>
       <header className="sticky top-0 z-30 flex h-14 items-center border-b bg-background px-4 py-2 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-        <Button
-          variant="outline"
-          onClick={() => {
-            document.documentElement.classList.toggle("dark");
-            localStorage.setItem(
-              "theme",
-              document.documentElement.classList.contains("dark") ? "dark" : ""
-            );
-          }}
-        >
-          🎃
-        </Button>
+        <ThemeToggle />
         <div className="flex-shrink-0 ml-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

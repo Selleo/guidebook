@@ -1,11 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-} from "~/components/ui/sheet";
+import { SheetMenu } from "~/components";
 import { useLandingStore } from "~/modules/Landing/landingStore";
 
 export const meta: MetaFunction = () => {
@@ -25,81 +20,73 @@ export default function LandingPage() {
 
   return (
     <div className="px-4">
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent side="left">
-          <SheetHeader>
-            <SheetDescription>
-              <div className="flex flex-col gap-2 px-2">
-                <div>
-                  <h2 className="text-xl font-semibold">
-                    Check out our Pokemons!
-                  </h2>
-                  <ul className="list-disc">
-                    <li>
-                      <Link className="text-orange-500" to="/about">
-                        Pokemons
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-                <h2 className="text-xl font-semibold">Usefull Remix Sources</h2>
-                <ul className="list-disc">
-                  <li>
-                    <a
-                      className="underline"
-                      target="_blank"
-                      href="https://remix.run/docs/en/main/discussion/routes#route-configuration"
-                      rel="noreferrer"
-                    >
-                      Layout routing
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="underline"
-                      target="_blank"
-                      href="https://remix.run/docs/en/main/guides/spa-mode"
-                      rel="noreferrer"
-                    >
-                      SPA Mode resources
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="underline"
-                      target="_blank"
-                      href="https://remix.run/docs/en/main/guides/client-data"
-                      rel="noreferrer"
-                    >
-                      Client data
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="underline"
-                      target="_blank"
-                      href="https://remix.run/docs/en/main/route/client-action#arguments"
-                      rel="noreferrer"
-                    >
-                      Client action
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="underline"
-                      target="_blank"
-                      href="https://remix.run/docs"
-                      rel="noreferrer"
-                    >
-                      Remix Docs
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </SheetDescription>
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
+      <SheetMenu isSheetOpen={isSheetOpen} setIsSheetOpen={setIsSheetOpen}>
+        <div className="flex flex-col gap-2 px-2">
+          <div>
+            <p className="text-xl font-semibold">Check out our Pokemons!</p>
+            <ul className="list-disc">
+              <li>
+                <Link className="text-orange-500" to="/pokemons">
+                  Pokemons
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <p className="text-xl font-semibold">Usefull Remix Sources</p>
+          <ul className="list-disc">
+            <li>
+              <a
+                className="underline"
+                target="_blank"
+                href="https://remix.run/docs/en/main/discussion/routes#route-configuration"
+                rel="noreferrer"
+              >
+                Layout routing
+              </a>
+            </li>
+            <li>
+              <a
+                className="underline"
+                target="_blank"
+                href="https://remix.run/docs/en/main/guides/spa-mode"
+                rel="noreferrer"
+              >
+                SPA Mode resources
+              </a>
+            </li>
+            <li>
+              <a
+                className="underline"
+                target="_blank"
+                href="https://remix.run/docs/en/main/guides/client-data"
+                rel="noreferrer"
+              >
+                Client data
+              </a>
+            </li>
+            <li>
+              <a
+                className="underline"
+                target="_blank"
+                href="https://remix.run/docs/en/main/route/client-action#arguments"
+                rel="noreferrer"
+              >
+                Client action
+              </a>
+            </li>
+            <li>
+              <a
+                className="underline"
+                target="_blank"
+                href="https://remix.run/docs"
+                rel="noreferrer"
+              >
+                Remix Docs
+              </a>
+            </li>
+          </ul>
+        </div>
+      </SheetMenu>
 
       <div className="relative w-[300px] h-[300px] mx-auto mt-20">
         <img
