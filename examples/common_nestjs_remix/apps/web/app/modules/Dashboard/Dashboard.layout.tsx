@@ -12,7 +12,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { useAuthEffect } from "../Auth/authEffect";
 import { authGuard } from "../Auth/authGuard";
-import { ThemeToggle } from "~/components";
+import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
 
 export function clientLoader() {
   return authGuard();

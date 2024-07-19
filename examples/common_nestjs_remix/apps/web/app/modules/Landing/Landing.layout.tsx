@@ -8,10 +8,11 @@ import {
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
 import { useLandingStore } from "./landingStore";
-import { ThemeToggle } from "~/components";
+import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
 
 export default function LandingLayout() {
-  const { setIsSheetOpen } = useLandingStore();
+  const setIsSheetOpen = useLandingStore((state) => state.setIsSheetOpen);
+
   return (
     <main className="p-4 relative">
       <Button

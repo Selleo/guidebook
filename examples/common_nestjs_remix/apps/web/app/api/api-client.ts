@@ -1,3 +1,4 @@
+import { useAuthStore } from "~/modules/Auth/authStore";
 import { API } from "./generated-api";
 
 export const ApiClient = new API({
@@ -9,10 +10,12 @@ export const ApiClient = new API({
 ApiClient.instance.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const isLoggedIn = useAuthStore.getState().isLoggedIn;
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+      if (!isLoggedIn) return;
 
       try {
         await ApiClient.auth.authControllerRefreshTokens();

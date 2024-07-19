@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { SheetMenu } from "~/components";
+import SheetMenu from "~/components/SheetMenu/SheetMenu";
 import { useLandingStore } from "~/modules/Landing/landingStore";
 
 export const meta: MetaFunction = () => {
