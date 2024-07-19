@@ -1,14 +1,20 @@
-import { useLayoutEffect, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import { useThemeStore } from "./themeStore";
+import { match } from "ts-pattern";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  useLayoutEffect(() => {
-    const theme = localStorage.getItem("theme");
+  const theme = useThemeStore((state) => state.theme);
 
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
+  useEffect(() => {
+    match(theme)
+      .with("dark", () => {
+        document.documentElement.classList.add("dark");
+      })
+      .with("light", () => {
+        document.documentElement.classList.remove("dark");
+      })
+      .exhaustive();
+  }, [theme]);
+
   return <>{children}</>;
 }

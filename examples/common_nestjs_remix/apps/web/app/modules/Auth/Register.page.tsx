@@ -11,9 +11,9 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useForm } from "react-hook-form";
-import { RegisterBody } from "~/api/generated-api";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { RegisterBody } from "~/api/generated-api";
 
 const registerSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),

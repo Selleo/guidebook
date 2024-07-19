@@ -7,20 +7,8 @@ import {
 } from "@remix-run/react";
 import "./index.css";
 import { Toaster } from "./components/ui/sonner";
-import { useEffect } from "react";
-import { useAuthStore } from "./modules/Auth/authStore";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { setLoggedIn } = useAuthStore();
-
-  useEffect(() => {
-    const storedAuth = localStorage.getItem("auth-storage");
-    if (storedAuth) {
-      const { state } = JSON.parse(storedAuth);
-      setLoggedIn(state.isLoggedIn);
-    }
-  }, [setLoggedIn]);
-
   return (
     <html lang="en">
       <head>
