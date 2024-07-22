@@ -1,6 +1,6 @@
 import { DatabasePg } from "../../common/index";
 import { INestApplication } from "@nestjs/common";
-import { isArray } from "lodash";
+import { isArray, omit } from "lodash";
 import request from "supertest";
 import { createUserFactory } from "../../../test/factory/user.factory";
 import { createE2ETest } from "../../../test/create-e2e-test";
@@ -205,8 +205,7 @@ describe("AuthController (e2e)", () => {
         .set("Cookie", `access_token=${accessToken};`)
         .expect(200);
 
-      expect(response.body.data).toHaveProperty("id");
-      expect(response.body.data.email).toBe(user.email);
+      expect(response.body.data).toStrictEqual(omit(user, "credentials"));
     });
 
     it("should return 401 for unauthenticated request", async () => {
