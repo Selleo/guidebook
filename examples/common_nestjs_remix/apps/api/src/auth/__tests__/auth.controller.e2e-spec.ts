@@ -137,6 +137,7 @@ describe("AuthController (e2e)", () => {
       const user = await userFactory.build();
       const password = "password123";
       await authService.register(user.email, password);
+      let refreshToken = "";
 
       const loginResponse = await request(app.getHttpServer())
         .post("/auth/login")
@@ -147,8 +148,6 @@ describe("AuthController (e2e)", () => {
         .expect(201);
 
       const cookies = loginResponse.headers["set-cookie"];
-
-      let refreshToken = "";
 
       if (isArray(cookies)) {
         cookies.forEach((cookie) => {
@@ -172,6 +171,46 @@ describe("AuthController (e2e)", () => {
         .post("/auth/refresh")
         .set("Cookie", ["refreshToken=invalid_token"])
         .expect(401);
+    });
+  });
+
+  describe("GET /auth/me", () => {
+    it("should return current user data for authenticated user", async () => {
+      let accessToken = "";
+
+      const user = await userFactory
+        .withCredentials({ password: "password123" })
+        .create();
+
+      const loginResponse = await request(app.getHttpServer())
+        .post("/auth/login")
+        .send({
+          email: user.email,
+          password: "password123",
+        });
+
+      const cookies = loginResponse.headers["set-cookie"];
+
+      if (Array.isArray(cookies)) {
+        cookies.forEach((cookieString) => {
+          const parsedCookie = cookie.parse(cookieString);
+          if ("access_token" in parsedCookie) {
+            accessToken = parsedCookie.access_token;
+          }
+        });
+      }
+
+      const response = await request(app.getHttpServer())
+        .get("/auth/me")
+        .set("Cookie", `access_token=${accessToken};`)
+        .expect(200);
+
+      expect(response.body.data).toHaveProperty("id");
+      expect(response.body.data.email).toBe(user.email);
+    });
+
+    it("should return 401 for unauthenticated request", async () => {
+      await request(app.getHttpServer()).get("/auth/me").expect(401);
     });
   });
 });
