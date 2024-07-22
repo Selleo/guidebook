@@ -1,4 +1,8 @@
-import { ConflictException, UnauthorizedException } from "@nestjs/common";
+import {
+  ConflictException,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { AuthService } from "src/auth/auth.service";
@@ -134,6 +138,26 @@ describe("AuthService", () => {
       const result = await authService.validateUser(email, password);
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe("currentUser", () => {
+    it("should return current user data", async () => {
+      const user = await userFactory.create();
+
+      const result = await authService.currentUser(user.id);
+
+      expect(result).toBeDefined();
+      expect(result.id).toBe(user.id);
+      expect(result.email).toBe(user.email);
+    });
+
+    it("should throw UnauthorizedException for non-existent user", async () => {
+      const nonExistentUserId = crypto.randomUUID();
+
+      await expect(authService.currentUser(nonExistentUserId)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });
