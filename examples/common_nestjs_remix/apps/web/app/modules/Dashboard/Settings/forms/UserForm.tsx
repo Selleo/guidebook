@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UpdateUserBody } from "~/api/generated-api";
 import { useUpdateUser } from "~/api/mutations/useUpdateUser";
+import { useSafeCurrentUser } from "~/api/queries/useCurrentUser";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -15,7 +16,6 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
-import { useAuthStore } from "~/modules/Auth/authStore";
 
 const updateUserSchema = z.object({
   email: z.string().email(),
@@ -23,7 +23,7 @@ const updateUserSchema = z.object({
 
 export default function UserForm() {
   const { mutate: updateUser } = useUpdateUser();
-  const currentUser = useAuthStore.getState().currentUser;
+  const { data: currentUser } = useSafeCurrentUser();
 
   const {
     register,

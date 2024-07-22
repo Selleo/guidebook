@@ -51,6 +51,15 @@ export type LogoutResponse = null;
 
 export type RefreshTokensResponse = null;
 
+export interface MeResponse {
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+  };
+}
+
 export interface GetUsersResponse {
   data: {
     id: string;
@@ -299,6 +308,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<RefreshTokensResponse, any>({
         path: `/auth/refresh`,
         method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AuthControllerMe
+     * @request GET:/auth/me
+     */
+    authControllerMe: (params: RequestParams = {}) =>
+      this.request<MeResponse, any>({
+        path: `/auth/me`,
+        method: "GET",
         format: "json",
         ...params,
       }),

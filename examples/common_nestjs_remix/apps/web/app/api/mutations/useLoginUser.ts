@@ -10,7 +10,8 @@ type LoginUserOptions = {
 };
 
 export function useLoginUser() {
-  const { setLoggedIn, setCurrentUser } = useAuthStore();
+  const setLoggedIn = useAuthStore.getState().setLoggedIn;
+
   return useMutation({
     mutationFn: async (options: LoginUserOptions) => {
       const response = await ApiClient.auth.authControllerLogin(options.data);
