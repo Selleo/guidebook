@@ -10,14 +10,17 @@ type LoginUserOptions = {
 };
 
 export function useLoginUser() {
-  const { setLoggedIn } = useAuthStore();
+  const { setLoggedIn, setCurrentUser } = useAuthStore();
   return useMutation({
     mutationFn: async (options: LoginUserOptions) => {
       const response = await ApiClient.auth.authControllerLogin(options.data);
 
+      if (!response) throw new Error("Invalid username or password");
+
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setCurrentUser(data.data);
       setLoggedIn(true);
     },
     onError: (error) => {
