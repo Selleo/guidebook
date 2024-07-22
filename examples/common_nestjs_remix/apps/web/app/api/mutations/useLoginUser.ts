@@ -22,8 +22,7 @@ export function useLoginUser() {
 
       return response.data;
     },
-    onSuccess: (data) => {
-      setCurrentUser(data.data);
+    onSuccess: () => {
       setLoggedIn(true);
     },
     onError: (error) => {

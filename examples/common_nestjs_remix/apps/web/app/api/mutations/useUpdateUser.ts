@@ -1,19 +1,20 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { useAuthStore } from "~/modules/Auth/authStore";
 import { ApiClient } from "../api-client";
 import { UpdateUserBody } from "../generated-api";
+import { queryClient } from "../queryClient";
+import {
+  currentUserQueryOptions,
+  useSafeCurrentUser,
+} from "../queries/useCurrentUser";
 
 type UpdateUserOptions = {
   data: UpdateUserBody;
 };
 
 export function useUpdateUser() {
-  const { setCurrentUser, currentUser } = useAuthStore();
-  if (!currentUser) {
-    throw new Error("User is not logged in");
-  }
+  const { data: currentUser } = useSafeCurrentUser();
 
   return useMutation({
     mutationFn: async (options: UpdateUserOptions) => {
@@ -24,8 +25,8 @@ export function useUpdateUser() {
 
       return response.data;
     },
-    onSuccess: (data) => {
-      setCurrentUser(data.data);
+    onSuccess: () => {
+      queryClient.invalidateQueries(currentUserQueryOptions);
       toast.success("User updated successfully");
     },
     onError: (error) => {
