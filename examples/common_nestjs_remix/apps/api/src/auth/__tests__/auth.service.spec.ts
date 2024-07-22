@@ -15,6 +15,12 @@ import { omit } from "lodash";
 import hashPassword from "src/common/helpers/hashPassword";
 import { truncateAllTables } from "test/helpers/test-helpers";
 
+jest.mock("../../common/emails/emails.service", () => ({
+  EmailService: jest.fn().mockImplementation(() => ({
+    sendEmail: jest.fn().mockResolvedValue(undefined),
+  })),
+}));
+
 describe("AuthService", () => {
   let testContext: TestContext;
   let authService: AuthService;

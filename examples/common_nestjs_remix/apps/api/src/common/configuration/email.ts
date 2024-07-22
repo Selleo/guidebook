@@ -7,12 +7,12 @@ const schema = Type.Object({
   SMTP_PORT: Type.Number(),
   SMTP_USER: Type.String(),
   SMTP_PASSWORD: Type.String(),
-  USE_MAILHOG: Type.Boolean({ default: false }),
+  USE_MAILHOG: Type.Boolean(),
 });
 
-type DatabaseConfig = Static<typeof schema>;
+type EmailConfig = Static<typeof schema>;
 
-export default registerAs("email", (): DatabaseConfig => {
+export default registerAs("email", (): EmailConfig => {
   const values = {
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_PORT: parseInt(process.env.SMTP_PORT ?? "465", 10),
