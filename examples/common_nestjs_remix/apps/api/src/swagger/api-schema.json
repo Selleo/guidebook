@@ -89,6 +89,23 @@
         }
       }
     },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "operationId": "UsersController_getUsers",
@@ -344,6 +361,37 @@
       },
       "RefreshTokensResponse": {
         "type": "null"
+      },
+      "MeResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
       },
       "GetUsersResponse": {
         "type": "object",

@@ -6,6 +6,7 @@ import {
   Res,
   UnauthorizedException,
   UseGuards,
+  Get,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Static } from "@sinclair/typebox";
@@ -23,6 +24,7 @@ import {
 } from "../schemas/create-account.schema";
 import { LoginBody, loginSchema } from "../schemas/login.schema";
 import { TokenService } from "../token.service";
+import { CurrentUser } from "src/common/decorators/user.decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -96,5 +98,17 @@ export class AuthController {
     this.tokenService.setTokenCookies(response, accessToken, newRefreshToken);
 
     return null;
+  }
+
+  @Get("me")
+  @Validate({
+    response: baseResponse(commonUserSchema),
+  })
+  async me(
+    @CurrentUser() currentUser: { userId: string },
+  ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
+    const account = await this.authService.currentUser(currentUser.userId);
+
+    return new BaseResponse(account);
   }
 }
