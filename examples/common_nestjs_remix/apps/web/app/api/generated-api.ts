@@ -88,7 +88,12 @@ export interface ChangePasswordBody {
    * @minLength 8
    * @maxLength 64
    */
-  password: string;
+  newPassword: string;
+  /**
+   * @minLength 8
+   * @maxLength 64
+   */
+  oldPassword: string;
 }
 
 export type ChangePasswordResponse = null;
