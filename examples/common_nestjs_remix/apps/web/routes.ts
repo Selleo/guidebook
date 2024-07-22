@@ -22,5 +22,9 @@ export const routes: (
         index: true,
       });
     });
+    route("auth", "modules/Auth/Auth.layout.tsx", () => {
+      route("login", "modules/Auth/Login.page.tsx");
+      route("register", "modules/Auth/Register.page.tsx");
+    });
   });
 };

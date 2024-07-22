@@ -10,6 +10,8 @@ export function authGuard() {
   const authStore = useAuthStore.getState();
 
   if (!authStore.isLoggedIn) {
-    return redirect("/login");
+    return redirect("/auth/login");
   }
+
+  return null;
 }

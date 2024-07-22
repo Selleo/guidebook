@@ -1,11 +1,19 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type AuthStore = {
   isLoggedIn: boolean;
-  setAuthState: (isLoggedIn: boolean) => void;
+  setLoggedIn: (value: boolean) => void;
 };
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  isLoggedIn: false,
-  setAuthState: (isLoggedIn) => set({ isLoggedIn }),
-}));
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      isLoggedIn: false,
+      setLoggedIn: (value) => set({ isLoggedIn: value }),
+    }),
+    {
+      name: "auth-storage",
+    }
+  )
+);
