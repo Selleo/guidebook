@@ -16,10 +16,6 @@ export function useLoginUser() {
     mutationFn: async (options: LoginUserOptions) => {
       const response = await ApiClient.auth.authControllerLogin(options.data);
 
-      if (!response) {
-        throw new Error("Invalid username or password");
-      }
-
       return response.data;
     },
     onSuccess: () => {

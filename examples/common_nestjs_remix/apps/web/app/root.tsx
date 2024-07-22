@@ -23,6 +23,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
         <Toaster
           position="top-right"
+          richColors
+          closeButton
           toastOptions={{
             classNames: {
               error: "bg-red-400",
