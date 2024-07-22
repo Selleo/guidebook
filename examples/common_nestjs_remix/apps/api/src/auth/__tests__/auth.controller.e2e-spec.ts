@@ -174,7 +174,7 @@ describe("AuthController (e2e)", () => {
     });
   });
 
-  describe("GET /auth/me", () => {
+  describe("GET /auth/current-user", () => {
     it("should return current user data for authenticated user", async () => {
       let accessToken = "";
 
@@ -201,7 +201,7 @@ describe("AuthController (e2e)", () => {
       }
 
       const response = await request(app.getHttpServer())
-        .get("/auth/me")
+        .get("/auth/current-user")
         .set("Cookie", `access_token=${accessToken};`)
         .expect(200);
 
@@ -209,7 +209,7 @@ describe("AuthController (e2e)", () => {
     });
 
     it("should return 401 for unauthenticated request", async () => {
-      await request(app.getHttpServer()).get("/auth/me").expect(401);
+      await request(app.getHttpServer()).get("/auth/current-user").expect(401);
     });
   });
 });

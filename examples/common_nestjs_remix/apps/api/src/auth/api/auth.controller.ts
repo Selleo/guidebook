@@ -100,7 +100,7 @@ export class AuthController {
     return null;
   }
 
-  @Get("me")
+  @Get("current-user")
   @Validate({
     response: baseResponse(commonUserSchema),
   })

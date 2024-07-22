@@ -316,11 +316,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name AuthControllerMe
-     * @request GET:/auth/me
+     * @request GET:/auth/current-user
      */
     authControllerMe: (params: RequestParams = {}) =>
       this.request<MeResponse, any>({
-        path: `/auth/me`,
+        path: `/auth/current-user`,
         method: "GET",
         format: "json",
         ...params,

@@ -7,29 +7,21 @@ export const ApiClient = new API({
   withCredentials: true,
 });
 
-const bypassRefreshEndpoints = ["/login"];
-
 ApiClient.instance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const isLoggedIn = useAuthStore.getState().isLoggedIn;
     const originalRequest = error.config;
+    const isLoggedIn = useAuthStore.getState().isLoggedIn;
 
-    if (
-      some(bypassRefreshEndpoints, (endpoint) =>
-        includes(originalRequest.url, endpoint)
-      )
-    ) {
+    if (!isLoggedIn) {
       return Promise.reject(error);
     }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      if (!isLoggedIn) return;
 
       try {
         await ApiClient.auth.authControllerRefreshTokens();
-
         return ApiClient.instance(originalRequest);
       } catch (error) {
         return Promise.reject(error);
