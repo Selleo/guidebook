@@ -21,6 +21,15 @@ export const routes: (
       route("", "modules/Dashboard/Dashboard.page.tsx", {
         index: true,
       });
+      route(
+        "settings",
+        "modules/Dashboard/Settings/Settings.layout.tsx",
+        () => {
+          route("", "modules/Dashboard/Settings/Settings.page.tsx", {
+            index: true,
+          });
+        }
+      );
     });
     route("auth", "modules/Auth/Auth.layout.tsx", () => {
       route("login", "modules/Auth/Login.page.tsx");
