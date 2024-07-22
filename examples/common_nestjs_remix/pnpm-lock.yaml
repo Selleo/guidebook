@@ -80,6 +80,9 @@ importers:
       nestjs-typebox:
         specifier: 3.0.0-next.8
         version: 3.0.0-next.8(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/swagger@7.4.0)(@sinclair/typebox@0.32.34)(rxjs@7.8.1)
+      nodemailer:
+        specifier: ^6.9.14
+        version: 6.9.14
       passport:
         specifier: ^0.7.0
         version: 0.7.0
