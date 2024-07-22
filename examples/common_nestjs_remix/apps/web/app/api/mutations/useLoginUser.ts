@@ -10,7 +10,7 @@ type LoginUserOptions = {
 };
 
 export function useLoginUser() {
-  const setLoggedIn = useAuthStore.getState().setLoggedIn;
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   return useMutation({
     mutationFn: async (options: LoginUserOptions) => {
