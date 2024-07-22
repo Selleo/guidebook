@@ -1,5 +1,6 @@
 import { useAuthStore } from "~/modules/Auth/authStore";
 import { API } from "./generated-api";
+import { includes, some } from "lodash-es";
 
 export const ApiClient = new API({
   baseURL: import.meta.env.VITE_API_URL,
@@ -7,11 +8,21 @@ export const ApiClient = new API({
   withCredentials: true,
 });
 
+const bypassRefreshEndpoints = ["/login"];
+
 ApiClient.instance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const isLoggedIn = useAuthStore.getState().isLoggedIn;
     const originalRequest = error.config;
+
+    if (
+      some(bypassRefreshEndpoints, (endpoint) =>
+        includes(originalRequest.url, endpoint)
+      )
+    ) {
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
