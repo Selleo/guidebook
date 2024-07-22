@@ -89,7 +89,7 @@
         }
       }
     },
-    "/auth/me": {
+    "/auth/current-user": {
       "get": {
         "operationId": "AuthController_me",
         "parameters": [],

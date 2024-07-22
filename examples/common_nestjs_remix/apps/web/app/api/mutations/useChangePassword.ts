@@ -1,19 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { useAuthStore } from "~/modules/Auth/authStore";
 import { ApiClient } from "../api-client";
 import { ChangePasswordBody } from "../generated-api";
+import { useCurrentUserSuspense } from "../queries/useCurrentUser";
 
 type ChangePasswordOptions = {
   data: ChangePasswordBody;
 };
 
 export function useChangePassword() {
-  const { currentUser } = useAuthStore();
-  if (!currentUser) {
-    throw new Error("User is not logged in");
-  }
+  const { data: currentUser } = useCurrentUserSuspense();
 
   return useMutation({
     mutationFn: async (options: ChangePasswordOptions) => {

@@ -1,6 +1,5 @@
 import { useAuthStore } from "~/modules/Auth/authStore";
 import { API } from "./generated-api";
-import { includes, some } from "lodash-es";
 
 export const ApiClient = new API({
   baseURL: import.meta.env.VITE_API_URL,

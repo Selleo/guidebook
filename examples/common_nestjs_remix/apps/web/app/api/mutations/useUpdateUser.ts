@@ -6,7 +6,7 @@ import { UpdateUserBody } from "../generated-api";
 import { queryClient } from "../queryClient";
 import {
   currentUserQueryOptions,
-  useSafeCurrentUser,
+  useCurrentUserSuspense,
 } from "../queries/useCurrentUser";
 
 type UpdateUserOptions = {
@@ -14,7 +14,7 @@ type UpdateUserOptions = {
 };
 
 export function useUpdateUser() {
-  const { data: currentUser } = useSafeCurrentUser();
+  const { data: currentUser } = useCurrentUserSuspense();
 
   return useMutation({
     mutationFn: async (options: UpdateUserOptions) => {

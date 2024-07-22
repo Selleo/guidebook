@@ -13,7 +13,7 @@ export function useCurrentUser() {
   return useQuery(currentUserQueryOptions);
 }
 
-export function useSafeCurrentUser() {
+export function useCurrentUserSuspense() {
   const { data, ...rest } = useSuspenseQuery(currentUserQueryOptions);
 
   return { data: data?.data, ...rest };
