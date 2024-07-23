@@ -14,10 +14,15 @@ import { createUserFactory } from "test/factory/user.factory";
 import { omit } from "lodash";
 import hashPassword from "src/common/helpers/hashPassword";
 import { truncateAllTables } from "test/helpers/test-helpers";
+import { EmailTestingAdapter } from "test/helpers/test-email.adapter";
+
+const mockEmailTestingAdapter = new EmailTestingAdapter();
 
 jest.mock("../../common/emails/emails.service", () => ({
   EmailService: jest.fn().mockImplementation(() => ({
-    sendEmail: jest.fn().mockResolvedValue(undefined),
+    sendEmail: jest
+      .fn()
+      .mockImplementation((email) => mockEmailTestingAdapter.sendMail(email)),
   })),
 }));
 
@@ -38,6 +43,8 @@ describe("AuthService", () => {
 
   afterEach(async () => {
     await truncateAllTables(db);
+    mockEmailTestingAdapter.resetEmailOverride();
+    mockEmailTestingAdapter.clearEmails();
   });
 
   describe("register", () => {
@@ -64,6 +71,29 @@ describe("AuthService", () => {
       expect(await bcrypt.compare(password, savedCredentials.password)).toBe(
         true,
       );
+    });
+
+    it("should send a welcome email after successful registration", async () => {
+      const user = userFactory.build();
+      const password = "password123";
+      const subject = "Hello there!";
+      const text = "General Kenobi";
+      const html = "<strong>You are a bold one</strong>";
+
+      mockEmailTestingAdapter.setEmailOverride({
+        subject,
+        text,
+        html,
+      });
+
+      await authService.register(user.email, password);
+      const lastEmail = mockEmailTestingAdapter.getLastEmail();
+
+      expect(lastEmail).toBeDefined();
+      expect(lastEmail?.to).toBe(user.email);
+      expect(lastEmail?.subject).toBe(subject);
+      expect(lastEmail?.text).toBe(text);
+      expect(lastEmail?.html).toBe(html);
     });
 
     it("should throw ConflictException if user already exists", async () => {
