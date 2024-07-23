@@ -4,8 +4,9 @@ import { EmailAdapter } from "../adapters/email.adapter";
 import { NodemailerAdapter } from "../adapters/nodemailer.adapter";
 import { LocalAdapter } from "../adapters/local.adapter";
 import { match, P } from "ts-pattern";
+import { EmailConfigSchema } from "src/common/configuration/email";
 
-type AdapterType = "mailhog" | "smtp";
+type AdapterType = EmailConfigSchema["EMAIL_ADAPTER"];
 
 @Injectable()
 export class EmailAdapterFactory {
