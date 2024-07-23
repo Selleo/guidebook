@@ -24,6 +24,7 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.616.0",
     "@knaadh/nestjs-drizzle-postgres": "^1.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",

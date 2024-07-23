@@ -5,6 +5,7 @@ import { NodemailerAdapter } from "./adapters/nodemailer.adapter";
 import { LocalAdapter } from "./adapters/local.adapter";
 import { EmailAdapterFactory } from "./factory/email-adapters.factory";
 import { EmailService } from "./emails.service";
+import { AWSSESAdapter } from "./adapters/ses.adapter";
 
 @Module({
   imports: [ConfigModule],
@@ -12,6 +13,7 @@ import { EmailService } from "./emails.service";
     EmailService,
     NodemailerAdapter,
     LocalAdapter,
+    AWSSESAdapter,
     EmailAdapterFactory,
     {
       provide: EmailAdapter,

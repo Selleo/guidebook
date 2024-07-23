@@ -8,6 +8,7 @@ import { UsersModule } from "./users/users.module";
 import { JwtModule } from "@nestjs/jwt";
 import jwtConfig from "./common/configuration/jwt";
 import emailConfig from "./common/configuration/email";
+import awsConfig from "./common/configuration/aws";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./common/guards/jwt-auth-guard";
 import { EmailModule } from "./common/emails/emails.module";
@@ -15,7 +16,7 @@ import { EmailModule } from "./common/emails/emails.module";
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database, jwtConfig, emailConfig],
+      load: [database, jwtConfig, emailConfig, awsConfig],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({

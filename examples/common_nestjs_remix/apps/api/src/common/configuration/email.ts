@@ -8,7 +8,11 @@ const schema = Type.Object({
   SMTP_USER: Type.String(),
   SMTP_PASSWORD: Type.String(),
   USE_MAILHOG: Type.Boolean(),
-  EMAIL_ADAPTER: Type.Union([Type.Literal("mailhog"), Type.Literal("smtp")]),
+  EMAIL_ADAPTER: Type.Union([
+    Type.Literal("mailhog"),
+    Type.Literal("smtp"),
+    Type.Literal("ses"),
+  ]),
 });
 
 export type EmailConfigSchema = Static<typeof schema>;

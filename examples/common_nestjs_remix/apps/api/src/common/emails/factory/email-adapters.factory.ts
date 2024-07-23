@@ -5,6 +5,7 @@ import { NodemailerAdapter } from "../adapters/nodemailer.adapter";
 import { LocalAdapter } from "../adapters/local.adapter";
 import { match, P } from "ts-pattern";
 import { EmailConfigSchema } from "src/common/configuration/email";
+import { AWSSESAdapter } from "../adapters/ses.adapter";
 
 type AdapterType = EmailConfigSchema["EMAIL_ADAPTER"];
 
@@ -14,6 +15,7 @@ export class EmailAdapterFactory {
     private configService: ConfigService,
     private localAdapter: LocalAdapter,
     private nodemailerAdapter: NodemailerAdapter,
+    private awsSesAdapter: AWSSESAdapter,
   ) {}
 
   createAdapter(): EmailAdapter {
@@ -22,6 +24,7 @@ export class EmailAdapterFactory {
     return match(adapterType)
       .with("mailhog", () => this.localAdapter)
       .with("smtp", () => this.nodemailerAdapter)
+      .with("ses", () => this.awsSesAdapter)
       .with(P.nullish, () => {
         throw new Error("EMAIL_ADAPTER is not defined in configuration");
       })
