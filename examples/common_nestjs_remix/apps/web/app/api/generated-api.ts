@@ -51,6 +51,15 @@ export type LogoutResponse = null;
 
 export type RefreshTokensResponse = null;
 
+export interface CurrentUserResponse {
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+  };
+}
+
 export interface GetUsersResponse {
   data: {
     id: string;
@@ -88,7 +97,12 @@ export interface ChangePasswordBody {
    * @minLength 8
    * @maxLength 64
    */
-  password: string;
+  newPassword: string;
+  /**
+   * @minLength 8
+   * @maxLength 64
+   */
+  oldPassword: string;
 }
 
 export type ChangePasswordResponse = null;
@@ -294,6 +308,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<RefreshTokensResponse, any>({
         path: `/auth/refresh`,
         method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AuthControllerCurrentUser
+     * @request GET:/auth/current-user
+     */
+    authControllerCurrentUser: (params: RequestParams = {}) =>
+      this.request<CurrentUserResponse, any>({
+        path: `/auth/current-user`,
+        method: "GET",
         format: "json",
         ...params,
       }),

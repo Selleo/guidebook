@@ -8,7 +8,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import { DatabasePg } from "src/common";
+import { DatabasePg, UUIDType } from "src/common";
 import { credentials, users } from "../storage/schema";
 import { UsersService } from "../users/users.service";
 import hashPassword from "src/common/helpers/hashPassword";
@@ -61,6 +61,16 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  public async currentUser(id: UUIDType) {
+    const user = await this.usersService.getUserById(id);
+
+    if (!user) {
+      throw new UnauthorizedException("User not found");
+    }
+
+    return user;
   }
 
   public async refreshTokens(refreshToken: string) {

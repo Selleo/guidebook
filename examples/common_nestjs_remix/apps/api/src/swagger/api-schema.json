@@ -89,6 +89,23 @@
         }
       }
     },
+    "/auth/current-user": {
+      "get": {
+        "operationId": "AuthController_currentUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "get": {
         "operationId": "UsersController_getUsers",
@@ -344,6 +361,37 @@
       },
       "RefreshTokensResponse": {
         "type": "null"
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
       },
       "GetUsersResponse": {
         "type": "object",
