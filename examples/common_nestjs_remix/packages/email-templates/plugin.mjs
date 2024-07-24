@@ -15,16 +15,24 @@ const generateIndexContent = () => {
     .readdirSync(templatesDir)
     .filter((file) => file.endsWith(".tsx") && file !== "index.ts");
 
-  const ast = parser.parse(
-    "import { emailTemplateFactory } from './email-factory';\n",
-    {
-      sourceType: "module",
-      plugins: ["typescript"],
-    }
-  );
+  const ast = parser.parse("", {
+    sourceType: "module",
+    plugins: ["typescript"],
+  });
 
   traverse(ast, {
     Program(path) {
+      const factoryImport = t.importDeclaration(
+        [
+          t.importSpecifier(
+            t.identifier("emailTemplateFactory"),
+            t.identifier("emailTemplateFactory")
+          ),
+        ],
+        t.stringLiteral("./email-factory")
+      );
+      path.pushContainer("body", factoryImport);
+
       templateFiles.forEach((templateFile) => {
         const templateName = templateFile.replace(".tsx", "");
         const variableName =

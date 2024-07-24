@@ -1,4 +1,4 @@
-import { emailTemplateFactory } from './email-factory';
+import { emailTemplateFactory } from "./email-factory";
 import WelcomeEmailTemplate from "./templates/WelcomeEmail";
 export const WelcomeEmail = emailTemplateFactory(WelcomeEmailTemplate);
 import WelcomeEmailTwoTemplate from "./templates/WelcomeEmailTwo";
