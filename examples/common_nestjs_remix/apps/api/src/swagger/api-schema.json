@@ -91,14 +91,14 @@
     },
     "/auth/current-user": {
       "get": {
-        "operationId": "AuthController_me",
+        "operationId": "AuthController_currentUser",
         "parameters": [],
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MeResponse"
+                  "$ref": "#/components/schemas/CurrentUserResponse"
                 }
               }
             }
@@ -362,7 +362,7 @@
       "RefreshTokensResponse": {
         "type": "null"
       },
-      "MeResponse": {
+      "CurrentUserResponse": {
         "type": "object",
         "properties": {
           "data": {

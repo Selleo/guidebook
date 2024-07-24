@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { queryClient } from "../queryClient";
 
 export function useLogoutUser() {
   const { setLoggedIn } = useAuthStore();
@@ -13,6 +14,7 @@ export function useLogoutUser() {
       return response.data;
     },
     onSuccess: () => {
+      queryClient.clear();
       setLoggedIn(false);
     },
     onError: (error) => {

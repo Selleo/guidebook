@@ -51,7 +51,7 @@ export type LogoutResponse = null;
 
 export type RefreshTokensResponse = null;
 
-export interface MeResponse {
+export interface CurrentUserResponse {
   data: {
     id: string;
     createdAt: string;
@@ -315,11 +315,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name AuthControllerMe
+     * @name AuthControllerCurrentUser
      * @request GET:/auth/current-user
      */
-    authControllerMe: (params: RequestParams = {}) =>
-      this.request<MeResponse, any>({
+    authControllerCurrentUser: (params: RequestParams = {}) =>
+      this.request<CurrentUserResponse, any>({
         path: `/auth/current-user`,
         method: "GET",
         format: "json",

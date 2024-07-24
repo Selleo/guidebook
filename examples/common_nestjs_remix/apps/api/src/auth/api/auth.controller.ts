@@ -104,7 +104,7 @@ export class AuthController {
   @Validate({
     response: baseResponse(commonUserSchema),
   })
-  async me(
+  async currentUser(
     @CurrentUser() currentUser: { userId: string },
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     const account = await this.authService.currentUser(currentUser.userId);
