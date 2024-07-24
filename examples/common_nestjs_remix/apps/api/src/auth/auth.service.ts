@@ -13,6 +13,7 @@ import { credentials, users } from "../storage/schema";
 import { UsersService } from "../users/users.service";
 import hashPassword from "src/common/helpers/hashPassword";
 import { EmailService } from "src/common/emails/emails.service";
+import { WelcomeEmail } from "@repo/email-templates";
 
 @Injectable()
 export class AuthService {
@@ -43,10 +44,13 @@ export class AuthService {
         .insert(credentials)
         .values({ userId: newUser.id, password: hashedPassword });
 
+      const emailTemplate = new WelcomeEmail({ email, name: email });
+
       await this.emailService.sendEmail({
         to: email,
         subject: "Welcome to our platform",
-        text: "You have successfully registered",
+        text: emailTemplate.text,
+        html: emailTemplate.html,
         from: "godfather@selleo.com",
       });
 

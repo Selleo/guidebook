@@ -7,6 +7,7 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate:client": "pnpm run --filter=web generate:client",
+    "generate:emails": "pnpm run --filter=email-templates build",
     "db:generate": "pnpm run --filter=api db:generate",
     "db:migrate": "pnpm run --filter=api db:migrate"
   },

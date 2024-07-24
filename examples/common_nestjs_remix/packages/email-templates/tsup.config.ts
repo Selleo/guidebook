@@ -1,10 +1,12 @@
 import { defineConfig, type Options } from "tsup";
-const plugin = require("./plugin");
+import tsupPlugin from "./plugin.mjs";
 
-export default defineConfig((options: Options) => ({
-  entry: ["./index.ts"],
-  format: ["cjs", "esm"],
-  dts: true,
-  plugins: [plugin()],
-  ...options,
-}));
+export default defineConfig(async (options: Options) => {
+  return {
+    entry: ["./src/index.ts"],
+    format: ["cjs", "esm"],
+    plugins: [tsupPlugin()],
+    dts: true,
+    ...options,
+  };
+});
