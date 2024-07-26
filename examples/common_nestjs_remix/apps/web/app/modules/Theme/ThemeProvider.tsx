@@ -6,14 +6,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const theme = useThemeStore((state) => state.theme);
 
   useEffect(() => {
-    match(theme)
-      .with("dark", () => {
-        document.documentElement.classList.add("dark");
-      })
-      .with("light", () => {
-        document.documentElement.classList.remove("dark");
-      })
-      .exhaustive();
+    if (typeof document !== "undefined") {
+      match(theme)
+        .with("dark", () => {
+          document.documentElement.classList.add("dark");
+        })
+        .with("light", () => {
+          document.documentElement.classList.remove("dark");
+        })
+        .exhaustive();
+    }
   }, [theme]);
 
   return <>{children}</>;
