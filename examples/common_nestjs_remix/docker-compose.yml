@@ -3,8 +3,8 @@ services:
     image: postgres:16-alpine
     restart: always
     environment:
-      POSTGRES_PASSWORD: guidebook 
-      POSTGRES_DB: guidebook 
+      POSTGRES_PASSWORD: guidebook
+      POSTGRES_DB: guidebook
     volumes:
       - guidebook-db-data:/var/lib/postgresql/data
     ports:
@@ -14,6 +14,16 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+  sws:
+    image: joseluisq/static-web-server:2.31.1
+    environment:
+      - SERVER_ROOT=/uploads
+      - SERVER_CORS_ALLOW_ORIGINS=https://app.guidebook.localhost
+      - SERVER_CORS_ALLOW_HEADERS=orgin, content-type, cache-control
+    volumes:
+      - ./uploads:/uploads
+    ports:
+      - 8069:80
 
 volumes:
   guidebook-db-data:

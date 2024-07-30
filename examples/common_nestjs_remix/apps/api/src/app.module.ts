@@ -14,12 +14,14 @@ import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { EmailModule } from "./common/emails/emails.module";
 import { TestConfigModule } from "./test-config/test-config.module";
 import { StagingGuard } from "./common/guards/staging.guard";
-import { HealthModule } from './health/health.module';
+import { HealthModule } from "./health/health.module";
+import { FilesModule } from "./files/files.module";
+import localFile from "./common/configuration/local_file";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database, jwtConfig, emailConfig, awsConfig],
+      load: [database, jwtConfig, emailConfig, awsConfig, localFile],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({
@@ -53,6 +55,7 @@ import { HealthModule } from './health/health.module';
     EmailModule,
     TestConfigModule,
     HealthModule,
+    FilesModule,
   ],
   controllers: [],
   providers: [

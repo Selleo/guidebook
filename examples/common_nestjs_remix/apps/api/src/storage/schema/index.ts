@@ -1,4 +1,4 @@
-import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { id, timestamps } from "./utils";
 
 export const users = pgTable("users", {
@@ -14,4 +14,13 @@ export const credentials = pgTable("credentials", {
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   password: text("password").notNull(),
+});
+
+export const files = pgTable("files", {
+  ...id,
+  ...timestamps,
+  filename: text("filename").notNull(),
+  url: text("url").notNull(),
+  mimetype: text("mimetype").notNull(),
+  size: integer("size").notNull(),
 });
