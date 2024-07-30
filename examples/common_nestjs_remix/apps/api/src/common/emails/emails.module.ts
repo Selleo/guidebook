@@ -1,20 +1,22 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { EmailAdapter } from "./adapters/email.adapter";
-import { NodemailerAdapter } from "./adapters/nodemailer.adapter";
+import { SmtpAdapter } from "./adapters/smtp.adapter";
 import { LocalAdapter } from "./adapters/local.adapter";
 import { EmailAdapterFactory } from "./factory/email-adapters.factory";
 import { EmailService } from "./emails.service";
 import { AWSSESAdapter } from "./adapters/ses.adapter";
+import { EmailTestingAdapter } from "test/helpers/test-email.adapter";
 
 @Module({
   imports: [ConfigModule],
   providers: [
     EmailService,
-    NodemailerAdapter,
+    SmtpAdapter,
     LocalAdapter,
     AWSSESAdapter,
     EmailAdapterFactory,
+    EmailTestingAdapter,
     {
       provide: EmailAdapter,
       useFactory: (factory: EmailAdapterFactory) => factory.createAdapter(),

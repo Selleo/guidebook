@@ -30,12 +30,12 @@ describe("AuthService", () => {
     jwtService = testContext.module.get(JwtService);
     db = testContext.db;
     userFactory = createUserFactory(db);
+    emailAdapter = testContext.module.get(EmailTestingAdapter);
   }, 30000);
 
   afterEach(async () => {
     await truncateAllTables(db);
-    mockEmailTestingAdapter.resetEmailOverride();
-    mockEmailTestingAdapter.clearEmails();
+    emailAdapter.clearEmails();
   });
 
   describe("register", () => {
@@ -71,14 +71,14 @@ describe("AuthService", () => {
       const text = "General Kenobi";
       const html = "<strong>You are a bold one</strong>";
 
-      mockEmailTestingAdapter.setEmailOverride({
+      emailAdapter.setEmailOverride({
         subject,
         text,
         html,
       });
 
       await authService.register(user.email, password);
-      const lastEmail = mockEmailTestingAdapter.getLastEmail();
+      const lastEmail = emailAdapter.getLastEmail();
 
       expect(lastEmail).toBeDefined();
       expect(lastEmail?.to).toBe(user.email);
