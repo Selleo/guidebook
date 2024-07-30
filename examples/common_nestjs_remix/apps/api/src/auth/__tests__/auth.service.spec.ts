@@ -15,6 +15,7 @@ import { omit } from "lodash";
 import hashPassword from "src/common/helpers/hashPassword";
 import { truncateAllTables } from "test/helpers/test-helpers";
 import { EmailTestingAdapter } from "test/helpers/test-email.adapter";
+import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
 
 describe("AuthService", () => {
   let testContext: TestContext;
@@ -30,7 +31,7 @@ describe("AuthService", () => {
     jwtService = testContext.module.get(JwtService);
     db = testContext.db;
     userFactory = createUserFactory(db);
-    emailAdapter = testContext.module.get(EmailTestingAdapter);
+    emailAdapter = testContext.module.get(EmailAdapter);
   }, 30000);
 
   afterEach(async () => {
