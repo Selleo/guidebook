@@ -17,10 +17,6 @@ export class EmailTestingAdapter extends EmailAdapter {
     this.emailOverride = override;
   }
 
-  resetEmailOverride(): void {
-    this.emailOverride = null;
-  }
-
   getAllEmails(): Email[] {
     return this.sentEmails;
   }
