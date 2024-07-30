@@ -5,7 +5,7 @@ import { Email } from "../email.interface";
 import { EmailAdapter } from "./email.adapter";
 
 @Injectable()
-export class NodemailerAdapter extends EmailAdapter {
+export class SmtpAdapter extends EmailAdapter {
   private transporter: nodemailer.Transporter;
 
   constructor(private configService: ConfigService) {
