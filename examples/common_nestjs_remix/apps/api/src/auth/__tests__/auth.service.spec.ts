@@ -16,22 +16,13 @@ import hashPassword from "src/common/helpers/hashPassword";
 import { truncateAllTables } from "test/helpers/test-helpers";
 import { EmailTestingAdapter } from "test/helpers/test-email.adapter";
 
-const mockEmailTestingAdapter = new EmailTestingAdapter();
-
-jest.mock("../../common/emails/emails.service", () => ({
-  EmailService: jest.fn().mockImplementation(() => ({
-    sendEmail: jest
-      .fn()
-      .mockImplementation((email) => mockEmailTestingAdapter.sendMail(email)),
-  })),
-}));
-
 describe("AuthService", () => {
   let testContext: TestContext;
   let authService: AuthService;
   let jwtService: JwtService;
   let db: DatabasePg;
   let userFactory: ReturnType<typeof createUserFactory>;
+  let emailAdapter: EmailTestingAdapter;
 
   beforeAll(async () => {
     testContext = await createUnitTest();
