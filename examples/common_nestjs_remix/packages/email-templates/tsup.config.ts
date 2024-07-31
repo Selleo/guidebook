@@ -6,6 +6,7 @@ export default defineConfig(async (options: Options) => {
     entry: ["./src/index.ts"],
     format: ["cjs", "esm"],
     plugins: [tsupPlugin()],
+    clean: true,
     dts: true,
     ...options,
   };
