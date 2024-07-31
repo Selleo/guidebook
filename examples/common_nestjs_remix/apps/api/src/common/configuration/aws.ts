@@ -1,6 +1,6 @@
 import { registerAs } from "@nestjs/config";
 import { Static, Type } from "@sinclair/typebox";
-import { Value } from "@sinclair/typebox/value";
+import { configValidator } from "src/utils/configValidator";
 
 const schema = Type.Object({
   AWS_REGION: Type.String(),
@@ -17,5 +17,5 @@ export default registerAs("aws", (): AWSConfigSchema => {
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   };
 
-  return Value.Decode(schema, values);
+  return validateAwsConfig(values);
 });
