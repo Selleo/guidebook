@@ -17,7 +17,7 @@ export class EmailAdapterFactory {
     private configService: ConfigService,
   ) {}
 
-  createAdapter(): EmailAdapter {
+  async createAdapter(): Promise<EmailAdapter> {
     const adapterType = this.configService.get<AdapterType>("EMAIL_ADAPTER");
     const adapter = match(adapterType)
       .with("mailhog", () => LocalAdapter)
@@ -30,6 +30,6 @@ export class EmailAdapterFactory {
         throw new Error(`Unknown email adapter type: ${type}`);
       });
 
-    return this.moduleRef.get(adapter, { strict: false });
+    return await this.moduleRef.create<EmailAdapter>(adapter);
   }
 }
