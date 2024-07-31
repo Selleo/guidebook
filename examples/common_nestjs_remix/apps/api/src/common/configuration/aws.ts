@@ -10,6 +10,8 @@ const schema = Type.Object({
 
 type AWSConfigSchema = Static<typeof schema>;
 
+const validateAwsConfig = configValidator(schema);
+
 export default registerAs("aws", (): AWSConfigSchema => {
   const values = {
     AWS_REGION: process.env.AWS_REGION,

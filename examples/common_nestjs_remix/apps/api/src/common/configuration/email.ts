@@ -16,15 +16,16 @@ const schema = Type.Object({
 
 export type EmailConfigSchema = Static<typeof schema>;
 
+const valdateEmailConfig = configValidator(schema);
+
 export default registerAs("email", (): EmailConfigSchema => {
   const values = {
     SMTP_HOST: process.env.SMTP_HOST,
-    SMTP_PORT: parseInt(process.env.SMTP_PORT ?? "465", 10),
+    SMTP_PORT: parseInt(process.env.SMTP_PORT || "465", 10),
     SMTP_USER: process.env.SMTP_USER,
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
-    USE_MAILHOG: process.env.USE_MAILHOG === "true",
     EMAIL_ADAPTER: process.env.EMAIL_ADAPTER,
   };
 
-  return Value.Decode(schema, values);
+  return valdateEmailConfig(values);
 });
