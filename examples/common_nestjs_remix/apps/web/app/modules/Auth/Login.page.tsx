@@ -33,6 +33,7 @@ export default function LoginPage() {
   } = useForm<LoginBody>({ resolver: zodResolver(loginSchema) });
 
   const onSubmit = (data: LoginBody) => {
+    console.log("ON SUBMIT", data);
     loginUser({ data }).then(() => {
       navigate("/dashboard");
     });
