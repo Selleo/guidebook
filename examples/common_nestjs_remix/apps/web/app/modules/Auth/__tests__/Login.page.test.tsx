@@ -1,23 +1,26 @@
 import { createRemixStub } from "@remix-run/testing";
 import { screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { userEvent } from "@testing-library/user-event";
+import { PropsWithChildren } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { ApiClient } from "~/api/api-client";
 import { renderWith } from "~/utils/testUtils";
 import LoginPage from "../Login.page";
-import { ApiClient } from "~/api/api-client";
-
-vi.mock("@remix-run/react");
-vi.mock("../../../api/api-client");
 
 const mockedUseNavigate = vi.fn();
+
+vi.mock("../../../api/api-client");
 vi.mock("@remix-run/react", async () => {
-  const mod =
+  const module =
     await vi.importActual<typeof import("@remix-run/react")>(
       "@remix-run/react"
     );
   return {
-    ...mod,
+    ...module,
     useNavigate: () => mockedUseNavigate,
+    Link: ({ to, children }: PropsWithChildren<{ to: string }>) => (
+      <a href={to}>{children}</a>
+    ),
   };
 });
 
@@ -40,6 +43,7 @@ describe("Login page", () => {
   });
 
   it.only("submits the form with valid data", async () => {
+    // @ts-expect-error mock
     ApiClient.auth.authControllerLogin.mockResolvedValue({
       data: "",
     });
@@ -51,10 +55,10 @@ describe("Login page", () => {
     await user.type(screen.getByLabelText("Password"), "password123");
     await user.click(screen.getByRole("button", { name: "Login" }));
 
-    // expect(loginUser).toHaveBeenCalledWith({
-    //   email: "test@example.com",
-    //   password: "password123",
-    // });
+    expect(ApiClient.auth.authControllerLogin).toHaveBeenCalledWith({
+      email: "test@example.com",
+      password: "password123",
+    });
     expect(mockedUseNavigate).toHaveBeenCalledWith("/dashboard");
   });
 });
