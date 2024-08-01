@@ -6,17 +6,9 @@ import { last } from "lodash";
 @Injectable()
 export class EmailTestingAdapter extends EmailAdapter {
   private sentEmails: Email[] = [];
-  private emailOverride: Partial<Email> | null = null;
 
   async sendMail(email: Email): Promise<void> {
-    const finalEmail = this.emailOverride
-      ? { ...email, ...this.emailOverride }
-      : email;
-    this.sentEmails.push(finalEmail);
-  }
-
-  setEmailOverride(override: Partial<Email>): void {
-    this.emailOverride = override;
+    this.sentEmails.push(email);
   }
 
   getAllEmails(): Email[] {

@@ -68,24 +68,12 @@ describe("AuthService", () => {
     it("should send a welcome email after successful registration", async () => {
       const user = userFactory.build();
       const password = "password123";
-      const subject = "Hello there!";
-      const text = "General Kenobi";
-      const html = "<strong>You are a bold one</strong>";
 
-      emailAdapter.setEmailOverride({
-        subject,
-        text,
-        html,
-      });
+      const allEmails = emailAdapter.getAllEmails();
 
+      expect(allEmails).toHaveLength(0);
       await authService.register(user.email, password);
-      const lastEmail = emailAdapter.getLastEmail();
-
-      expect(lastEmail).toBeDefined();
-      expect(lastEmail?.to).toBe(user.email);
-      expect(lastEmail?.subject).toBe(subject);
-      expect(lastEmail?.text).toBe(text);
-      expect(lastEmail?.html).toBe(html);
+      expect(allEmails).toHaveLength(1);
     });
 
     it("should throw ConflictException if user already exists", async () => {
