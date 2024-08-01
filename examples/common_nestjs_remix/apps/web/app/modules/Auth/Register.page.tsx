@@ -50,21 +50,19 @@ export default function RegisterPage() {
               id="email"
               type="email"
               placeholder="user@example.com"
-              {...register("email", { required: true })}
+              {...register("email")}
             />
             {errors.email && (
-              <div className="text-red-500 text-sm">Email is required</div>
+              <div className="text-red-500 text-sm">{errors.email.message}</div>
             )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              {...register("password", { required: true })}
-            />
+            <Input id="password" type="password" {...register("password")} />
             {errors.password && (
-              <div className="text-red-500 text-sm">Password is required</div>
+              <div className="text-red-500 text-sm">
+                {errors.password.message}
+              </div>
             )}
           </div>
           <Button type="submit" className="w-full">
