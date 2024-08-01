@@ -11,9 +11,10 @@ test("move to register page", async ({ page }) => {
 test("login as test user", async ({ page }) => {
   await page.goto("/auth/login");
 
-  await page.getByRole("link", { name: "Get started" }).click();
+  await page.getByLabel("email").fill("user@example.com");
+  await page.getByLabel("password").fill("password");
+  await page.getByRole("button", { name: /login/i }).click();
 
-  await expect(
-    page.getByRole("heading", { name: "Installation" })
-  ).toBeVisible();
+  await expect(page).toHaveURL(/dashboard/);
+  await expect(page).toHaveTitle(/dashboard/i);
 });

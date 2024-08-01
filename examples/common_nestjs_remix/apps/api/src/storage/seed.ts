@@ -13,8 +13,8 @@ if (!("DATABASE_URL" in process.env))
 
 async function seed() {
   const connectionString = process.env.DATABASE_URL!;
-  const adminEmail = process.env.TEST_USER_EMAIL || "admin@admin.com";
-  const adminPassword = process.env.TEST_USER_PASSWORD || "admin";
+  const testUserEmail = "user@example.com";
+  const adminPassword = "password";
 
   const sql = postgres(connectionString);
   const db = drizzle(sql) as DatabasePg;
@@ -22,7 +22,7 @@ async function seed() {
   try {
     const adminUserData = {
       id: faker.string.uuid(),
-      email: adminEmail,
+      email: testUserEmail,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
