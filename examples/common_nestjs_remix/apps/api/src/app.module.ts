@@ -10,8 +10,10 @@ import jwtConfig from "./common/configuration/jwt";
 import emailConfig from "./common/configuration/email";
 import awsConfig from "./common/configuration/aws";
 import { APP_GUARD } from "@nestjs/core";
-import { JwtAuthGuard } from "./common/guards/jwt-auth-guard";
+import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { EmailModule } from "./common/emails/emails.module";
+import { TestConfigModule } from "./test-config/test-config.module";
+import { StagingGuard } from "./common/guards/staging.guard";
 
 @Module({
   imports: [
@@ -51,12 +53,17 @@ import { EmailModule } from "./common/emails/emails.module";
     AuthModule,
     UsersModule,
     EmailModule,
+    TestConfigModule,
   ],
   controllers: [],
   providers: [
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: StagingGuard,
     },
   ],
 })

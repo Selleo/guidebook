@@ -171,9 +171,6 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
-      esbuild-register:
-        specifier: ^3.6.0
-        version: 3.6.0(esbuild@0.19.12)
       eslint:
         specifier: ^8.42.0
         version: 8.57.0
@@ -9261,6 +9258,7 @@ packages:
       esbuild: 0.19.12
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /esbuild@0.17.6:
     resolution: {integrity: sha512-TKFRp9TxrJDdRWfSsSERKEovm6v30iHnrjlcGhLBOtReE28Yp1VSBRfO3GTaOFMoxsNerx4TjrhzSuma9ha83Q==}
