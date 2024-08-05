@@ -1,113 +1,171 @@
-import React, { useCallback, useRef, useState } from "react";
-import { cn } from "~/lib/utils";
-import { Label } from "../ui/label";
+import { cva, type VariantProps } from "class-variance-authority";
+import { isEmpty, join } from "lodash-es";
+import { useCallback, useMemo, useRef, useState } from "react";
+import DropzoneContent from "./DropZoneContent";
+import FileList from "./FileList";
 
-function Dropzone() {
-  const [avatar, setAvatar] = useState<string | null>(null);
+type FileExtension = `.${string}`;
+type MimeType = `${string}/${string}`;
+
+type AcceptedFileType =
+  | FileExtension
+  | MimeType
+  | "image/*"
+  | "audio/*"
+  | "video/*";
+
+interface DropzoneProps extends VariantProps<typeof dropzoneVariants> {
+  /**
+   * @description
+   * Accepted file type string. Can be one of:
+   * - A file extension starting with a dot (e.g., ".pdf", ".doc")
+   * - A MIME type (e.g., "image/jpeg", "application/pdf")
+   * - A wildcard MIME type (e.g., "image/*", "video/*")
+   * List of accepted file types.
+   * @example ["image/*", ".pdf", ".doc,.docx"]
+   */
+  acceptedFileTypes: AcceptedFileType[];
+  /**
+   * Whether to allow multiple file selection.
+   * @default false
+   */
+  multiple?: boolean;
+  /**
+   * Callback function called when files are selected.
+   * @param files The selected files
+   */
+  onFilesSelected: (files: File[]) => void;
+}
+
+const dropzoneVariants = cva(
+  "border rounded-lg transition-colors flex items-center justify-center text-neutral-400 text-sm cursor-pointer",
+  {
+    variants: {
+      size: {
+        full: "w-full h-40",
+        preview: "w-40 h-40",
+      },
+      state: {
+        idle: "border",
+        highlighted: "border-blue-500",
+        hasFile: "border-green-500",
+      },
+    },
+    defaultVariants: {
+      size: "full",
+      state: "idle",
+    },
+  }
+);
+
+export default function FileDropZone({
+  acceptedFileTypes,
+  multiple = false,
+  onFilesSelected,
+}: DropzoneProps) {
+  const [files, setFiles] = useState<File[]>([]);
   const [isHighlighted, setIsHighlighted] = useState(false);
-  const [fileName, setFileName] = useState<string>();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = async (file?: File) => {
-    if (!file) {
-      return;
-    }
+  const handleFileUpload = useCallback(
+    (newFiles: File[]) => {
+      if (isEmpty(newFiles)) return;
 
-    if (!file.type.startsWith("image/")) {
-      alert("Please upload an image file");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setAvatar(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-    setFileName(file.name);
-
-    // TODO: Implement server-side file upload
-  };
+      setFiles((prevFiles) =>
+        multiple ? [...prevFiles, ...newFiles] : newFiles
+      );
+      onFilesSelected(newFiles);
+    },
+    [multiple, onFilesSelected]
+  );
 
   const openFileDialog = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    fileInputRef.current?.click();
   };
 
-  const onDragOver = useCallback((evt: React.DragEvent<HTMLDivElement>) => {
+  const onDragOver = (evt: React.DragEvent<HTMLDivElement>) => {
     evt.preventDefault();
     setIsHighlighted(true);
-  }, []);
+  };
 
-  const onDragLeave = useCallback(() => {
+  const onDragLeave = () => {
     setIsHighlighted(false);
-  }, []);
+  };
 
-  const onDrop = useCallback(async (evt: React.DragEvent<HTMLDivElement>) => {
-    evt.preventDefault();
-    const file = Array.from(evt.dataTransfer.files)[0];
-    await handleFileUpload(file);
-    setIsHighlighted(false);
-  }, []);
+  const onDrop = useCallback(
+    (evt: React.DragEvent<HTMLDivElement>) => {
+      evt.preventDefault();
+      const droppedFiles = Array.from(evt.dataTransfer.files);
+      handleFileUpload(droppedFiles);
+      setIsHighlighted(false);
+    },
+    [handleFileUpload]
+  );
 
   const onFileChange = useCallback(
-    async (evt: React.ChangeEvent<HTMLInputElement>) => {
-      const file = Array.from(evt.target.files || [])[0];
-      await handleFileUpload(file);
+    (evt: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFiles = Array.from(evt.target.files || []);
+      handleFileUpload(selectedFiles);
     },
-    []
+    [handleFileUpload]
   );
 
-  const dropZoneClasses = cn(
-    "border-neutral-500 transition-colors h-40 flex items-center justify-center text-neutral-400 text-sm cursor-pointer",
-    {
-      "!border-neutral-300": isHighlighted,
-      "border p-2 w-full": !avatar,
-      "rounded-lg w-40": avatar,
-    }
+  const handleRemoveFile = useCallback(
+    (indexToRemove: number) => {
+      setFiles((prevFiles) => {
+        const updatedFiles = prevFiles.filter(
+          (_, index) => index !== indexToRemove
+        );
+        onFilesSelected(updatedFiles);
+        return updatedFiles;
+      });
+    },
+    [onFilesSelected]
   );
+
+  const getDropZoneState = useMemo(
+    () =>
+      (
+        isHighlighted: boolean,
+        hasFiles: boolean
+      ): "highlighted" | "hasFile" | "idle" => {
+        if (isHighlighted) return "highlighted";
+        if (!multiple && hasFiles) return "hasFile";
+        return "idle";
+      },
+    [multiple]
+  );
+
+  const dropZoneClasses = useMemo(() => {
+    const size = !multiple && !isEmpty(files) ? "preview" : "full";
+    const state = getDropZoneState(isHighlighted, !isEmpty(files));
+
+    return dropzoneVariants({ size, state });
+  }, [multiple, files, getDropZoneState, isHighlighted]);
 
   return (
-    <div className="flex gap-6">
+    <div className="w-full space-y-4">
       <div
         role="button"
         tabIndex={0}
-        onKeyDown={openFileDialog}
+        onKeyDown={(e) => e.key === "Enter" && openFileDialog()}
         onClick={openFileDialog}
         className={dropZoneClasses}
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onDrop={onDrop}
       >
-        {avatar ? (
-          <img
-            src={avatar}
-            alt="Avatar"
-            className="w-full h-full rounded-lg object-cover"
-          />
-        ) : (
-          <span className="text-center">
-            Drag and drop or click to upload avatar
-          </span>
-        )}
-        <input
-          type="file"
-          onChange={onFileChange}
-          ref={fileInputRef}
-          className="hidden"
-          accept="image/*"
-        />
+        <DropzoneContent files={files} multiple={multiple} />
       </div>
-      {fileName && (
-        <div className="space-y-2">
-          <Label htmlFor="email">File name</Label>
-          <p className="cursor-default border h-fit p-2 rounded-md text-sm text-neutral-300">
-            {fileName}
-          </p>
-        </div>
-      )}
+      <input
+        type="file"
+        onChange={onFileChange}
+        ref={fileInputRef}
+        className="hidden"
+        accept={join(acceptedFileTypes, ",")}
+        multiple={multiple}
+      />
+      <FileList files={files} onRemoveFile={handleRemoveFile} />
     </div>
   );
 }
-
-export default Dropzone;
