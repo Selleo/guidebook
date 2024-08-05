@@ -8,6 +8,10 @@ export default function SettingsLayout() {
 
   const navigationItems = [
     {
+      id: "user-avatar",
+      title: "Avatar",
+    },
+    {
       id: "user-info",
       title: "User Info",
     },

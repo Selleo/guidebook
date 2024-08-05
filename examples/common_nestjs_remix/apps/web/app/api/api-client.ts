@@ -22,9 +22,11 @@ ApiClient.instance.interceptors.response.use(
 
       try {
         await ApiClient.auth.authControllerRefreshTokens();
-        return ApiClient.instance(originalRequest);
+        if (!originalRequest.url.includes("/login")) {
+          return ApiClient.instance(originalRequest);
+        }
       } catch (error) {
-        return Promise.reject(error);
+        useAuthStore.getState().setLoggedIn(false);
       }
     }
 
