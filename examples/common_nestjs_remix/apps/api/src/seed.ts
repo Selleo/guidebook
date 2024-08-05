@@ -1,10 +1,10 @@
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { users, credentials } from "../../src/storage/schema";
-import { DatabasePg } from "../common";
+import { users, credentials } from "./storage/schema";
+import { DatabasePg } from "./common";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
-import hashPassword from "../../src/common/helpers/hashPassword";
+import hashPassword from "./common/helpers/hashPassword";
 
 dotenv.config({ path: "./.env" });
 
