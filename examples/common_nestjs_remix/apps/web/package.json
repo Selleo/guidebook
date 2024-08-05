@@ -11,7 +11,7 @@
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "cross-env NODE_ENV=production node ./server.js",
     "generate:client": "swagger-typescript-api -p ../api/src/swagger/api-schema.json -o ./app/api --axios --name generated-api.ts --api-class-name API",
-    "typecheck": "tsc",
+    "tsc": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },
@@ -75,6 +75,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jsdom": "^24.1.1",
+    "msw": "^2.3.5",
     "playwright": "^1.45.3",
     "postcss": "^8.4.38",
     "react-router-dom": "^6.25.1",
