@@ -15,7 +15,6 @@ export function useLoginUser() {
   return useMutation({
     mutationFn: async (options: LoginUserOptions) => {
       const response = await ApiClient.auth.authControllerLogin(options.data);
-      console.log();
       return response.data;
     },
     onSuccess: () => {
