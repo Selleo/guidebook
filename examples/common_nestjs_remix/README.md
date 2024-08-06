@@ -62,3 +62,41 @@ and you should be abble to acces your app on the following adresses!
 | Web app | [ https://app.guidebook.localhost ](https://app.guidebook.localhost)         |
 | Api     | [https://api.guidebook.localhost ](https://api.guidebook.localhost)          |
 | Swagger | [ https://api.guidebook.localhost/api ](https://api.guidebook.localhost/api) |
+
+### Commands
+
+- #### Database
+
+  - generate migration
+
+    ```sh
+    pnpm db:generate
+    ```
+
+  - run migrations
+    ```sh
+    pnpm db:migrate
+    ```
+    > [!IMPORTANT]
+    > Once migration is generated chagne its name to something more descriptive.
+    > Also make sure to change the migration name in [\_journal.json](apps/api/src/storage/migrations/meta/_journal.json) file under the `tag` key.
+
+- #### HTTP Client
+
+  To generate the http client run the following command.
+
+  ```sh
+  pnpm generate:client
+  ```
+
+  This command automates the process of creating a TypeScript client for the API based on the Swagger specification.
+
+- #### Email Templates
+
+  Email templates are generated on every start of turborepo. To generate them manually run the following command in email-templates package.
+
+  ```sh
+  pnpm build
+  ```
+
+  The mailhog service is available at [mailbox.guidebook.localhost](mailbox.guidebook.localhost)
