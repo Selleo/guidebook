@@ -1,28 +1,17 @@
 import { createRemixStub } from "@remix-run/testing";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { PropsWithChildren } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { ApiClient } from "~/api/api-client";
+import {
+  mockRemixReact,
+  mockedUseNavigate,
+} from "~/utils/mocks/remix-run-mock";
 import { renderWith } from "~/utils/testUtils";
 import RegisterPage from "./Register.page";
 
 vi.mock("../../../api/api-client");
 
-const mockedUseNavigate = vi.fn();
-vi.mock("@remix-run/react", async () => {
-  const mod =
-    await vi.importActual<typeof import("@remix-run/react")>(
-      "@remix-run/react"
-    );
-  return {
-    ...mod,
-    useNavigate: () => mockedUseNavigate,
-    Link: ({ to, children }: PropsWithChildren<{ to: string }>) => (
-      <a href={to}>{children}</a>
-    ),
-  };
-});
+mockRemixReact();
 
 describe("Register page", () => {
   beforeEach(() => {
