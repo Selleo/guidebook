@@ -44,7 +44,7 @@ describe("Register page", () => {
     ).toBeInTheDocument();
   });
 
-  it.skip("submits the form with valid data", async () => {
+  it("submits the form with valid data", async () => {
     renderWith({ withQuery: true }).render(<RemixStub />);
 
     const user = userEvent.setup();
@@ -52,9 +52,8 @@ describe("Register page", () => {
     await user.type(screen.getByLabelText("Password"), "password123");
     await user.click(screen.getByRole("button", { name: "Create an account" }));
 
-    expect(ApiClient.auth.authControllerRegister).toHaveBeenCalledWith({
-      email: "test@example.com",
-      password: "password123",
+    await waitFor(() => {
+      expect(mockedUseNavigate).toHaveBeenCalledWith("/auth/login");
     });
   });
 

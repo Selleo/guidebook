@@ -1,10 +1,33 @@
 import { http, HttpResponse } from "msw";
 
+interface Credentials {
+  email: string;
+  password: string;
+}
+
 export const handlers = [
-  http.post("https://api.guidebook.localhost/auth/login", () => {
-    return HttpResponse.json({ data: "" }, { status: 200 });
+  http.post("/auth/login", async ({ request }) => {
+    const credentials = (await request.json()) as Credentials;
+
+    if (
+      credentials.email === "test@example.com" &&
+      credentials.password === "password123"
+    ) {
+      return HttpResponse.json({ token: "fake_token" }, { status: 200 });
+    } else {
+      return new HttpResponse(null, { status: 401 });
+    }
   }),
-  http.post("https://api.guidebook.localhost/auth/login", async () => {
-    return HttpResponse.json({ data: "" }, { status: 200 });
+  http.post("/auth/register", async ({ request }) => {
+    const credentials = (await request.json()) as Credentials;
+
+    if (
+      credentials.email === "test@example.com" &&
+      credentials.password === "password123"
+    ) {
+      return HttpResponse.json({ token: "fake_token" }, { status: 200 });
+    } else {
+      return new HttpResponse(null, { status: 401 });
+    }
   }),
 ];
