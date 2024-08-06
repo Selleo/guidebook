@@ -100,3 +100,19 @@ and you should be abble to acces your app on the following adresses!
   ```
 
   The mailhog service is available at [mailbox.guidebook.localhost](mailbox.guidebook.localhost)
+
+- #### Testing
+  - **Frontend**:
+    ```sh
+    pnpm test:web
+    ```
+    ```sh
+    pnpm test:web:e2e
+    ```
+  - **Backend**:
+    ```sh
+    pnpm test:api
+    ```
+    ```sh
+    pnpm test:api:e2e
+    ```
