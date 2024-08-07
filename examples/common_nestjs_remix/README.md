@@ -101,7 +101,7 @@ and you should be abble to acces your app on the following adresses!
   pnpm build
   ```
 
-  The mailhog service is available at [mailbox.guidebook.localhost](mailbox.guidebook.localhost)
+  The mailhog service is available at [mailbox.guidebook.localhost](https://mailbox.guidebook.localhost)
 
 - #### Testing
   - **Frontend**:
