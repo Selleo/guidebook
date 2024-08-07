@@ -40,10 +40,7 @@ import { StagingGuard } from "./common/guards/staging.guard";
         return {
           secret: configService.get<string>("jwt.secret")!,
           signOptions: {
-            expiresIn: configService.get<string>(
-              "JWT_EXPIRATION_TIME",
-              "15min",
-            ),
+            expiresIn: configService.get<string>("jwt.expirationTime"),
           },
         };
       },
