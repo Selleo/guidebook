@@ -74,12 +74,14 @@ and you should be abble to acces your app on the following adresses!
     ```
 
   - run migrations
+
     ```sh
     pnpm db:migrate
     ```
-    > [!IMPORTANT]
-    > Once migration is generated chagne its name to something more descriptive.
-    > Also make sure to change the migration name in [\_journal.json](apps/api/src/storage/migrations/meta/_journal.json) file under the `tag` key.
+
+> [!IMPORTANT]
+> Once migration is generated chagne its name to something more descriptive.
+> Also make sure to change the migration name in [\_journal.json](apps/api/src/storage/migrations/meta/_journal.json) file under the `tag` key.
 
 - #### HTTP Client
 
