@@ -93,7 +93,7 @@ and you should be abble to acces your app on the following adresses!
 
 - #### Email Templates
 
-  Email templates are generated on every start of turborepo. To generate them manually run the following command in email-templates package.
+  Email templates are generated on every start of turborepo. To generate them manually run the following command in `packages/email-templates`.
 
   ```sh
   pnpm build
