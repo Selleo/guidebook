@@ -6,14 +6,19 @@ import {
   Platform,
 } from 'react-native';
 
-export const ScreenContainer: FC<KeyboardAvoidingViewProps> = ({
+interface ScreenContainerProps extends KeyboardAvoidingViewProps {
+  center?: boolean;
+}
+
+export const ScreenContainer: FC<ScreenContainerProps> = ({
   children,
+  center = false,
   style,
   ...props
 }) => {
   return (
     <KeyboardAvoidingView
-      style={[styles.container, style]}
+      style={[styles.container, center && styles.center, style]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       {...props}
     >
@@ -25,5 +30,9 @@ export const ScreenContainer: FC<KeyboardAvoidingViewProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
