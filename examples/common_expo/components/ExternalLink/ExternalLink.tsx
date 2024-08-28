@@ -3,7 +3,9 @@ import * as WebBrowser from 'expo-web-browser';
 import { ComponentProps, FC } from 'react';
 import { Platform } from 'react-native';
 
-export type ExternalLinkProps = Omit<ComponentProps<typeof Link>, 'href'> & { href: string };
+export type ExternalLinkProps = Omit<ComponentProps<typeof Link>, 'href'> & {
+  href: string;
+};
 
 export const ExternalLink: FC<ExternalLinkProps> = (props) => {
   return (
@@ -22,4 +24,4 @@ export const ExternalLink: FC<ExternalLinkProps> = (props) => {
       }}
     />
   );
-}
+};
