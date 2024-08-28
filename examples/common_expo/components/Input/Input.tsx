@@ -12,13 +12,18 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
+import { Typography } from '../Typography';
 
 interface InputProps extends TextInputProps {
   label: string;
+  help?: string;
+  error?: boolean;
 }
 
 export const Input: FC<InputProps> = ({
   label,
+  help,
+  error = false,
   value,
   defaultValue = '',
   onChangeText,
@@ -81,6 +86,7 @@ export const Input: FC<InputProps> = ({
         onBlur={handleOnBlur}
         {...props}
       />
+      {help && <Typography.Text error={error}>{help}</Typography.Text>}
     </View>
   );
 };

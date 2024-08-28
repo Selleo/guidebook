@@ -9,15 +9,21 @@ import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const validationSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: z.string().email({ message: 'Invalid email address' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' }),
 });
 
 type SignInFormValues = z.infer<typeof validationSchema>;
 
 export default function SignIn() {
   const { signIn } = useAuth();
-  const { control, handleSubmit } = useForm<SignInFormValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormValues>({
     resolver: zodResolver(validationSchema),
   });
 
@@ -33,25 +39,29 @@ export default function SignIn() {
       <Controller
         control={control}
         name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ field: { onChange, onBlur, name, value } }) => (
           <Input
             label="Email"
             onChangeText={onChange}
             onBlur={onBlur}
             value={value}
             keyboardType="email-address"
+            error={!!errors[name]}
+            help={errors[name]?.message}
           />
         )}
       />
       <Controller
         control={control}
         name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ field: { onChange, onBlur, name, value } }) => (
           <Input
             label="Password"
             onChangeText={onChange}
             onBlur={onBlur}
             value={value}
+            help={errors[name]?.message}
+            error={!!errors[name]}
             secureTextEntry
           />
         )}
