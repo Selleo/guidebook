@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useRef, useState } from 'react';
 import {
   TextInput,
   View,
@@ -26,6 +26,7 @@ export const Input: FC<InputProps> = ({
   onBlur,
   ...props
 }) => {
+  const inputRef = useRef<TextInput>(null);
   const [inputValue, setInputValue] = useState(defaultValue ?? value);
 
   const offsetY = useSharedValue(inputValue.length > 0 ? -10 : 10);
@@ -63,10 +64,16 @@ export const Input: FC<InputProps> = ({
 
   return (
     <View style={styles.container}>
-      <Animated.Text style={[styles.label, animatedLabelStyle]}>
+      <Animated.Text
+        style={[styles.label, animatedLabelStyle]}
+        onPress={() => {
+          inputRef.current?.focus();
+        }}
+      >
         {label}
       </Animated.Text>
       <TextInput
+        ref={inputRef}
         style={[styles.input]}
         value={inputValue}
         onChangeText={handleChangeText}
