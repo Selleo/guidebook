@@ -1,10 +1,10 @@
 import { CenterView } from '@/components/CenterView';
 import { Typography } from '@/components/Typography';
 
-export default function HomeScreen() {
+export default function Profile() {
   return (
     <CenterView>
-      <Typography.Header>Home screen</Typography.Header>
+      <Typography.Header>Profile screen</Typography.Header>
     </CenterView>
   );
 }
