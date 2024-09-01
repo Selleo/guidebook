@@ -1,17 +1,17 @@
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Redirect, Stack } from 'expo-router';
 import { useAuth } from '@/providers/AuthProvider';
-import { ScreenContainer } from '@/components/ScreenContainer';
 import { Typography } from '@/components/Typography';
+import { CenterView } from '@/components/CenterView';
 
 export default function AppLayout() {
   const { session, isLoading, signOut } = useAuth();
 
   if (isLoading) {
     return (
-      <ScreenContainer center>
+      <CenterView>
         <ActivityIndicator size="large" />
-      </ScreenContainer>
+      </CenterView>
     );
   }
 

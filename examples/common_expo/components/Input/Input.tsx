@@ -6,6 +6,7 @@ import {
   TextInputProps,
   NativeSyntheticEvent,
   TextInputFocusEventData,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -69,14 +70,15 @@ export const Input: FC<InputProps> = ({
 
   return (
     <View style={styles.container}>
-      <Animated.Text
-        style={[styles.label, animatedLabelStyle]}
+      <TouchableWithoutFeedback
         onPress={() => {
           inputRef.current?.focus();
         }}
       >
-        {label}
-      </Animated.Text>
+        <Animated.Text style={[styles.label, animatedLabelStyle]}>
+          {label}
+        </Animated.Text>
+      </TouchableWithoutFeedback>
       <TextInput
         ref={inputRef}
         style={[styles.input]}

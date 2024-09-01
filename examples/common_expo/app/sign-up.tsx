@@ -3,39 +3,49 @@ import { useAuth } from '@/providers/AuthProvider';
 import { router } from 'expo-router';
 import { useCallback } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet } from 'react-native';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Typography } from '@/components/Typography';
-import { KeyboardAvoidingContainer } from '@/components/KeyboardAvoidingContainer';
 import { CenterView } from '@/components/CenterView';
+import { KeyboardAvoidingContainer } from '@/components/KeyboardAvoidingContainer';
 
-const validationSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
-  password: z
-    .string()
-    .min(8, { message: 'Password must be at least 8 characters' }),
-});
+const passwordLengthMessage = 'Password must be at least 8 characters';
 
-type SignInFormValues = z.infer<typeof validationSchema>;
+const validationSchema = z
+  .object({
+    email: z.string().email({ message: 'Invalid email address' }),
+    password: z.string().min(8, { message: passwordLengthMessage }),
+    confirmPassword: z.string().min(8, { message: passwordLengthMessage }),
+  })
+  .superRefine(({ password, confirmPassword }, ctx) => {
+    if (password !== confirmPassword) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Passwords do not match',
+        path: ['confirmPassword'],
+      });
+    }
+  });
 
-export default function SignIn() {
-  const { signIn } = useAuth();
+type SignUpFormValues = z.infer<typeof validationSchema>;
+
+export default function SignUp() {
+  const { signUp } = useAuth();
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInFormValues>({
+  } = useForm<SignUpFormValues>({
     resolver: zodResolver(validationSchema),
   });
 
-  const handleOnSubmit = useCallback<SubmitHandler<SignInFormValues>>(() => {
-    signIn();
+  const handleOnSubmit = useCallback<SubmitHandler<SignUpFormValues>>(() => {
+    signUp();
 
     // TODO: Check if the user is already signed in.
-    router.replace('/');
-  }, [signIn]);
+    router.replace('/sign-in');
+  }, [signUp]);
 
   return (
     <KeyboardAvoidingContainer>
@@ -70,11 +80,23 @@ export default function SignIn() {
             />
           )}
         />
+        <Controller
+          control={control}
+          name="confirmPassword"
+          render={({ field: { onChange, onBlur, name, value } }) => (
+            <Input
+              label="Confirm Password"
+              onChangeText={onChange}
+              onBlur={onBlur}
+              value={value}
+              help={errors[name]?.message}
+              error={!!errors[name]}
+              secureTextEntry
+            />
+          )}
+        />
         <Button title="Sign In" onPress={handleSubmit(handleOnSubmit)} />
-        <View style={styles.signUpContainer}>
-          <Typography.Text>Don&apos;t have an account?</Typography.Text>
-          <Button title="Sign Up" onPress={() => router.navigate('/sign-up')} />
-        </View>
+        <Button title="Go back" onPress={() => router.back()} />
       </CenterView>
     </KeyboardAvoidingContainer>
   );
@@ -83,10 +105,5 @@ export default function SignIn() {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 24,
-  },
-  signUpContainer: {
-    alignItems: 'center',
-    display: 'flex',
-    marginTop: 24,
   },
 });

@@ -10,6 +10,7 @@ import {
 
 type AuthContextType = {
   signIn: () => void;
+  signUp: () => void;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
@@ -19,6 +20,7 @@ export const sessionKey = 'session';
 
 export const AuthContext = createContext<AuthContextType>({
   signIn: () => null,
+  signUp: () => null,
   signOut: () => null,
   session: null,
   isLoading: false,
@@ -42,16 +44,22 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setSession('xxx');
   }, [setSession]);
 
+  const signUp = useCallback(() => {
+    // TODO: Perform sign-up logic here
+    setSession('xxx');
+  }, [setSession]);
+
   const contextValue = useMemo<AuthContextType>(
     () => ({
       signIn,
+      signUp,
       signOut: () => {
         setSession(null);
       },
       session,
       isLoading,
     }),
-    [isLoading, session, setSession, signIn],
+    [isLoading, session, setSession, signIn, signUp],
   );
 
   return (
