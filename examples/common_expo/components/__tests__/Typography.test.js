@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react-native';
 
-import { MonoText } from '../StyledText';
+import { Typography } from '../Typography';
 
 test('renders correctly', () => {
   const { getByTestId } = render(
-    <MonoText testID="example-text">Snapshot test!</MonoText>,
+    <Typography.Text testID="example-text">Typography test</Typography.Text>,
   );
   const text = getByTestId('example-text');
 
