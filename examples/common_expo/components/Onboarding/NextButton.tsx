@@ -7,8 +7,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { router } from 'expo-router';
+import { setAsyncStorageItem } from '@/utilities/asyncStorage';
 
 import { OnboardingItem } from './OnboardingListItem';
+import { onboardingKey } from './OnboardingWrapper';
 
 type NextButtonProps = {
   flatListRef: AnimatedRef<Animated.FlatList<OnboardingItem>>;
@@ -40,6 +42,8 @@ export const NextButton: FC<NextButtonProps> = ({
 
   const handleOnPress = useCallback(() => {
     if (listIndex.value === listLength - 1) {
+      setAsyncStorageItem(onboardingKey, 'true');
+
       router.replace('/sign-in');
       return;
     }

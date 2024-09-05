@@ -16,7 +16,7 @@ export default function AppLayout() {
   }
 
   if (!session) {
-    return <Redirect href="/sign-in" />;
+    return <Redirect href="/onboarding" />;
   }
 
   return (

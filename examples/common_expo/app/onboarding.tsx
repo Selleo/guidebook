@@ -8,6 +8,7 @@ import {
   NextButton,
   OnboardingListItem,
   OnboardingItem,
+  OnboardingWrapper,
 } from '@/components/Onboarding';
 
 const items: OnboardingItem[] = [
@@ -21,30 +22,32 @@ export default function Onboarding() {
   const flatListRef = useAnimatedRef<Animated.FlatList<OnboardingItem>>();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Animated.FlatList
-        ref={flatListRef}
-        data={items}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <OnboardingListItem item={item} listIndex={index} />
-        )}
-        onViewableItemsChanged={({ viewableItems }) => {
-          flatListIndex.value = viewableItems[0].index ?? 0;
-        }}
-        bounces={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        pagingEnabled
-      />
-      <View style={styles.bottomPanel}>
-        <NextButton
-          flatListRef={flatListRef}
-          listIndex={flatListIndex}
-          listLength={items.length}
+    <OnboardingWrapper>
+      <SafeAreaView style={styles.container}>
+        <Animated.FlatList
+          ref={flatListRef}
+          data={items}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <OnboardingListItem item={item} listIndex={index} />
+          )}
+          onViewableItemsChanged={({ viewableItems }) => {
+            flatListIndex.value = viewableItems[0].index ?? 0;
+          }}
+          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          pagingEnabled
         />
-      </View>
-    </SafeAreaView>
+        <View style={styles.bottomPanel}>
+          <NextButton
+            flatListRef={flatListRef}
+            listIndex={flatListIndex}
+            listLength={items.length}
+          />
+        </View>
+      </SafeAreaView>
+    </OnboardingWrapper>
   );
 }
 
