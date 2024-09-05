@@ -73,7 +73,7 @@ export default function SignIn() {
         <Button title="Sign In" onPress={handleSubmit(handleOnSubmit)} />
         <View style={styles.signUpContainer}>
           <Typography.Text>Don&apos;t have an account?</Typography.Text>
-          <Button title="Sign Up" onPress={() => router.navigate('/sign-up')} />
+          <Button title="Sign Up" onPress={() => router.push('/sign-up')} />
         </View>
       </CenterView>
     </KeyboardAvoidingContainer>
@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
   },
   signUpContainer: {
     alignItems: 'center',
-    display: 'flex',
     marginTop: 24,
   },
 });
