@@ -1,5 +1,6 @@
 import Animated, {
   useAnimatedRef,
+  useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
@@ -9,6 +10,7 @@ import {
   OnboardingListItem,
   OnboardingItem,
   OnboardingWrapper,
+  Pagination,
 } from '@/components/Onboarding';
 
 const items: OnboardingItem[] = [
@@ -18,8 +20,15 @@ const items: OnboardingItem[] = [
 ];
 
 export default function Onboarding() {
+  const offsetX = useSharedValue(0);
   const flatListIndex = useSharedValue(0);
   const flatListRef = useAnimatedRef<Animated.FlatList<OnboardingItem>>();
+
+  const handleOnScroll = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      offsetX.value = event.contentOffset.x;
+    },
+  });
 
   return (
     <OnboardingWrapper>
@@ -34,12 +43,14 @@ export default function Onboarding() {
           onViewableItemsChanged={({ viewableItems }) => {
             flatListIndex.value = viewableItems[0].index ?? 0;
           }}
+          onScroll={handleOnScroll}
           bounces={false}
           showsHorizontalScrollIndicator={false}
           horizontal
           pagingEnabled
         />
         <View style={styles.bottomPanel}>
+          <Pagination length={items.length} offsetX={offsetX} />
           <NextButton
             flatListRef={flatListRef}
             listIndex={flatListIndex}
@@ -57,7 +68,7 @@ const styles = StyleSheet.create({
   },
   bottomPanel: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingHorizontal: 24,
   },
 });
