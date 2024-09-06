@@ -10,6 +10,6 @@ mailbox.guidebook.localhost {
 	reverse_proxy localhost:8025
 }
 
-storage.articulate.localhost {
+storage.guidebook.localhost {
 	reverse_proxy localhost:8069
 }
