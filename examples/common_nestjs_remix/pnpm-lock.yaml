@@ -455,7 +455,7 @@ importers:
         specifier: ^7.24.7
         version: 7.24.7
       '@repo/typescript-config':
-        specifier: '*'
+        specifier: workspace:*
         version: link:../typescript-config
       '@types/node':
         specifier: ^20.14.12
