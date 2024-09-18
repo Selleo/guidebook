@@ -3,9 +3,9 @@ import {
   HealthCheckService,
   HttpHealthIndicator,
   HealthCheck,
-  TypeOrmHealthIndicator,
 } from "@nestjs/terminus";
 import { Public } from "src/common/decorators/public.decorator";
+import { DrizzleOrmHealthIndicator } from "./indicator/database/drizzleorm.health";
 
 @Controller("health")
 export class HealthController {
