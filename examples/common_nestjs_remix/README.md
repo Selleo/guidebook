@@ -118,3 +118,7 @@ and you should be abble to acces your app on the following adresses!
     ```sh
     pnpm test:api:e2e
     ```
+
+## Legal notice
+
+This project was generated using [Selleo Guidebook](https://github.com/Selleo/guidebook) which is licensed under the MIT license.
