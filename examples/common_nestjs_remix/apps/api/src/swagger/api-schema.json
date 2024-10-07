@@ -294,9 +294,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -311,9 +309,7 @@
                       "example": {},
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -332,9 +328,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -368,9 +362,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -390,9 +382,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -415,9 +405,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -430,6 +418,59 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/files/upload": {
+      "post": {
+        "operationId": "FileController_uploadFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/files/download/{id}": {
+      "get": {
+        "operationId": "FileController_downloadFile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/files/{id}": {
+      "delete": {
+        "operationId": "FileController_deleteFile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           }
         }
       }
@@ -458,10 +499,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "email",
-          "password"
-        ]
+        "required": ["email", "password"]
       },
       "RegisterResponse": {
         "type": "object",
@@ -482,17 +520,10 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id",
-              "createdAt",
-              "updatedAt",
-              "email"
-            ]
+            "required": ["id", "createdAt", "updatedAt", "email"]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "LoginBody": {
         "type": "object",
@@ -507,10 +538,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "email",
-          "password"
-        ]
+        "required": ["email", "password"]
       },
       "LoginResponse": {
         "type": "object",
@@ -531,17 +559,10 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id",
-              "createdAt",
-              "updatedAt",
-              "email"
-            ]
+            "required": ["id", "createdAt", "updatedAt", "email"]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "LogoutResponse": {
         "type": "null"
@@ -568,17 +589,10 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id",
-              "createdAt",
-              "updatedAt",
-              "email"
-            ]
+            "required": ["id", "createdAt", "updatedAt", "email"]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "GetUsersResponse": {
         "type": "object",
@@ -601,18 +615,11 @@
                   "type": "string"
                 }
               },
-              "required": [
-                "id",
-                "createdAt",
-                "updatedAt",
-                "email"
-              ]
+              "required": ["id", "createdAt", "updatedAt", "email"]
             }
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "GetUserByIdResponse": {
         "type": "object",
@@ -633,17 +640,10 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id",
-              "createdAt",
-              "updatedAt",
-              "email"
-            ]
+            "required": ["id", "createdAt", "updatedAt", "email"]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "UpdateUserBody": {
         "type": "object",
@@ -673,17 +673,10 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id",
-              "createdAt",
-              "updatedAt",
-              "email"
-            ]
+            "required": ["id", "createdAt", "updatedAt", "email"]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "ChangePasswordBody": {
         "type": "object",
@@ -699,10 +692,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "newPassword",
-          "oldPassword"
-        ]
+        "required": ["newPassword", "oldPassword"]
       },
       "ChangePasswordResponse": {
         "type": "null"

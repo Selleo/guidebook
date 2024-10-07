@@ -6,6 +6,7 @@ const schema = Type.Object({
   AWS_REGION: Type.String(),
   AWS_ACCESS_KEY_ID: Type.String(),
   AWS_SECRET_ACCESS_KEY: Type.String(),
+  BUCKET_NAME: Type.String(),
 });
 
 type AWSConfigSchema = Static<typeof schema>;
@@ -17,6 +18,7 @@ export default registerAs("aws", (): AWSConfigSchema => {
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    BUCKET_NAME: process.env.AWS_BUCKET_NAME,
   };
 
   return validateAwsConfig(values);
