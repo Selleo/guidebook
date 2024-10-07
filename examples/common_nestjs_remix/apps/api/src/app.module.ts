@@ -15,7 +15,7 @@ import { EmailModule } from "./common/emails/emails.module";
 import { TestConfigModule } from "./test-config/test-config.module";
 import { StagingGuard } from "./common/guards/staging.guard";
 import { HealthModule } from "./health/health.module";
-import { FilesModule } from "./files/files.module";
+import { FilesModule } from "./common/files/files.module";
 import localFile from "./common/configuration/local_file";
 
 @Module({
