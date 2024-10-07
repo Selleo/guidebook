@@ -1,24 +1,25 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { S3FileAdapter } from "./adapters";
 import { LocalFilesAdapter } from "./adapters";
-import { DatabasePg } from "../common";
-import { CommonFile } from "../common/schemas/common-file.schema";
 
 @Injectable()
 export class FileService {
   private storageAdapter: LocalFilesAdapter | S3FileAdapter;
 
-  constructor(configService: ConfigService, @Inject("DB") db: DatabasePg) {
+  constructor(configService: ConfigService) {
     if (configService.get("ENVIRONMENT") === "development") {
-      this.storageAdapter = new LocalFilesAdapter(configService, db);
+      this.storageAdapter = new LocalFilesAdapter(configService);
     } else {
-      this.storageAdapter = new S3FileAdapter(configService, db);
+      this.storageAdapter = new S3FileAdapter(configService);
     }
   }
 
-  async uploadFile(file: Express.Multer.File): Promise<CommonFile> {
-    return await this.storageAdapter.uploadFile(file);
+  async uploadFile(
+    directory: string,
+    file: Express.Multer.File,
+  ): Promise<{ path: string }> {
+    return await this.storageAdapter.uploadFile(directory, file);
   }
 
   async deleteFile(key: string): Promise<void> {

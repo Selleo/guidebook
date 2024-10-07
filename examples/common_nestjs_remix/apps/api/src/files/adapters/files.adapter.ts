@@ -1,7 +1,8 @@
-import { CommonFile } from "../../common/schemas/common-file.schema";
-
 export abstract class FilesAdapter {
-  abstract uploadFile(file: Express.Multer.File): Promise<CommonFile>;
+  abstract uploadFile(
+    path: string,
+    file: Express.Multer.File,
+  ): Promise<{ path: string }>;
 
   abstract deleteFile(id: string): Promise<void>;
 
