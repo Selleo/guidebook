@@ -36,12 +36,19 @@ caddy run
 
 After running caddy proceed with the on screen instructions.
 
-Last step is to go our NestJS app and configure its environmental variables and docker.
-So being in `guidebook/apps/api` run the following command
+The final setup step is to configure both the `api` and `web` applications.
+
+First, from the `examples/common_nestjs_remix` directory, navigate to `apps/api` and run the following to set up the backend:
 
 ```sh
 cp .env.example .env
 docker-compose up -d
+```
+
+Next, navigate to `apps/web` and copy the environment variables for the frontend:
+
+```sh
+cp .env.example .env
 ```
 
 ### Migrations
@@ -54,14 +61,14 @@ pnpm db:migrate
 
 ### Develop
 
-Now in the main directory once you run `pnpm dev` it will run everything in parallel
-and you should be abble to acces your app on the following adresses!
+Now, from the root of the `examples/common_nestjs_remix` directory, run `pnpm dev` to start all applications in parallel.
+You should be able to access your app at the following addresses:
 
 | Service | URL                                                                          |
 | ------- | ---------------------------------------------------------------------------- |
-| Web app | [ https://app.guidebook.localhost ](https://app.guidebook.localhost)         |
-| Api     | [https://api.guidebook.localhost ](https://api.guidebook.localhost)          |
-| Swagger | [ https://api.guidebook.localhost/api ](https://api.guidebook.localhost/api) |
+| Web app | [`https://app.guidebook.localhost`](https://app.guidebook.localhost)         |
+| Api     | [`https://api.guidebook.localhost`](https://api.guidebook.localhost)          |
+| Swagger | [`https://api.guidebook.localhost/api`](https://api.guidebook.localhost/api) |
 
 ### Commands
 
