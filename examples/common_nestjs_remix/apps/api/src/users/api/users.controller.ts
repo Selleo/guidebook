@@ -30,7 +30,7 @@ import {
 } from "../schemas/user.schema";
 import { UsersService } from "../users.service";
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
-import { Public, Session, UserSession } from "@thallesp/nestjs-better-auth";
+import { Session, UserSession } from "@thallesp/nestjs-better-auth";
 import { memoryStorage } from "multer";
 import type { Express } from "express";
 
@@ -75,15 +75,14 @@ export class UsersController {
     response: baseResponse(commonUserSchema),
     request: [{ type: "param", name: "id", schema: StringSchema }],
   })
-  @Public()
   async uploadUserImage(
     id: string,
     @UploadedFile() file: Express.Multer.File,
-    // @Session() session: UserSession,
+    @Session() session: UserSession,
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
-    // if (session.user.id !== id) {
-    //   throw new ForbiddenException("You can only update your own account");
-    // }
+    if (session.user.id !== id) {
+      throw new ForbiddenException("You can only update your own account");
+    }
 
     const updatedUser = await this.usersService.uploadUserImage(id, file);
 

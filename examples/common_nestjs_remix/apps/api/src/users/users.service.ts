@@ -1,9 +1,15 @@
-import { Inject, Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
 import { eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import { user } from "src/storage/schema";
 import { FileStorageService } from "src/file-storage";
 import { randomUUID } from "crypto";
+import type { Express } from "express";
 
 @Injectable()
 export class UsersService {
@@ -14,7 +20,9 @@ export class UsersService {
 
   private async ensureUser(id: string) {
     const [existingUser] = await this.db
-      .select()
+      .select({
+        id: user.id,
+      })
       .from(user)
       .where(eq(user.id, id));
 
@@ -22,7 +30,7 @@ export class UsersService {
       throw new NotFoundException("User not found");
     }
 
-    return existingUser;
+    return true;
   }
 
   public async getUsers() {
@@ -32,7 +40,16 @@ export class UsersService {
   }
 
   public async getUserById(id: string) {
-    return this.ensureUser(id);
+    const [existingUser] = await this.db
+      .select()
+      .from(user)
+      .where(eq(user.id, id));
+
+    if (!existingUser) {
+      throw new NotFoundException("User not found");
+    }
+
+    return existingUser;
   }
 
   public async updateUser(id: string, data: { email?: string }) {
@@ -74,15 +91,17 @@ export class UsersService {
       metadata: {
         originalName: file.originalname,
       },
+      originalName: file.originalname,
+      byteSize: file.size,
+      entityRef: `user:${id}`,
     });
 
     const [updatedUser] = await this.db
       .update(user)
-      .set({ image: uploadResult.key })
+      .set({ image: uploadResult.file.storageKey })
       .where(eq(user.id, id))
       .returning();
 
     return updatedUser;
   }
-
 }
