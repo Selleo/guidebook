@@ -5,8 +5,12 @@ import {
   ForbiddenException,
   Get,
   Patch,
+  Post,
+  UploadedFile,
+  UseInterceptors,
 } from "@nestjs/common";
 import { Static } from "@sinclair/typebox";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { Validate } from "nestjs-typebox";
 import {
   baseResponse,
@@ -15,11 +19,6 @@ import {
   StringSchema,
   UUIDSchema,
 } from "src/common";
-import { CurrentUser } from "src/common/decorators/user.decorator";
-import {
-  ChangePasswordBody,
-  changePasswordSchema,
-} from "../schemas/change-password.schema";
 import {
   UpdateUserBody,
   updateUserSchema,
@@ -30,11 +29,10 @@ import {
   UserResponse,
 } from "../schemas/user.schema";
 import { UsersService } from "../users.service";
-import {
-  CommonUser,
-  commonUserSchema,
-} from "src/common/schemas/common-user.schema";
-import { Session, UserSession } from "@thallesp/nestjs-better-auth";
+import { commonUserSchema } from "src/common/schemas/common-user.schema";
+import { Public, Session, UserSession } from "@thallesp/nestjs-better-auth";
+import { memoryStorage } from "multer";
+import type { Express } from "express";
 
 @Controller("users")
 export class UsersController {
@@ -64,6 +62,32 @@ export class UsersController {
     const user = await this.usersService.getUserById(id);
 
     return new BaseResponse(user);
+  }
+
+  @Post(":id/image")
+  @UseInterceptors(
+    FileInterceptor("file", {
+      storage: memoryStorage(),
+      limits: { fileSize: 5 * 1024 * 1024 },
+    }),
+  )
+  @Validate({
+    response: baseResponse(commonUserSchema),
+    request: [{ type: "param", name: "id", schema: StringSchema }],
+  })
+  @Public()
+  async uploadUserImage(
+    id: string,
+    @UploadedFile() file: Express.Multer.File,
+    // @Session() session: UserSession,
+  ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
+    // if (session.user.id !== id) {
+    //   throw new ForbiddenException("You can only update your own account");
+    // }
+
+    const updatedUser = await this.usersService.uploadUserImage(id, file);
+
+    return new BaseResponse(updatedUser);
   }
 
   @Patch(":id")

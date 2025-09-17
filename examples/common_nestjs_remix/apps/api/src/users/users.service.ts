@@ -1,19 +1,18 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException, BadRequestException } from "@nestjs/common";
 import { eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import { user } from "src/storage/schema";
+import { FileStorageService } from "src/file-storage";
+import { randomUUID } from "crypto";
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private readonly fileStorageService: FileStorageService,
+  ) {}
 
-  public async getUsers() {
-    const allUsers = await this.db.select().from(user);
-
-    return allUsers;
-  }
-
-  public async getUserById(id: string) {
+  private async ensureUser(id: string) {
     const [existingUser] = await this.db
       .select()
       .from(user)
@@ -26,15 +25,18 @@ export class UsersService {
     return existingUser;
   }
 
-  public async updateUser(id: string, data: { email?: string }) {
-    const [existingUser] = await this.db
-      .select()
-      .from(user)
-      .where(eq(user.id, id));
+  public async getUsers() {
+    const allUsers = await this.db.select().from(user);
 
-    if (!existingUser) {
-      throw new NotFoundException("User not found");
-    }
+    return allUsers;
+  }
+
+  public async getUserById(id: string) {
+    return this.ensureUser(id);
+  }
+
+  public async updateUser(id: string, data: { email?: string }) {
+    await this.ensureUser(id);
 
     const [updatedUser] = await this.db
       .update(user)
@@ -55,4 +57,32 @@ export class UsersService {
       throw new NotFoundException("User not found");
     }
   }
+
+  public async uploadUserImage(id: string, file?: Express.Multer.File) {
+    if (!file || !file.buffer) {
+      throw new BadRequestException("File is required");
+    }
+
+    await this.ensureUser(id);
+
+    const key = `users/${id}/${randomUUID()}-${file.originalname}`;
+
+    const uploadResult = await this.fileStorageService.uploadFile({
+      key,
+      body: file.buffer,
+      contentType: file.mimetype,
+      metadata: {
+        originalName: file.originalname,
+      },
+    });
+
+    const [updatedUser] = await this.db
+      .update(user)
+      .set({ image: uploadResult.key })
+      .where(eq(user.id, id))
+      .returning();
+
+    return updatedUser;
+  }
+
 }

@@ -8,9 +8,10 @@ import { JwtModule } from "@nestjs/jwt";
 import jwtConfig from "./common/configuration/jwt";
 import emailConfig from "./common/configuration/email";
 import awsConfig from "./common/configuration/aws";
+import fileStorageConfig from "./common/configuration/file-storage";
 import { APP_GUARD } from "@nestjs/core";
-import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { EmailModule } from "./common/emails/emails.module";
+import { FileStorageModule } from "./file-storage";
 import { TestConfigModule } from "./test-config/test-config.module";
 import { StagingGuard } from "./common/guards/staging.guard";
 import { HealthModule } from "./health/health.module";
@@ -21,7 +22,7 @@ import { LoggerMiddleware } from "./logger/logger.middleware";
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database, jwtConfig, emailConfig, awsConfig],
+      load: [database, jwtConfig, emailConfig, awsConfig, fileStorageConfig],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({
@@ -53,6 +54,7 @@ import { LoggerMiddleware } from "./logger/logger.middleware";
     AuthModule.forRoot(auth),
     UsersModule,
     EmailModule,
+    FileStorageModule,
     TestConfigModule,
     HealthModule,
   ],
