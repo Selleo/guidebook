@@ -52,6 +52,7 @@
     "drizzle-orm": "^0.44.5",
     "drizzle-typebox": "^0.3.3",
     "lodash": "^4.17.21",
+    "multer": "^2.0.2",
     "nestjs-typebox": "4.0.0",
     "nodemailer": "^7.0.6",
     "passport": "^0.7.0",

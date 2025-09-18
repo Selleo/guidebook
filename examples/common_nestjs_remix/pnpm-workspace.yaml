@@ -5,6 +5,12 @@ packages:
 onlyBuiltDependencies:
   - '@nestjs/core'
   - '@scarf/scarf'
+  - '@swc/core'
+  - '@tailwindcss/oxide'
+  - bcrypt
+  - cpu-features
   - esbuild
+  - protobufjs
   - sharp
+  - ssh2
   - unrs-resolver

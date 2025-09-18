@@ -98,6 +98,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      multer:
+        specifier: ^2.0.2
+        version: 2.0.2
       nestjs-typebox:
         specifier: 4.0.0
         version: 4.0.0(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(@nestjs/swagger@11.2.0(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(reflect-metadata@0.2.2))(@sinclair/typebox@0.34.41)(rxjs@7.8.2)
@@ -16780,18 +16783,6 @@ snapshots:
       mkdirp: 3.0.1
       yallist: 5.0.0
 
-  terser-webpack-plugin@5.3.14(@swc/core@1.13.5)(esbuild@0.25.0)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.0)):
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.31
-      jest-worker: 27.5.1
-      schema-utils: 4.3.2
-      serialize-javascript: 6.0.2
-      terser: 5.44.0
-      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.9)
-    optionalDependencies:
-      '@swc/core': 1.13.5
-      esbuild: 0.25.0
-
   terser-webpack-plugin@5.3.14(@swc/core@1.13.5)(esbuild@0.25.9)(webpack@5.100.2(@swc/core@1.13.5)(esbuild@0.25.9)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
@@ -16800,6 +16791,18 @@ snapshots:
       serialize-javascript: 6.0.2
       terser: 5.44.0
       webpack: 5.100.2(@swc/core@1.13.5)(esbuild@0.25.9)
+    optionalDependencies:
+      '@swc/core': 1.13.5
+      esbuild: 0.25.9
+
+  terser-webpack-plugin@5.3.14(@swc/core@1.13.5)(esbuild@0.25.9)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.9)):
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      jest-worker: 27.5.1
+      schema-utils: 4.3.2
+      serialize-javascript: 6.0.2
+      terser: 5.44.0
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.9)
     optionalDependencies:
       '@swc/core': 1.13.5
       esbuild: 0.25.9
@@ -17428,7 +17431,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.2
       tapable: 2.2.3
-      terser-webpack-plugin: 5.3.14(@swc/core@1.13.5)(esbuild@0.25.0)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.0))
+      terser-webpack-plugin: 5.3.14(@swc/core@1.13.5)(esbuild@0.25.9)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.9))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
     transitivePeerDependencies:
