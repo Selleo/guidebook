@@ -15,6 +15,13 @@
       "when": 1758115769861,
       "tag": "0001_files_init",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758287259869,
+      "tag": "0002_add_admin_plugin",
+      "breakpoints": true
     }
   ]
 }

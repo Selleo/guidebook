@@ -1,6 +1,6 @@
 import { betterAuth, BetterAuthOptions, BetterAuthPlugin } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { createAuthMiddleware, openAPI } from "better-auth/plugins";
+import { admin, createAuthMiddleware, openAPI } from "better-auth/plugins";
 import type { DatabasePg } from "src/common";
 import { WelcomeEmail } from "@repo/email-templates";
 import * as schema from "../storage/schema";
@@ -51,7 +51,7 @@ export const buildBetterAuthInstance = ({
   const logLevel = env("LOG_LEVEL");
   const devSocial = env("DEV_SOCIAL") === "true";
 
-  const defaultPlugins: BetterAuthPlugin[] = plugins ?? [openAPI()];
+  const defaultPlugins: BetterAuthPlugin[] = plugins ?? [openAPI(), admin()];
 
   let baseOptions: BetterAuthOptions = {
     basePath,

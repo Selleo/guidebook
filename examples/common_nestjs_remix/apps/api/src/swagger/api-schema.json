@@ -401,6 +401,46 @@
                 },
                 "updatedAt": {
                   "type": "Date"
+                },
+                "role": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "banned": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "banReason": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "banExpires": {
+                  "anyOf": [
+                    {
+                      "type": "Date"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [
@@ -410,7 +450,11 @@
                 "emailVerified",
                 "image",
                 "createdAt",
-                "updatedAt"
+                "updatedAt",
+                "role",
+                "banned",
+                "banReason",
+                "banExpires"
               ]
             }
           }
@@ -452,6 +496,46 @@
               },
               "updatedAt": {
                 "type": "Date"
+              },
+              "role": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banned": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banReason": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banExpires": {
+                "anyOf": [
+                  {
+                    "type": "Date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -461,7 +545,11 @@
               "emailVerified",
               "image",
               "createdAt",
-              "updatedAt"
+              "updatedAt",
+              "role",
+              "banned",
+              "banReason",
+              "banExpires"
             ]
           }
         },
@@ -502,6 +590,46 @@
               },
               "updatedAt": {
                 "type": "Date"
+              },
+              "role": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banned": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banReason": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banExpires": {
+                "anyOf": [
+                  {
+                    "type": "Date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -511,7 +639,11 @@
               "emailVerified",
               "image",
               "createdAt",
-              "updatedAt"
+              "updatedAt",
+              "role",
+              "banned",
+              "banReason",
+              "banExpires"
             ]
           }
         },
@@ -561,6 +693,46 @@
               },
               "updatedAt": {
                 "type": "Date"
+              },
+              "role": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banned": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banReason": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "banExpires": {
+                "anyOf": [
+                  {
+                    "type": "Date"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -570,7 +742,11 @@
               "emailVerified",
               "image",
               "createdAt",
-              "updatedAt"
+              "updatedAt",
+              "role",
+              "banned",
+              "banReason",
+              "banExpires"
             ]
           }
         },
