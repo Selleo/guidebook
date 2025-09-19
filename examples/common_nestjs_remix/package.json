@@ -7,12 +7,12 @@
     "dev-social": "turbo dev-social",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "generate:client": "pnpm run --filter=web generate:client",
+    "generate:client": "pnpm run --filter=guidebook-web-app generate:client",
     "db:generate": "pnpm run --filter=api db:generate",
     "db:migrate": "pnpm run --filter=api db:migrate",
-    "test:web": "pnpm run --filter=web test",
+    "test:web": "pnpm run --filter=guidebook-web-app test",
     "test:api": "pnpm run --filter=api test",
-    "test:web:e2e": "pnpm run --filter=web test:e2e",
+    "test:web:e2e": "pnpm run --filter=guidebook-web-app test:e2e",
     "test:api:e2e": "pnpm run --filter=api test:e2e"
   },
   "devDependencies": {

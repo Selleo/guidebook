@@ -1,23 +1,28 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
+import { InferInsertModel, eq } from "drizzle-orm";
+import { DatabasePg } from "src/common";
 import { FileStorageAdapter } from "./adapters/file-storage.adapter";
 import {
+  StoredFile,
   StoredFileUploadResult,
   UploadFileInput,
 } from "./file-storage.types";
-import { FileStorageRepository } from "./file-storage.repository";
+import { file } from "./files-schema";
+
+type NewFileRecord = InferInsertModel<typeof file>;
 
 @Injectable()
 export class FileStorageService {
   constructor(
     private readonly adapter: FileStorageAdapter,
-    private readonly repository: FileStorageRepository,
+    @Inject("DB") private readonly db: DatabasePg,
   ) {}
 
   async uploadFile(input: UploadFileInput): Promise<StoredFileUploadResult> {
     const uploadResult = await this.adapter.uploadFile(input);
     const byteSize = this.resolveByteSize(input);
 
-    const fileRecord = await this.repository.create({
+    const fileRecord = await this.create({
       storageKey: uploadResult.key,
       bucket: uploadResult.bucket,
       originalName:
@@ -35,7 +40,11 @@ export class FileStorageService {
 
   async deleteFile(key: string): Promise<void> {
     await this.adapter.deleteFile(key);
-    await this.repository.markDeletedByKey(key);
+    await this.markDeletedByKey(key);
+  }
+
+  generateEntityRef(entityType: 'user', entityId: string) {
+    return `${entityType}:${entityId}`;
   }
 
   private resolveByteSize(input: UploadFileInput): number {
@@ -55,6 +64,26 @@ export class FileStorageService {
       return input.body.byteLength;
     }
 
-    throw new Error("Unable to determine file size. Provide byteSize in input.");
+    throw new Error(
+      "Unable to determine file size. Provide byteSize in input.",
+    );
+  }
+
+  private async create(data: NewFileRecord): Promise<StoredFile> {
+    const [created] = await this.db.insert(file).values(data).returning();
+
+    return created;
+  }
+
+  private async markDeletedByKey(
+    storageKey: string,
+  ): Promise<StoredFile | undefined> {
+    const [updated] = await this.db
+      .update(file)
+      .set({ deletedAt: new Date().toISOString() })
+      .where(eq(file.storageKey, storageKey))
+      .returning();
+
+    return updated;
   }
 }

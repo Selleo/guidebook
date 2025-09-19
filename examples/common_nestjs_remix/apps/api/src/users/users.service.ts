@@ -93,7 +93,7 @@ export class UsersService {
       },
       originalName: file.originalname,
       byteSize: file.size,
-      entityRef: `user:${id}`,
+      entityRef: this.fileStorageService.generateEntityRef("user", id),
     });
 
     const [updatedUser] = await this.db

@@ -2,14 +2,14 @@
 
 ## Project Structure & Module Organization
 - `apps/api`: NestJS backend; feature folders (e.g., `users`, `common`, `storage`) hold modules, DTOs, and shared helpers. `test/` contains Jest setups and factories for unit/e2e specs.
-- `apps/rr-react19-flow`: React Router 7 frontend; UI primitives in `app/components`, domain logic in `app/modules`, routes and layouts have `name.page.tsx` and `name.layout.tsx` convention in modules and API adapters in `app/api`.
+- `apps/web-app`: React Router 7 frontend; UI primitives in `app/components`, domain logic in `app/modules`, routes and layouts have `name.page.tsx` and `name.layout.tsx` convention in modules and API adapters in `app/api`.
 - `apps/reverse-proxy`: Caddy config enabling HTTPS domains during local development.
 - `packages/`: `email-templates` builds transactional mails, `eslint-config` centralizes lint rules, and `typescript-config` exposes reusable tsconfig bases.dist/`.
 
 ## Build, Test, and Development Commands
 - Install deps: `pnpm install` (Node 22+, pnpm 10).
 - Start everything: `pnpm dev`; build all workspaces: `pnpm build`.
-- Focused dev: `pnpm --filter api dev` for the API, `pnpm --filter rr-react19-flow dev` for the frontend, `pnpm --filter reverse-proxy dev` when reloading Caddy.
+- Focused dev: `pnpm --filter api dev` for the API, `pnpm --filter guidebook-web-app dev` for the frontend, `pnpm --filter reverse-proxy dev` when reloading Caddy.
 - Database: `pnpm db:generate` then rename the migration and sync its `tag` in `apps/api/src/storage/migrations/meta/_journal.json`; apply with `pnpm db:migrate`.
 - Tooling extras: `pnpm generate:client` refreshes the Swagger client, `pnpm lint` and `pnpm format` keep standards aligned.
 

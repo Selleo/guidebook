@@ -34,6 +34,18 @@ export interface GetUserByIdResponse {
   };
 }
 
+export interface UploadUserImageResponse {
+  data: {
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    createdAt: date;
+    updatedAt: date;
+  };
+}
+
 export interface UpdateUserBody {
   /** @format email */
   email?: string;
@@ -315,6 +327,21 @@ export class API<
       this.request<DeleteUserResponse, any>({
         path: `/users/${id}`,
         method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Users
+     * @name UsersControllerUploadUserImage
+     * @request POST:/users/{id}/image
+     */
+    usersControllerUploadUserImage: (id: string, params: RequestParams = {}) =>
+      this.request<UploadUserImageResponse, any>({
+        path: `/users/${id}/image`,
+        method: "POST",
         format: "json",
         ...params,
       }),
