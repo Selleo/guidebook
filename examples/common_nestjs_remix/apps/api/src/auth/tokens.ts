@@ -1,0 +1,5 @@
+export const BEFORE_HOOK = Symbol("BETTER_AUTH_BEFORE_HOOK");
+export const AFTER_HOOK = Symbol("BETTER_AUTH_AFTER_HOOK");
+export const HOOK_CLASS = Symbol("BETTER_AUTH_HOOK_CLASS");
+export const AUTH_INSTANCE = Symbol("BETTER_AUTH_INSTANCE");
+export const AUTH_MODULE_OPTIONS = Symbol("BETTER_AUTH_MODULE_OPTIONS");

@@ -30,7 +30,7 @@ import {
 } from "../schemas/user.schema";
 import { UsersService } from "../users.service";
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
-import { Session, UserSession } from "@thallesp/nestjs-better-auth";
+import { Session, UserSession } from "src/auth";
 import { memoryStorage } from "multer";
 import type { Express } from "express";
 

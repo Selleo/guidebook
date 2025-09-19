@@ -15,8 +15,10 @@ import { FileStorageModule } from "./file-storage";
 import { TestConfigModule } from "./test-config/test-config.module";
 import { StagingGuard } from "./common/guards/staging.guard";
 import { HealthModule } from "./health/health.module";
-import { AuthModule } from "@thallesp/nestjs-better-auth";
-import { auth } from "./lib/auth";
+import { BetterAuthModule, AuthGuard } from "./auth";
+import { buildBetterAuthInstance } from "./lib/better-auth-options";
+import { EmailService } from "./common/emails/emails.service";
+import type { DatabasePg } from "./common";
 import { LoggerMiddleware } from "./logger/logger.middleware";
 
 @Module({
@@ -51,7 +53,24 @@ import { LoggerMiddleware } from "./logger/logger.middleware";
       inject: [ConfigService],
       global: true,
     }),
-    AuthModule.forRoot(auth),
+    BetterAuthModule.forRootAsync({
+      imports: [EmailModule],
+      inject: [ConfigService, EmailService, "DB"],
+      //@ts-expect-error yes
+      useFactory: (
+        configService: ConfigService,
+        emailService: EmailService,
+        db: DatabasePg,
+      ) => {
+        const auth = buildBetterAuthInstance({
+          db,
+          env: (key) => configService.get<string>(key) ?? process.env[key],
+          emailSender: (email) => emailService.sendEmail(email),
+        });
+
+        return { auth };
+      },
+    }),
     UsersModule,
     EmailModule,
     FileStorageModule,
@@ -60,6 +79,10 @@ import { LoggerMiddleware } from "./logger/logger.middleware";
   ],
   controllers: [],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: StagingGuard,
