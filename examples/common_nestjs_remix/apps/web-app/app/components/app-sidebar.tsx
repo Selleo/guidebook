@@ -18,6 +18,7 @@ import { NavMain } from "~/components/nav-main";
 import { NavProjects } from "~/components/nav-projects";
 import { NavUser } from "~/components/nav-user";
 import { TeamSwitcher } from "~/components/team-switcher";
+import { NavAdmin } from "~/components/nav-admin";
 import {
   Sidebar,
   SidebarContent,
@@ -26,6 +27,7 @@ import {
   SidebarRail,
 } from "~/components/ui/sidebar";
 import { useCurrentUser } from "~/api/queries/useCurrentUser";
+import { useLocation } from "react-router";
 
 // This is sample data.
 const data = {
@@ -149,6 +151,8 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = useCurrentUser();
+  const location = useLocation();
+  const isAdmin = user.data?.role === "admin";
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -157,6 +161,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
+        <NavAdmin isAdmin={isAdmin} currentPath={location.pathname} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser

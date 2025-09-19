@@ -15,6 +15,7 @@ export default [
   ]),
   layout("modules/dashboard/dashboard.layout.tsx", [
     route("dashboard", "modules/dashboard/dashboard.page.tsx", { index: true }),
+    route("dashboard/admin/users", "modules/dashboard/admin/users.page.tsx"),
   ]),
   route(
     "/.well-known/appspecific/com.chrome.devtools.json",
