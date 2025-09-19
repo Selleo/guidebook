@@ -2,7 +2,7 @@
 
 - apps
   - `api`: a NestJS backend application working as API
-  - `web`: a Vite Remix SPA
+  - `web`: React Router SPA on Vite
   - `reverse-proxy`: for domains and https during development
 - packages
   - `email-templates`: a package for email templates

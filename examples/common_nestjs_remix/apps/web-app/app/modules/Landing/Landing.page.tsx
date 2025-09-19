@@ -5,11 +5,11 @@ import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Guidebook | Remix + NestJS starter" },
+    { title: "Guidebook | React + NestJS starter" },
     {
       name: "description",
       content:
-        "Launch your next SaaS faster with a production-ready Remix + NestJS starter from Selleo.",
+        "Launch your next SaaS faster with a production-ready React + NestJS starter from Selleo.",
     },
   ];
 };
@@ -75,7 +75,7 @@ export default function LandingPage() {
               </span>
               <span className="flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-primary" />
-                Typesafe Remix + NestJS stack
+                Typesafe React + NestJS stack
               </span>
             </div>
           </div>
