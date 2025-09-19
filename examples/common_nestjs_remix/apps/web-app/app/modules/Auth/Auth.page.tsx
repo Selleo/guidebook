@@ -95,7 +95,9 @@ export default function LoginPage() {
         description: "You can now log in to your account",
         position: "top-center",
       });
-      navigate("/auth");
+      navigate("/auth", {
+        replace: true,
+      });
     }
   }, [verified, navigate]);
 
