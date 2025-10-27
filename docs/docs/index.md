@@ -1,6 +1,6 @@
 # Overview
 
-Guide book is a set of practices that focus on providing efficient development of web and mobile apps.
+Guidebook is a set of practices that focus on providing efficient development of web and mobile apps.
 
 This includes:
 

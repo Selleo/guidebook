@@ -1,6 +1,6 @@
-# Docker compose
+# Infra Dependencies
 
-Whenever you need a database or any external server stuff you should be using docker compose in the development for the ease of use and project installation.
+Whenever you need a database or any external server stuff you should be using docker compose in the development for the ease of use and project installation. In the matter of object storage - ideally you should use real S3 public buket.
 
 ## How to add Postgres with Docker compose
 
@@ -9,7 +9,7 @@ To add Postgres via Docker Compose you should add `docker-compose.yml` in you de
 ```yml
 services:
   project-db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     restart: always
     environment:
       POSTGRES_PASSWORD: projecthjkl
@@ -42,26 +42,6 @@ volumes:
     driver: local
 ```
 
-## How to store files in SWS
-
-To store eg. images in on your local disk and easily expose them you can use Static Web Server
-
-```yml
-services:
-  sws:
-    image: joseluisq/static-web-server:2.31.1
-    environment:
-      - SERVER_ROOT=/uploads
-      - SERVER_CORS_ALLOW_ORIGINS=https://app.projectname.localhost
-      - SERVER_CORS_ALLOW_HEADERS=orgin, content-type, cache-control
-    volumes:
-      - ./uploads:/uploads
-    ports:
-      - 8069:80
-```
-
-With this configuration whatever is ./uploads folder will be exposed on localhost:8069
-
 ## Mails on localhost
 
 Whenever working with nodemailer you can use Mailhog to inspect the mails you are sending locally.
@@ -76,3 +56,8 @@ services:
 ```
 
 With this configuration you're able to inspect the mails on localhost:8025
+
+## How to store files in Local Development
+
+The Primary approach for handling files in development is having a public s3 bucket. By using it
+we achieve 100% compatibility and consistency with prod environment.
